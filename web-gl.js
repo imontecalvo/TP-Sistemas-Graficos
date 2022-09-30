@@ -1,3 +1,6 @@
+console.log("llega")
+import { Objeto3D } from "./objeto3d.js";
+
 var mat4 = glMatrix.mat4;
 var vec3 = glMatrix.vec3;
 
@@ -20,6 +23,8 @@ var projMatrix = mat4.create();
 var normalMatrix = mat4.create();
 var rotate_angle = -1.57078;
 
+// var { vertices, normals, indices } = setupBuffers(new Plano(1,1));
+// var plano = new Objeto3D(buffers.webgl_position_buffer,buffers.webgl_normal_buffer, buffers.webgl_index_buffer)
 
 
 function initWebGL() {
@@ -33,11 +38,13 @@ function initWebGL() {
         alert("Error: Your browser does not appear to support WebGL.");
     }
 
+    const sup = [new Plano(1,1)]
+
     if (gl) {
 
         setupWebGL();
         initShaders();
-        setupBuffers();
+        // setupBuffers();
         setupVertexShaderMatrix();
         tick();
 
@@ -61,7 +68,7 @@ function setupWebGL() {
     mat4.perspective(projMatrix, 45, canvas.width / canvas.height, 0.1, 100.0);
 
     mat4.identity(modelMatrix);
-    mat4.rotate(modelMatrix, modelMatrix, -1.57078, [1.0, 0.0, 0.0]);
+    mat4.rotate(modelMatrix, modelMatrix, 0.78, [1.0, 0.0, 0.0]);
 
     mat4.identity(viewMatrix);
     mat4.translate(viewMatrix, viewMatrix, [0.0, 0.0, -5.0]);
@@ -163,14 +170,37 @@ function Plano(ancho, largo) {
     }
 }
 
+function Esfera(radio) {
 
-function setupBuffers() {
-    const superficie = new Plano(5,5)
+    this.getPos = function (u, v) {
+
+        var x = radio * Math.sin(u * Math.PI) * Math.cos(v * 2 * Math.PI);
+        var y = radio * Math.sin(u * Math.PI) * Math.sin(v * 2 * Math.PI);
+        var z = radio * Math.cos(u * Math.PI);
+        return [x, y, z];
+    }
+
+    this.getNrm = function (u, v) {
+        var p0 = this.getPosicion(u, v);
+        var p1 = this.getPosicion(u + 0.001, v);
+        var p2 = this.getPosicion(u, v + 0.001);
+        var v1 = [p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]];
+        var v2 = [p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]];
+
+        var x = v1[1] * v2[2] - v1[2] * v2[1];
+        var y = -(v1[0] * v2[2] - v1[2] * v2[0]);
+        var z = v1[0] * v2[1] - v1[1] * v2[0];
+        console.log([x, y, z]);
+        return p0;
+    }
+}
+
+function setupBuffers(superficie) {
     var pos = [];
     var normal = [];
     var r = 2;
-    var rows = 128;
-    var cols = 256;
+    var rows = 200;
+    var cols = 200;
 
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
@@ -234,20 +264,23 @@ function setupVertexShaderMatrix() {
 }
 
 function drawScene() {
+    console.log("llega")
     setupVertexShaderMatrix();
+    // plano.dibujar()
+    var x = new Objeto3D(gl, glProgram)
+    x.dibujar()
+    // vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
+    // gl.enableVertexAttribArray(vertexPositionAttribute);
+    // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+    // gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-    vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
-    gl.enableVertexAttribArray(vertexPositionAttribute);
-    gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-    gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+    // vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
+    // gl.enableVertexAttribArray(vertexNormalAttribute);
+    // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesNormalBuffer);
+    // gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-    vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-    gl.enableVertexAttribArray(vertexNormalAttribute);
-    gl.bindBuffer(gl.ARRAY_BUFFER, trianglesNormalBuffer);
-    gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, trianglesIndexBuffer);
-    gl.drawElements(gl.TRIANGLE_STRIP, trianglesIndexBuffer.number_vertex_point, gl.UNSIGNED_SHORT, 0);
+    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, trianglesIndexBuffer);
+    // gl.drawElements(gl.TRIANGLE_STRIP, trianglesIndexBuffer.number_vertex_point, gl.UNSIGNED_SHORT, 0);
 }
 
 
