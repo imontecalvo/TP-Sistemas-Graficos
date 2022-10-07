@@ -8,10 +8,6 @@ export class Esfera extends Objeto3D{
         this.mallaDeTriangulos = crearMalla(this)
     }
 
-    generarSuperficie(){
-        this.mallaDeTriangulos =  crearMalla(this);
-    }
-
     obtenerPosicion(u, v) {
 
         var x = this.radio * Math.sin(u * Math.PI) * Math.cos(v * 2 * Math.PI);
