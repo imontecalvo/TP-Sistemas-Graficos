@@ -8,6 +8,10 @@ export class Esfera extends Objeto3D{
         this.mallaDeTriangulos = crearMalla(this)
     }
 
+    obtenerMalla = () => {
+        return this.mallaDeTriangulos;
+    }
+
     obtenerPosicion(u, v) {
 
         var x = this.radio * Math.sin(u * Math.PI) * Math.cos(v * 2 * Math.PI);
@@ -27,5 +31,29 @@ export class Esfera extends Objeto3D{
         var y = -(v1[0] * v2[2] - v1[2] * v2[0]);
         var z = v1[0] * v2[1] - v1[1] * v2[0];
         return p0;
+    }
+}
+
+export class Plano extends Objeto3D{
+    constructor(ancho, largo,filas, columnas){
+        super(filas, columnas);
+        this.ancho = ancho
+        this.largo = largo
+        this.mallaDeTriangulos = crearMalla(this)
+    }
+
+    obtenerMalla = () => {
+        return this.mallaDeTriangulos;
+    }
+
+    obtenerPosicion = function (u, v) {
+
+        var x = (u - 0.5) * this.ancho;
+        var z = (v - 0.5) * this.largo;
+        return [x, 0, z];
+    }
+
+    obtenerNormal = function (u, v) {
+        return [0, 1, 0];
     }
 }

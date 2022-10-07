@@ -1,4 +1,5 @@
-import { Esfera } from "./esfera.js";
+import { Esfera, Plano } from "./esfera.js";
+import { Objeto3D } from "./objeto3d.js";
 
 var mat4 = glMatrix.mat4;
 var vec3 = glMatrix.vec3;
@@ -95,12 +96,6 @@ function initShaders() {
 
     //use program
     gl.useProgram(glProgram);
-
-    glProgram.vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
-    gl.enableVertexAttribArray(glProgram.vertexPositionAttribute);
-
-    glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-    gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
 }
 
 function makeShader(src, type) {
@@ -117,12 +112,15 @@ function makeShader(src, type) {
 
 
 function setupVertexShaderMatrix() {
-    var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+    // Objeto3D.MODEL_MATRIX_UNIFORM = gl.getUniformLocation(glProgram, "uModelMatrix");
+    // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+    // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
+    // var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
     var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
     var projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
     var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
 
-    gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
+    // gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
     gl.uniformMatrix4fv(viewMatrixUniform, false, viewMatrix);
     gl.uniformMatrix4fv(projMatrixUniform, false, projMatrix);
     gl.uniformMatrix4fv(normalMatrixUniform, false, normalMatrix);
@@ -131,8 +129,18 @@ function setupVertexShaderMatrix() {
 function drawScene() {
     setupVertexShaderMatrix();
     var esfera = new Esfera(100,100,1)
+    // esfera.trasladar(1,0,0)
+    esfera.trasladar(0,0,-2)
+    // var esfera2 = new Esfera(100,100,0.5)
+    // esfera.trasladar(1,3,3)
+    // esfera2.trasladar(-4,0,0)
+    // var plano = new Plano(2,2,100,100)
+    // plano.trasladar(0,0,0)
+    // plano.dibujar()
     esfera.dibujar()
+    // esfera2.dibujar()
 }
+
 
 function animate() {
 
