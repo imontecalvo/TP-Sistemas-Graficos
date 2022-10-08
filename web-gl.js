@@ -1,8 +1,10 @@
 import { Esfera, Plano } from "./esfera.js";
 import { Objeto3D } from "./objeto3d.js";
+import { Escena } from "./escena.js";
 
 var mat4 = glMatrix.mat4;
 var vec3 = glMatrix.vec3;
+var escena = null;
 
 var gl = null,
     canvas = null,
@@ -54,6 +56,8 @@ function initWebGL() {
 
 
 function setupWebGL() {
+    escena = new Escena()
+
     gl.enable(gl.DEPTH_TEST);
     //set the clear color
     gl.clearColor(0.1, 0.1, 0.2, 1.0);
@@ -127,17 +131,21 @@ function setupVertexShaderMatrix() {
 }
 
 function drawScene() {
+    // escena.actualizar()
+    // viewMatrix = escena.obtenerVista()
     setupVertexShaderMatrix();
-    var esfera = new Esfera(100,100,1)
+    // escena.dibujar()
+
+    // var esfera = new Esfera(100,100,1)
     // esfera.trasladar(1,0,0)
-    esfera.trasladar(0,0,-2)
+    // esfera.trasladar(0,0,-2)
     // var esfera2 = new Esfera(100,100,0.5)
     // esfera.trasladar(1,3,3)
     // esfera2.trasladar(-4,0,0)
-    // var plano = new Plano(2,2,100,100)
+    var plano = new Plano(2,2,100,100)
     // plano.trasladar(0,0,0)
-    // plano.dibujar()
-    esfera.dibujar()
+    plano.dibujar()
+    // esfera.dibujar()
     // esfera2.dibujar()
 }
 
