@@ -1,24 +1,35 @@
 <!doctype html>
 <html>
-    <head>
-        <title></title>        
-        <style>
-            body{ background-color: grey; }
-            canvas{ background-color: white; }
-			textarea{ background-color: black; foreground-color: white;}
-        </style>
-    </head>
-    <body>
-    	<center>    		            
-            <canvas id="my-canvas" width="1000" height="800">
-            	Your browser does not support the HTML5 canvas element.
-    		</canvas>    		
-    	</center>
 
-        <script type="text/javascript" src="js/gl-matrix.js"></script>
-        <script src="js/jquery.min.js"></script>
-        <!-- position = aVertexPosition+(1.0+sin(position.y*8.0*3.14))*0.03; -->
-        <script id="shader-vs" type="x-shader/x-vertex">
+<head>
+    <title></title>
+    <style>
+        body {
+            background-color: grey;
+        }
+
+        canvas {
+            background-color: white;
+        }
+
+        textarea {
+            background-color: black;
+            foreground-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <canvas id="my-canvas" width="1280" height="640">
+            Your browser does not support the HTML5 canvas element.
+        </canvas>
+    </center>
+
+    <script type="text/javascript" src="js/gl-matrix.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <!-- position = aVertexPosition+(1.0+sin(position.y*8.0*3.14))*0.03; -->
+    <script id="shader-vs" type="x-shader/x-vertex">
             precision highp float;
 
             attribute vec3 aVertexPosition;
@@ -29,9 +40,12 @@
             uniform mat4 projMatrix;
 
             uniform mat4 normalMatrix;
+            
+            uniform vec3 uColor;
 
             varying vec3 vNormal;    
             varying vec3 vPosWorld;  
+            varying vec3 vColor;
 
             void main(void) {
                 vec3 position = aVertexPosition;
@@ -39,23 +53,27 @@
             
                 vPosWorld=(modelMatrix*vec4(position,1.0)).xyz;    //la posicion en coordenadas de mundo
                 vNormal=(normalMatrix*vec4(aVertexNormal,1.0)).xyz;       //la normal en coordenadas de mundo                
-
+                vColor = uColor;
             }
+
         </script>
-        <script id="shader-fs" type="x-shader/x-fragment">
+    <script id="shader-fs" type="x-shader/x-fragment">
             precision highp float;
             varying vec3 vNormal;
             varying vec3 vPosWorld;
+            varying vec3 vColor;
 
             void main(void) {
-                vec3 lightVec=normalize(vec3(0.0,3.0,5.0)-vPosWorld);
-                vec3 diffColor=mix(vec3(0.7,0.7,0.7),vNormal,0.4);
-                vec3 color=dot(lightVec,vNormal)*diffColor+vec3(0.2,0.2,0.2);
-                
+                vec3 ambientColor = vec3(0.5,0.5,0.5);
+                vec3 directionalColor = vec3(1., 1., 1.);
+                vec3 lightVec=normalize(vec3(750.0,250.0,750.0)-vPosWorld);
+
+                vec3 color=(ambientColor+directionalColor*max(dot(vNormal,lightVec), 0.0))*vColor.xyz;
                 gl_FragColor = vec4(color,1.0);
             }
         </script>
-        
-        <script type="module" src="web-gl.js"></script>
-    </body>
+
+    <script type="module" src="web-gl.js"></script>
+</body>
+
 </html>

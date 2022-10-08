@@ -38,6 +38,8 @@ export class Objeto3D {
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
 
+            var colorUniform = gl.getUniformLocation(glProgram, "uColor");
+            gl.uniform3fv(colorUniform, this.color);
 
             var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition"); //referencia a aVertexPosition del shader
             gl.enableVertexAttribArray(vertexPositionAttribute); //activo el atributo

@@ -121,8 +121,9 @@ function setupVertexShaderMatrix() {
     // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
     // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
     // var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-    mat4.identity(viewMatrix)
-    mat4.translate(viewMatrix, viewMatrix, [0., 0, -30]);
+
+    // mat4.identity(viewMatrix)
+    // mat4.translate(viewMatrix, viewMatrix, [0., 0, -30]);
     // mat4.rotate(viewMatrix, viewMatrix, tiempo*Math.PI, [0, 1, 0]);
 
     var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
@@ -138,6 +139,8 @@ function setupVertexShaderMatrix() {
 function drawScene() {
     // escena.actualizar()
     // viewMatrix = escena.obtenerVista()
+    escena.actualizar()
+    viewMatrix = escena.obtenerVista()
     setupVertexShaderMatrix();
     escena.dibujar()
 
