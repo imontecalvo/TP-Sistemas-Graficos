@@ -24,18 +24,19 @@ export class Objeto3D {
         // mat4.scale(this.matrizModelado, this.matrizModelado, this.escala);
     };
 
-    async dibujar() {
+    async dibujar(matrizPadre) {
         this.matrizModelado = mat4.create();
         var mat = mat4.create();
         this.actualizarMatrizModelado();
-        
+        mat4.multiply(mat, this.matrizModelado, matrizPadre);
+
         if (this.mallaDeTriangulos) {
             // mat4.identity(mat)
             // mat4.rotate(mat, mat, 0.78, [1.0, 0.0, 0.0]);
             // console.log(this.matrizModelado)
             // gl.uniformMatrix3fv(glProgram.normalMatrixUniform, false, normalMatrix);
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-            gl.uniformMatrix4fv(modelMatrixUniform, false, this.matrizModelado);
+            gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
 
 
             var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition"); //referencia a aVertexPosition del shader
@@ -54,10 +55,16 @@ export class Objeto3D {
         }
     }
 
+    setearPosicion(x,y,z){
+        this.posicion[0] = x;
+        this.posicion[1] = y;
+        this.posicion[2] = z;
+    }
+
     trasladar(x, y, z) {
         this.posicion[0] = this.posicion[0] + x;
-        this.posicion[1] = this.posicion[0] + y;
-        this.posicion[2] = this.posicion[0] + z;
+        this.posicion[1] = this.posicion[1] + y;
+        this.posicion[2] = this.posicion[2] + z;
     }
 
     rotarX(rad) {

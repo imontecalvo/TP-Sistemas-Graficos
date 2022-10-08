@@ -1,7 +1,7 @@
 import { Esfera, Plano } from "./esfera.js";
 import { Objeto3D } from "./objeto3d.js";
 import { Escena } from "./escena.js";
-
+var tiempo = 0;
 var mat4 = glMatrix.mat4;
 var vec3 = glMatrix.vec3;
 var escena = null;
@@ -70,10 +70,11 @@ function setupWebGL() {
     mat4.perspective(projMatrix, 45, canvas.width / canvas.height, 0.1, 100.0);
 
     mat4.identity(modelMatrix);
-    mat4.rotate(modelMatrix, modelMatrix, 0.78, [1.0, 0.0, 0.0]);
-
-    mat4.identity(viewMatrix);
-    mat4.translate(viewMatrix, viewMatrix, [0.0, 0.0, -5.0]);
+    // mat4.rotate(modelMatrix, modelMatrix, 0.78, [1.0, 0.0, 0.0]);
+    
+    // mat4.identity(viewMatrix);
+    mat4.translate(viewMatrix, viewMatrix, [0., 0, -20.0]);
+    // mat4.rotate(viewMatrix, viewMatrix, Math.PI/4, [0, 0, 1]);
 }
 
 
@@ -120,6 +121,10 @@ function setupVertexShaderMatrix() {
     // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
     // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
     // var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+    mat4.identity(viewMatrix)
+    mat4.translate(viewMatrix, viewMatrix, [0., 0, -30]);
+    // mat4.rotate(viewMatrix, viewMatrix, tiempo*Math.PI, [0, 1, 0]);
+
     var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
     var projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
     var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
@@ -134,7 +139,7 @@ function drawScene() {
     // escena.actualizar()
     // viewMatrix = escena.obtenerVista()
     setupVertexShaderMatrix();
-    // escena.dibujar()
+    escena.dibujar()
 
     // var esfera = new Esfera(100,100,1)
     // esfera.trasladar(1,0,0)
@@ -142,9 +147,9 @@ function drawScene() {
     // var esfera2 = new Esfera(100,100,0.5)
     // esfera.trasladar(1,3,3)
     // esfera2.trasladar(-4,0,0)
-    var plano = new Plano(2,2,100,100)
+    // var plano = new Plano(2,2,100,100)
     // plano.trasladar(0,0,0)
-    plano.dibujar()
+    // plano.dibujar()
     // esfera.dibujar()
     // esfera2.dibujar()
 }
@@ -152,7 +157,7 @@ function drawScene() {
 
 function animate() {
 
-    rotate_angle += 0.01;
+    rotate_angle += 1;
     mat4.identity(modelMatrix);
     mat4.rotate(modelMatrix, modelMatrix, rotate_angle, [1.0, 0.0, 1.0]);
 
@@ -165,7 +170,7 @@ function animate() {
 }
 
 function tick() {
-
+    tiempo+=0.01
     requestAnimationFrame(tick);
     drawScene();
     // animate();
