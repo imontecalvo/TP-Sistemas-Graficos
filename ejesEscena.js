@@ -67,6 +67,7 @@ class Eje {
     }
 
     dibujar() {
+        gl.useProgram(glProgram)
         if (this.mallaDeTriangulos) {
             var mat = mat4.create();
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");

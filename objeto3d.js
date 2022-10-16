@@ -25,6 +25,7 @@ export class Objeto3D {
     };
 
     async dibujar(matrizPadre) {
+        gl.useProgram(glProgram);
         this.matrizModelado = mat4.create();
         var mat = mat4.create();
         this.actualizarMatrizModelado();

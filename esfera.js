@@ -2,11 +2,11 @@ import {Objeto3D} from "./objeto3d.js"
 import {crearMalla} from "./geometria.js"
 
 export class Esfera extends Objeto3D{
-    constructor(filas, columnas, radio){
+    constructor(filas, columnas, radio, color=[0,0,0]){
         super(filas, columnas);
         this.radio = radio
         this.mallaDeTriangulos = crearMalla(this)
-        this.color = [0, 0, 0]
+        this.color = color
     }
 
     obtenerMalla = () => {

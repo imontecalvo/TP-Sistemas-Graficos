@@ -3,6 +3,8 @@ import {Esfera, Plano} from "./esfera.js"
 import { EsferaDirigible } from "./esferaDirigible.js";
 import { Camara } from "./camara2.js";
 import { EjesEscena } from "./ejesEscena.js";
+import { LineaCurva } from "./pruebaCurva.js";
+import { Superficie } from "./superficie.js";
 
 var mat4 = glMatrix.mat4;
 
@@ -17,39 +19,12 @@ export class Escena {
         this.plano.trasladar(0,0,0)
         this.camera = new CamaraInteractuableArrastre()
         this.centro = new Esfera(20,20,0.2)
-
-        // this.x1 = new Esfera(20,20,0.2)
-        // this.x1.trasladar(0.5,0,0)
-        // this.x2 = new Esfera(20,20,0.2)
-        // this.x2.trasladar(1.,0,0)
-        // this.x3 = new Esfera(20,20,0.2)
-        // this.x3.trasladar(1.5,0,0)
-        // this.x4 = new Esfera(20,20,0.2)
-        // this.x4.trasladar(2.,0,0)
-        // this.x5 = new Esfera(20,20,0.2)
-        // this.x5.trasladar(2.5,0,0)
-
-        // this.y1 = new Esfera(20,20,0.2)
-        // this.y1.trasladar(0, 0.5,0)
-        // this.y2 = new Esfera(20,20,0.2)
-        // this.y2.trasladar(0, 1.,0)
-        // this.y3 = new Esfera(20,20,0.2)
-        // this.y3.trasladar(0, 1.5,0)
-        // this.y4 = new Esfera(20,20,0.2)
-        // this.y4.trasladar(0, 2.,0)
-        // this.y5 = new Esfera(20,20,0.2)
-        // this.y5.trasladar(0, 2.5,0)
-
-        // this.z1 = new Esfera(20,20,0.2)
-        // this.z1.trasladar(0, 0, 0.5)
-        // this.z2 = new Esfera(20,20,0.2)
-        // this.z2.trasladar(0, 0, 1.)
-        // this.z3 = new Esfera(20,20,0.2)
-        // this.z3.trasladar(0, 0, 1.5)
-        // this.z4 = new Esfera(20,20,0.2)
-        // this.z4.trasladar(0, 0, 2.)
-        // this.z5 = new Esfera(20,20,0.2)
-        // this.z5.trasladar(0, 0, 2.5)
+        this.ref = new Esfera(20,20,0.2,[1,0,0])
+        this.ref.trasladar(0,0,5)
+        this.curva = new LineaCurva([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
+        
+        this.recorrido = new LineaCurva([[0,2,3], [3,2,0],[0,2,-3],[-3,2,0]])
+        this.sup = new Superficie(10,10)
     }
 
     actualizar(){
@@ -66,6 +41,10 @@ export class Escena {
         // this.camara.actualizar()
         // this.esferaDirigible.actualizar()
         // this.esferaDirigible.dibujar(this.matriz)
-        this.centro.dibujar(this.matriz)
+        // this.centro.dibujar(this.matriz)
+        // this.curva.dibujar()
+        // this.recorrido.dibujar()
+        this.ref.dibujar(this.matriz, "red")
+        this.sup.dibujar(this.matriz)
     }
 }
