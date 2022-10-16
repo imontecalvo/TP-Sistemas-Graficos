@@ -6,6 +6,7 @@ export class Esfera extends Objeto3D{
         super(filas, columnas);
         this.radio = radio
         this.mallaDeTriangulos = crearMalla(this)
+        this.color = [0, 0, 0]
     }
 
     obtenerMalla = () => {
