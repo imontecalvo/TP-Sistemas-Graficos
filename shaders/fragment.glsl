@@ -9,5 +9,5 @@ void main(void) {
     vec3 lightVec=normalize(vec3(750.0,250.0,750.0)-vPosWorld);
 
     vec3 color=(ambientColor+directionalColor*max(dot(vNormal,lightVec), 0.0))*vColor.xyz;
-    gl_FragColor = vec4(color,1.0);
+    gl_FragColor = vec4(vNormal,1.0);
 }

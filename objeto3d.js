@@ -1,4 +1,4 @@
-import { gl, glProgram } from "./web-gl.js";
+import { gl, glProgram, glProgramCurva } from "./web-gl.js";
 var mat4 = glMatrix.mat4;
 var vec3 = glMatrix.vec3;
 
@@ -53,8 +53,32 @@ export class Objeto3D {
             gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
-
+            
             gl.drawElements(gl.TRIANGLE_STRIP, this.mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+            
+            if (this.bufferNormDibujadas){
+                const color = [].concat(this.bufferNorm.map(x => [1,1,1]))
+                gl.useProgram(glProgramCurva);
+                var trianglesVerticeBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNormDibujadas), gl.STATIC_DRAW);
+                // console.log("norm dibujar: ", this.bufferNormDibujadas)
+                var trianglesColorBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);
+        
+                var vertexPositionAttribute = gl.getAttribLocation(glProgramCurva, "aVertexPosition");
+                gl.enableVertexAttribArray(vertexPositionAttribute);
+                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+                gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+        
+                var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
+                gl.enableVertexAttribArray(vertexColorAttribute);
+                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
+                gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
+                
+                gl.drawArrays(gl.LINES, 0, 2*this.bufferNormDibujadas.length/3);
+            }
         }
     }
 

@@ -14,7 +14,7 @@ export function discretizar(curva, ejeBinormal, deltaU, esRecorrido = false) {
 
         puntos.push(punto)
         tangentes.push(tangente)
-        normales.push(productoVectorial(tangente, binormal))
+        normales.push(productoVectorial(binormal, tangente))
     }
     if (esRecorrido) {
         return {posicion:puntos, tangente:tangentes, normal:normales, binormal:binormal}
@@ -24,7 +24,7 @@ export function discretizar(curva, ejeBinormal, deltaU, esRecorrido = false) {
 }
 
 
-function productoVectorial(vec1, vec2) {
+export function productoVectorial(vec1, vec2) {
     const x = vec1[1] * vec2[2] - vec1[2] * vec2[1]
     const y = - (vec1[0] * vec2[2] - vec1[2] * vec2[0])
     const z = vec1[0] * vec2[1] - vec1[1] * vec2[0]

@@ -1,21 +1,34 @@
 import { Objeto3D } from "./objeto3d.js"
-import {BezierCubica} from "./bezier/bezier3.js"
+import { BezierCubica } from "./bezier/bezier3.js"
 import { discretizar } from "./bezier/discretizador.js";
 import { gl, glProgram } from "./web-gl.js";
 import { superficeBarrido } from "./superficieBarrido.js";
 
-export class Superficie extends Objeto3D{
-    constructor(filas, columnas){
+export class Superficie extends Objeto3D {
+    constructor(filas, columnas, posiciones, normales) {
         super(filas, columnas)
-        let curva = new BezierCubica([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
-        let recorrido = new BezierCubica([[10,0,0,],[4,0,-12],[-4,0,-12],[-10,0,0]])
-        const data = superficeBarrido(curva, recorrido, columnas, filas+1)
-        this.bufferPos = data[0],
-        // console.log(data[0])
-        this.bufferNorm = data[1],
+        this.bufferPos = posiciones
+        this.bufferNorm = normales
+        this.bufferNormDibujadas = []
+
+
+        for (let i = 0; i < this.bufferPos.length-3; i+=3) {
+            this.bufferNormDibujadas.push(this.bufferPos[i])
+            this.bufferNormDibujadas.push(this.bufferPos[i+1])
+            this.bufferNormDibujadas.push(this.bufferPos[i+2])
+
+            this.bufferNormDibujadas.push(this.bufferPos[i] + this.bufferNorm[i])
+            this.bufferNormDibujadas.push(this.bufferPos[i+1] + this.bufferNorm[i+1])
+            this.bufferNormDibujadas.push(this.bufferPos[i+2] + this.bufferNorm[i+2])
+        }
+
+
+        // console.log(this.bufferPos)
+        // console.log(this.bufferNormDibujadas)
+        // this.bufferNormDibujadas=[0,0,0,0,1,1,3,0,0,3,0,4]
         this.mallaDeTriangulos = crearMalla(this)
         // console.log("malla:" , this.mallaDeTriangulos)
-        this.color = [0,0,0]
+        this.color = [0, 0, 0]
     }
 }
 
@@ -24,7 +37,7 @@ function getVertexIndex(i, j, columnas) {
 }
 
 
-function crearMalla(superficie){
+function crearMalla(superficie) {
     // Buffer de indices de los triángulos
     let indexBuffer = [];
 

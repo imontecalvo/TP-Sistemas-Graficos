@@ -1,9 +1,9 @@
 import { BezierCubica } from "./bezier/bezier3.js"
-import { discretizar } from "./bezier/discretizador.js";
+import { productoVectorial, discretizar } from "./bezier/discretizador.js";
 var mat4 = glMatrix.mat4;
 var vec4 = glMatrix.vec4;
 
-export function superficeBarrido(curva, recorrido, columnas, niveles) {
+export function superficeRevolucion(curva, columnas, niveles) {
     //filas = niveles-1
     // let m = mat4.fromValues(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
     // let v = vec4.fromValues(1, 1, 1, 1)
@@ -14,9 +14,7 @@ export function superficeBarrido(curva, recorrido, columnas, niveles) {
     let puntosTransformados = []
     let normalesTransformadas = []
     const puntosCurva = discretizar(curva, "z", 1 / columnas, false)
-    const puntosRecorrido = discretizar(recorrido, "y", 1 / (niveles-1), true)
-    // console.log("recorrido:", puntosRecorrido)
-
+    const puntosRecorrido = getRecorrido(niveles)
     // Recorro c/u de los niveles del recorrido
     for (let i = 0; i < niveles; i++) {
         const matrizDeNivel = generarMatrizDeNivel(puntosRecorrido.posicion[i],
@@ -48,16 +46,11 @@ export function superficeBarrido(curva, recorrido, columnas, niveles) {
             // console.log("NORMALES- x: ", normalVec4[0], " y: ", normalVec4[1], " z: ", normalVec4[2])
         }
     }
-    // console.log("puntoss: ", puntosTransformados)
+    console.log("puntoss: ", puntosTransformados)
     return [puntosTransformados, normalesTransformadas]
 }
 
 function generarMatrizDeNivel(pos, normal, binormal, tangente) {
-    // console.log("pos: ", pos)
-    // console.log("nor: ", normal)
-    // console.log("binro: ", binormal)
-    // console.log("tang: ", tangente)
-
     return [
         mat4.fromValues(
         normal[0], binormal[0], tangente[0], pos[0],
@@ -72,22 +65,19 @@ function generarMatrizDeNivel(pos, normal, binormal, tangente) {
     ]
 }
 
+function getRecorrido(niveles){
+    const posiciones = []
+    const normales = []
+    const tangentes = []
+    const binormales = []
 
+    for (let i = 0; i<=1; i+=1/(niveles-1)){
+        console.log(i)
+        posiciones.push([0, 0, 0])
+        binormales.push([0,1,0])
+        tangentes.push([Math.cos(i*2*Math.PI), 0, Math.sin(i*2*Math.PI)])
+        normales.push(productoVectorial([0,1,0], [Math.cos(i*2*Math.PI), 0, Math.sin(i*2*Math.PI)]))
+    }
+    return {posicion:posiciones, tangente: tangentes, normal:normales, binormal:[0,1,0]}
+}
 
-
-// discretizar curva -> cols
-// discretizar recorrido -> filas
-
-// matriz de nivel
-
-// for (let i = 0; i <= niveles; i++) {
-//     let matrizDeNivel;
-//     let puntosDeControl = [[-5, 5, i], [-0.5, 0, i], [0.5, 0, i], [5, 5, i]]
-//     let curva = new BezierCubica(puntosDeControl)
-//     let puntosCurva = discretizar(curva, "z", 1 / columnas, false)
-
-//     for punto in puntosCurva:
-//         posiciones.push(matrizdeNivel * punto)
-//     this.bufferPos = this.bufferPos.concat(...puntosCurva.posicion)
-//     this.bufferNorm = this.bufferNorm.concat(...puntosCurva.normal)
-// }

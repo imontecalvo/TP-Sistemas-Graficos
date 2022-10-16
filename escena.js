@@ -5,6 +5,9 @@ import { Camara } from "./camara2.js";
 import { EjesEscena } from "./ejesEscena.js";
 import { LineaCurva } from "./pruebaCurva.js";
 import { Superficie } from "./superficie.js";
+import { superficeBarrido } from "./superficieBarrido.js";
+import { superficeRevolucion } from "./superficieRevolucion.js";
+import { BezierCubica } from "./bezier/bezier3.js";
 
 var mat4 = glMatrix.mat4;
 
@@ -24,7 +27,17 @@ export class Escena {
         this.curva = new LineaCurva([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
         
         this.recorrido = new LineaCurva([[0,2,3], [3,2,0],[0,2,-3],[-3,2,0]])
-        this.sup = new Superficie(10,10)
+        let curva = new BezierCubica([[-5, 5, 0], [-0.5, 0, 0], [0.5, 0, 0], [5, 5, 0]])
+        let recorrido = new BezierCubica([[10, 0, 0,], [4, 0, -12], [-4, 0, -12], [-10, 0, 0]])
+        const columnas = 10
+        const filas = 10
+        const data = superficeBarrido(curva, recorrido, columnas, filas + 1)
+        this.sup = new Superficie(columnas,filas,data[0],data[1])
+
+        let curvaRev = new BezierCubica([[0, 3, 0], [3, 1, 0], [3, -1, 0], [0, -3, 0]])
+        let revData = superficeRevolucion(curvaRev, 10, 11)
+        this.supRev = new Superficie(10,10,revData[0],revData[1])
+        // this.curva2 = new LineaCurva([[0, 3, 0], [3, 1, 0], [3, -1, 0], [0, -3, 0]])
     }
 
     actualizar(){
@@ -44,7 +57,9 @@ export class Escena {
         // this.centro.dibujar(this.matriz)
         // this.curva.dibujar()
         // this.recorrido.dibujar()
+        // this.curva2.dibujar()
         this.ref.dibujar(this.matriz, "red")
         this.sup.dibujar(this.matriz)
+        this.supRev.dibujar(this.matriz)
     }
 }
