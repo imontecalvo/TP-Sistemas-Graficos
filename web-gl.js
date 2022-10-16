@@ -1,4 +1,4 @@
-console.log("llega")
+import { Esfera, Plano } from "./esfera.js";
 import { Objeto3D } from "./objeto3d.js";
 
 var mat4 = glMatrix.mat4;
@@ -37,8 +37,6 @@ function initWebGL() {
     } catch (e) {
         alert("Error: Your browser does not appear to support WebGL.");
     }
-
-    const sup = [new Plano(1,1)]
 
     if (gl) {
 
@@ -112,177 +110,36 @@ function makeShader(src, type) {
     return shader;
 }
 
-function getPos(alfa, beta) {
-
-    var r = 2;
-    var nx = Math.sin(beta) * Math.sin(alfa);
-    var ny = Math.sin(beta) * Math.cos(alfa);
-    var nz = Math.cos(beta);
-
-
-    var g = beta % 0.5;
-    var h = alfa % 1;
-    var f = 1;
-
-    if (g < 0.25) f = 0.95;
-    if (h < 0.5) f = f * 0.95;
-
-    var x = nx * r * f;
-    var y = ny * r * f;
-    var z = nz * r * f;
-
-    return [x, y, z];
-}
-
-function getNrm(alfa, beta) {
-    var p = getPos(alfa, beta);
-    var v = vec3.create();
-    vec3.normalize(v, p);
-
-    var delta = 0.05;
-    var p1 = getPos(alfa, beta);
-    var p2 = getPos(alfa, beta + delta);
-    var p3 = getPos(alfa + delta, beta);
-
-    var v1 = vec3.fromValues(p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]);
-    var v2 = vec3.fromValues(p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2]);
-
-    vec3.normalize(v1, v1);
-    vec3.normalize(v2, v2);
-
-    var n = vec3.create();
-    vec3.cross(n, v1, v2);
-    vec3.scale(n, n, -1);
-    return n;
-}
-
-function Plano(ancho, largo) {
-
-    this.getPos = function (u, v) {
-
-        var x = (u - 0.5) * ancho;
-        var z = (v - 0.5) * largo;
-        return [x, 0, z];
-    }
-
-    this.getNrm = function (u, v) {
-        return [0, 1, 0];
-    }
-}
-
-function Esfera(radio) {
-
-    this.getPos = function (u, v) {
-
-        var x = radio * Math.sin(u * Math.PI) * Math.cos(v * 2 * Math.PI);
-        var y = radio * Math.sin(u * Math.PI) * Math.sin(v * 2 * Math.PI);
-        var z = radio * Math.cos(u * Math.PI);
-        return [x, y, z];
-    }
-
-    this.getNrm = function (u, v) {
-        var p0 = this.getPosicion(u, v);
-        var p1 = this.getPosicion(u + 0.001, v);
-        var p2 = this.getPosicion(u, v + 0.001);
-        var v1 = [p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]];
-        var v2 = [p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]];
-
-        var x = v1[1] * v2[2] - v1[2] * v2[1];
-        var y = -(v1[0] * v2[2] - v1[2] * v2[0]);
-        var z = v1[0] * v2[1] - v1[1] * v2[0];
-        console.log([x, y, z]);
-        return p0;
-    }
-}
-
-function setupBuffers(superficie) {
-    var pos = [];
-    var normal = [];
-    var r = 2;
-    var rows = 200;
-    var cols = 200;
-
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < cols; j++) {
-
-            var u = i/rows
-            var v = j/cols ;
-            var p = superficie.getPos(u, v);
-
-            pos.push(p[0]);
-            pos.push(p[1]);
-            pos.push(p[2]);
-
-            var n = superficie.getNrm(u, v);
-
-            normal.push(n[0]);
-            normal.push(n[1]);
-            normal.push(n[2]);
-        }
-
-    }
-
-    trianglesVerticeBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pos), gl.STATIC_DRAW);
-
-
-    trianglesNormalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, trianglesNormalBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normal), gl.STATIC_DRAW);
-
-    var index = [];
-
-    for (var i = 0; i < rows - 1; i++) {
-        index.push(i * cols);
-        for (var j = 0; j < cols - 1; j++) {
-            index.push(i * cols + j);
-            index.push((i + 1) * cols + j);
-            index.push(i * cols + j + 1);
-            index.push((i + 1) * cols + j + 1);
-        }
-        index.push((i + 1) * cols + cols - 1);
-    }
-
-
-    trianglesIndexBuffer = gl.createBuffer();
-    trianglesIndexBuffer.number_vertex_point = index.length;
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, trianglesIndexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(index), gl.STATIC_DRAW);
-}
 
 function setupVertexShaderMatrix() {
-    var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+    // Objeto3D.MODEL_MATRIX_UNIFORM = gl.getUniformLocation(glProgram, "uModelMatrix");
+    // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+    // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
+    // var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
     var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
     var projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
     var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
 
-    gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
+    // gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
     gl.uniformMatrix4fv(viewMatrixUniform, false, viewMatrix);
     gl.uniformMatrix4fv(projMatrixUniform, false, projMatrix);
     gl.uniformMatrix4fv(normalMatrixUniform, false, normalMatrix);
 }
 
 function drawScene() {
-    console.log("llega")
     setupVertexShaderMatrix();
+    var esfera = new Esfera(100,100,1)
+    // esfera.trasladar(1,0,0)
+    esfera.trasladar(0,0,-2)
+    // var esfera2 = new Esfera(100,100,0.5)
+    // esfera.trasladar(1,3,3)
+    // esfera2.trasladar(-4,0,0)
+    // var plano = new Plano(2,2,100,100)
+    // plano.trasladar(0,0,0)
     // plano.dibujar()
-    var x = new Objeto3D(gl, glProgram)
-    x.dibujar()
-    // vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
-    // gl.enableVertexAttribArray(vertexPositionAttribute);
-    // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-    // gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-
-    // vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-    // gl.enableVertexAttribArray(vertexNormalAttribute);
-    // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesNormalBuffer);
-    // gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
-
-    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, trianglesIndexBuffer);
-    // gl.drawElements(gl.TRIANGLE_STRIP, trianglesIndexBuffer.number_vertex_point, gl.UNSIGNED_SHORT, 0);
+    esfera.dibujar()
+    // esfera2.dibujar()
 }
-
 
 
 function animate() {
@@ -307,3 +164,5 @@ function tick() {
 }
 
 window.onload = initWebGL;
+
+export {gl, glProgram}

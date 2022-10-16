@@ -1,139 +1,80 @@
+import { gl, glProgram } from "./web-gl.js";
+var mat4 = glMatrix.mat4;
+var vec3 = glMatrix.vec3;
 
-export function Objeto3D (gl, glProgram){
-    var trianglesVerticeBuffer = null
-    var trianglesNormalBuffer = null
-    var trianglesIndexBuffer = null
-    // this.vertexBuffer = vertexBuffer;
-    // this.indexBuffer = indexBuffer;
-    // this.normalBuffer = normalBuffer;
-    // this.color = null;
-    // this.matriz_modelado = mat4.create();
-    // this.matriz_normal = mat4.create();
-    this.hijos = [];
-    this.posicion = [0.0, 0.0, 0.0];
-    this.Program = null;
-    this.uniformBool = [];
-    this.pos_camara = null;
+export class Objeto3D {
+    static MODEL_MATRIX_UNIFORM = null;
+    constructor(filas, columnas) {
+        this.filas = filas;
+        this.columnas = columnas;
+        this.mallaDeTriangulos = null;
+        this.matrizModelado = mat4.create();
+        this.posicion = vec3.fromValues(0, 0, 0);
+        this.rotacionX = 0
+        this.rotacionY = 0
+        this.rotacionZ = 0
+        this.escala = vec3.fromValues(1, 1, 1);
+    }
 
-    // set_posicion_camara(pos){
-    //     this.pos_camara = pos;
-    //     for (var i = 0; i < this.hijos.length; i++) {
-    //         this.hijos[i].set_posicion_camara(pos);
-    //     }
-    // }
+    actualizarMatrizModelado() {
+        mat4.translate(this.matrizModelado, this.matrizModelado, this.posicion);
+        // mat4.rotateY(this.matrizModelado, this.matrizModelado, this.rotacionY);
+        // mat4.rotateZ(this.matrizModelado, this.matrizModelado, this.rotacionZ);
+        // mat4.rotateX(this.matrizModelado, this.matrizModelado, this.rotacionX);
+        // mat4.scale(this.matrizModelado, this.matrizModelado, this.escala);
+    };
 
-    // set_color(color){
-    //     this.color = color;
-    // }
+    async dibujar() {
+        this.matrizModelado = mat4.create();
+        var mat = mat4.create();
+        this.actualizarMatrizModelado();
+        
+        if (this.mallaDeTriangulos) {
+            // mat4.identity(mat)
+            // mat4.rotate(mat, mat, 0.78, [1.0, 0.0, 0.0]);
+            // console.log(this.matrizModelado)
+            // gl.uniformMatrix3fv(glProgram.normalMatrixUniform, false, normalMatrix);
+            var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+            gl.uniformMatrix4fv(modelMatrixUniform, false, this.matrizModelado);
 
-    // getMatrizModelado(){
-    //     return this.matriz_modelado;
-    // }
 
-    function Plano(ancho, largo) {
+            var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition"); //referencia a aVertexPosition del shader
+            gl.enableVertexAttribArray(vertexPositionAttribute); //activo el atributo
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer); //linkeo mi buffer de posiciones al atributo activado (aVertexPosition)
+            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-        this.getPos = function (u, v) {
+            var vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
+            gl.enableVertexAttribArray(vertexNormalAttribute);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
+            gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            var x = (u - 0.5) * ancho;
-            var z = (v - 0.5) * largo;
-            return [x, 0, z];
-        }
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
 
-        this.getNrm = function (u, v) {
-            return [0, 1, 0];
+            gl.drawElements(gl.TRIANGLE_STRIP, this.mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
         }
     }
 
-    function setupBuffers(superficie) {
-        var pos = [];
-        var normal = [];
-        var r = 2;
-        var rows = 200;
-        var cols = 200;
-
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < cols; j++) {
-
-                var u = i / rows
-                var v = j / cols;
-                var p = superficie.getPos(u, v);
-
-                pos.push(p[0]);
-                pos.push(p[1]);
-                pos.push(p[2]);
-
-                var n = superficie.getNrm(u, v);
-
-                normal.push(n[0]);
-                normal.push(n[1]);
-                normal.push(n[2]);
-            }
-
-        }
-
-        console.log(pos)
-
-        trianglesVerticeBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pos), gl.STATIC_DRAW);
-
-
-        trianglesNormalBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesNormalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normal), gl.STATIC_DRAW);
-
-        var index = [];
-
-        for (var i = 0; i < rows - 1; i++) {
-            index.push(i * cols);
-            for (var j = 0; j < cols - 1; j++) {
-                index.push(i * cols + j);
-                index.push((i + 1) * cols + j);
-                index.push(i * cols + j + 1);
-                index.push((i + 1) * cols + j + 1);
-            }
-            index.push((i + 1) * cols + cols - 1);
-        }
-
-
-        trianglesIndexBuffer = gl.createBuffer();
-        trianglesIndexBuffer.number_vertex_point = index.length;
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, trianglesIndexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(index), gl.STATIC_DRAW);
+    trasladar(x, y, z) {
+        this.posicion[0] = this.posicion[0] + x;
+        this.posicion[1] = this.posicion[0] + y;
+        this.posicion[2] = this.posicion[0] + z;
     }
 
-    this.dibujar = () => {
-        console.log("llega")
-        setupBuffers(new Plano(1,1))
-
-        var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
-        gl.enableVertexAttribArray(vertexPositionAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-        gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-
-        var vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-        gl.enableVertexAttribArray(vertexNormalAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesNormalBuffer);
-        gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, trianglesIndexBuffer);
-        gl.drawElements(gl.TRIANGLE_STRIP, trianglesIndexBuffer.number_vertex_point, gl.UNSIGNED_SHORT, 0);
+    rotarX(rad) {
+        this.rotacionX += rad;
     }
 
+    rotarY(rad) {
+        this.rotacionY += rad;
+    }
 
-    // agregarHijo(hijo){
-    //     this.hijos.push(hijo);
-    // }
+    rotarZ(rad) {
+        this.rotacionZ += rad;
+    }
 
-    // quitarHijo(hijo){
-    //     for (var i = 0; i < this.hijos.length; i++) {
-    //         if (this.hijos[i] == hijo) {
-    //             this.hijos.splice(i, 1);
-    //             break;
-    //         }
-    //     }
-    // }
-    // obtenerHijos(){
-    //     return this.hijos;
-    // }
+    escalar(x, y, z) {
+        this.escala[0] = this.escala[0] * x;
+        this.escala[1] = this.escala[1] * y;
+        this.escala[2] = this.escala[2] * z;
+    }
 }
