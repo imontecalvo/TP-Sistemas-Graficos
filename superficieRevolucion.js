@@ -15,6 +15,8 @@ export function superficeRevolucion(curva, columnas, niveles) {
     let normalesTransformadas = []
     const puntosCurva = discretizar(curva, "z", 1 / columnas, false)
     const puntosRecorrido = getRecorrido(niveles)
+    console.log("niveles: ", niveles)
+    console.log("puntos: ", puntosRecorrido)
     // Recorro c/u de los niveles del recorrido
     for (let i = 0; i < niveles; i++) {
         const matrizDeNivel = generarMatrizDeNivel(puntosRecorrido.posicion[i],
@@ -46,7 +48,7 @@ export function superficeRevolucion(curva, columnas, niveles) {
             // console.log("NORMALES- x: ", normalVec4[0], " y: ", normalVec4[1], " z: ", normalVec4[2])
         }
     }
-    console.log("puntoss: ", puntosTransformados)
+    // console.log("puntoss: ", puntosTransformados)
     return [puntosTransformados, normalesTransformadas]
 }
 
@@ -71,12 +73,15 @@ function getRecorrido(niveles){
     const tangentes = []
     const binormales = []
 
-    for (let i = 0; i<=1; i+=1/(niveles-1)){
-        console.log(i)
+    let i = 0
+    while ( i-1 <= 10**(-15)){
+        console.log(1/(niveles-1), i)
         posiciones.push([0, 0, 0])
         binormales.push([0,1,0])
         tangentes.push([Math.cos(i*2*Math.PI), 0, Math.sin(i*2*Math.PI)])
         normales.push(productoVectorial([0,1,0], [Math.cos(i*2*Math.PI), 0, Math.sin(i*2*Math.PI)]))
+
+        i+=1/(niveles-1)
     }
     return {posicion:posiciones, tangente: tangentes, normal:normales, binormal:[0,1,0]}
 }

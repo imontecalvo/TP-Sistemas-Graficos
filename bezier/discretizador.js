@@ -8,14 +8,18 @@ export function discretizar(curva, ejeBinormal, deltaU, esRecorrido = false) {
     else if (ejeBinormal == "y") binormal = [0, 1, 0]
     else if (ejeBinormal == "z") binormal = [0, 0, 1]
 
-    for (let u = 0; u <= 1; u += deltaU) {
+    let u = 0
+    while ( u-1 <= 10**(-15)){
         const punto = curva.obtenerPunto(u)
         const tangente = curva.obtenerTangente(u)
 
         puntos.push(punto)
         tangentes.push(tangente)
         normales.push(productoVectorial(binormal, tangente))
+
+        u+=deltaU
     }
+
     if (esRecorrido) {
         return {posicion:puntos, tangente:tangentes, normal:normales, binormal:binormal}
     } else {

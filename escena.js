@@ -35,8 +35,8 @@ export class Escena {
         this.sup = new Superficie(columnas,filas,data[0],data[1])
 
         let curvaRev = new BezierCubica([[0, 3, 0], [3, 1, 0], [3, -1, 0], [0, -3, 0]])
-        let revData = superficeRevolucion(curvaRev, 10, 11)
-        this.supRev = new Superficie(10,10,revData[0],revData[1])
+        let revData = superficeRevolucion(curvaRev, 10, 21)
+        this.supRev = new Superficie(20,10,revData[0],revData[1])
         // this.curva2 = new LineaCurva([[0, 3, 0], [3, 1, 0], [3, -1, 0], [0, -3, 0]])
     }
 
@@ -58,7 +58,7 @@ export class Escena {
         // this.curva.dibujar()
         // this.recorrido.dibujar()
         // this.curva2.dibujar()
-        this.ref.dibujar(this.matriz, "red")
+        // this.ref.dibujar(this.matriz, "red")
         this.sup.dibujar(this.matriz)
         this.supRev.dibujar(this.matriz)
     }
