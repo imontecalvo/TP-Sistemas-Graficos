@@ -23,7 +23,7 @@ export class Camara {
         var scroll = posObserver.scroll;
 
         var matrizVista = mat4.create();
-        var ojo = vec3.fromValues(posHeli[0]+scroll*posObserver.x,posHeli[0]+scroll*posObserver.y,posHeli[0]+scroll*posObserver.z);
+        var ojo = vec3.fromValues(posHeli[0]+scroll*posObserver.x,posHeli[1]+scroll*posObserver.y,posHeli[2]+scroll*posObserver.z);
         var centro = vec3.fromValues(0, 0, 0);
 
         mat4.lookAt(matrizVista,

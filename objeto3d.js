@@ -7,35 +7,47 @@ export class Objeto3D {
     constructor() {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
-        this.posicion = vec3.fromValues(0, 0, 0);
-        this.rotacionX = 0
-        this.rotacionY = 0
-        this.rotacionZ = 0
-        this.escala = vec3.fromValues(1, 1, 1);
+        this.hijos = []
     }
 
-    actualizarMatrizModelado() {
-        mat4.translate(this.matrizModelado, this.matrizModelado, this.posicion);
-        // mat4.rotateY(this.matrizModelado, this.matrizModelado, this.rotacionY);
-        // mat4.rotateZ(this.matrizModelado, this.matrizModelado, this.rotacionZ);
-        // mat4.rotateX(this.matrizModelado, this.matrizModelado, this.rotacionX);
-        // mat4.scale(this.matrizModelado, this.matrizModelado, this.escala);
-    };
+    agregarHijo(hijo) {
+        this.hijos.push(hijo)
+    }
+
+    trasladar(x,y,z){
+        mat4.translate(this.matrizModelado, this.matrizModelado, [x,y,z]);
+    }
+
+    rotarX(rad){
+        mat4.rotateX(this.matrizModelado, this.matrizModelado, rad);
+    }
+
+    rotarY(rad){
+        mat4.rotateY(this.matrizModelado, this.matrizModelado, rad);
+    }
+
+    rotarZ(rad){
+        mat4.rotateZ(this.matrizModelado, this.matrizModelado, rad);
+    }
+
+    escalar(x, y, z) {
+        mat4.scale(this.matrizModelado, this.matrizModelado, [x, y, z]);
+    }
 
     async dibujar(matrizPadre) {
         gl.useProgram(glProgram);
-        this.matrizModelado = mat4.create();
         var mat = mat4.create();
-        this.actualizarMatrizModelado();
         mat4.multiply(mat, this.matrizModelado, matrizPadre);
+        var matNorm = mat4.create()
+        mat4.invert(matNorm, mat);
+        mat4.transpose(matNorm, matNorm);
 
         if (this.mallaDeTriangulos) {
-            // mat4.identity(mat)
-            // mat4.rotate(mat, mat, 0.78, [1.0, 0.0, 0.0]);
-            // console.log(this.matrizModelado)
-            // gl.uniformMatrix3fv(glProgram.normalMatrixUniform, false, normalMatrix);
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+
+            var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
+            gl.uniformMatrix4fv(normalMatrixUniform, false, matNorm);
 
             var colorUniform = gl.getUniformLocation(glProgram, "uColor");
             gl.uniform3fv(colorUniform, this.color);
@@ -55,60 +67,44 @@ export class Objeto3D {
             gl.drawElements(gl.TRIANGLE_STRIP, this.mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
             
             if (this.bufferNormDibujadas){
-                const color = [].concat(this.bufferNorm.map(x => [1,1,1]))
-                gl.useProgram(glProgramCurva);
-                var trianglesVerticeBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNormDibujadas), gl.STATIC_DRAW);
-                // console.log("norm dibujar: ", this.bufferNormDibujadas)
-                var trianglesColorBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);
-        
-                var vertexPositionAttribute = gl.getAttribLocation(glProgramCurva, "aVertexPosition");
-                gl.enableVertexAttribArray(vertexPositionAttribute);
-                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-                gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-        
-                var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
-                gl.enableVertexAttribArray(vertexColorAttribute);
-                gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-                gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
-                
-                gl.drawArrays(gl.LINES, 0, 2*this.bufferNormDibujadas.length/3);
+                this.dibujarNormales(mat);
             }
+        }
+
+        for (let hijo of this.hijos) {
+            await hijo.dibujar(mat);
         }
     }
 
-    setearPosicion(x,y,z){
-        this.posicion[0] = x;
-        this.posicion[1] = y;
-        this.posicion[2] = z;
+    dibujarNormales(mat){
+        const color = [].concat(this.bufferNorm.map(x => [1,1,1]))
+        gl.useProgram(glProgramCurva);
+
+        var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
+        gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+
+
+        var trianglesVerticeBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNormDibujadas), gl.STATIC_DRAW);
+        // console.log("norm dibujar: ", this.bufferNormDibujadas)
+        var trianglesColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);
+
+        var vertexPositionAttribute = gl.getAttribLocation(glProgramCurva, "aVertexPosition");
+        gl.enableVertexAttribArray(vertexPositionAttribute);
+        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+        gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+
+        var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
+        gl.enableVertexAttribArray(vertexColorAttribute);
+        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
+        gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
+        
+        gl.drawArrays(gl.LINES, 0, 2*this.bufferNormDibujadas.length/3);
     }
 
-    trasladar(x, y, z) {
-        this.posicion[0] = this.posicion[0] + x;
-        this.posicion[1] = this.posicion[1] + y;
-        this.posicion[2] = this.posicion[2] + z;
-    }
-
-    rotarX(rad) {
-        this.rotacionX += rad;
-    }
-
-    rotarY(rad) {
-        this.rotacionY += rad;
-    }
-
-    rotarZ(rad) {
-        this.rotacionZ += rad;
-    }
-
-    escalar(x, y, z) {
-        this.escala[0] = this.escala[0] * x;
-        this.escala[1] = this.escala[1] * y;
-        this.escala[2] = this.escala[2] * z;
-    }
 
     crearMalla() {
         function getVertexIndex(i, j, columnas) {

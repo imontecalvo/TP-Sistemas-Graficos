@@ -8,7 +8,7 @@ import { Superficie } from "./superficie.js";
 import { superficeBarrido } from "./superficieBarrido.js";
 import { superficieRevolucion } from "./superficieRevolucion.js";
 import { BezierCubica } from "./bezier/bezier3.js";
-import {Periferia, Centro} from "./elementosEscena/centro.js"
+import {Periferia, Centro, Terreno} from "./elementosEscena/terreno.js"
 
 var mat4 = glMatrix.mat4;
 
@@ -22,7 +22,8 @@ export class Escena {
         // this.plano = new Esfera(100,100,1)
         // this.plano.trasladar(0,0,0)
         // this.camera = new CamaraInteractuableArrastre()
-        this.centro = new Esfera(20,20,0.2)
+        this.centro = new Esfera(20,20,0.2,[0,0,0])
+        // this.esferita = new Esfera(50,50,2, [0,0,0])
         // this.ref = new Esfera(20,20,0.2,[1,0,0])
         // this.ref.trasladar(0,0,5)
         // this.curva = new LineaCurva([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
@@ -39,8 +40,10 @@ export class Escena {
         // let revData = superficeRevolucion(curvaRev, 10, 21)
         // this.supRev = new Superficie(20,10,revData[0],revData[1])
         // this.curva2 = new LineaCurva([[0, 3, 0], [3, 1, 0], [3, -1, 0], [0, -3, 0]])
-        this.plataforma = new Centro()
-        this.periferia = new Periferia()
+        // this.plataforma = new Centro()
+        // this.periferia = new Periferia()
+        this.terreno = new Terreno()
+        // this.terreno.trasladar(15,5,2)
     }
 
     actualizar(){
@@ -48,18 +51,20 @@ export class Escena {
     }
 
     obtenerVista(){
-        return this.camara.generarVista(this.centro.posicion)
+        return this.camara.generarVista([0,0,0])
     }
 
     dibujar(){
         this.ejes.dibujar()
-        this.plataforma.dibujar(this.matriz)
-        this.periferia.dibujar(this.matriz)
+        this.centro.dibujar(this.matriz)
+        this.terreno.dibujar(this.matriz)
+        // this.plataforma.dibujar(this.matriz)
+        // this.periferia.dibujar(this.matriz)
+        // this.esferita.dibujar(this.matriz)
         // this.plano.dibujar(this.matriz)
         // this.camara.actualizar()
         // this.esferaDirigible.actualizar()
         // this.esferaDirigible.dibujar(this.matriz)
-        // this.centro.dibujar(this.matriz)
         // this.curva.dibujar()
         // this.recorrido.dibujar()
         // this.curva2.dibujar()

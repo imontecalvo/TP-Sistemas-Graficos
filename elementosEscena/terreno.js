@@ -3,7 +3,19 @@ import {BezierCubica} from "../bezier/bezier3.js"
 import { superficieRevolucion } from "../superficieRevolucion.js";
 import { discretizar } from "../bezier/discretizador.js";
 
-export class Centro extends Objeto3D {
+var mat4 = glMatrix.mat4;
+
+export class Terreno extends Objeto3D{
+    constructor(){
+        super()
+        this.agregarHijo(new Centro())
+        this.agregarHijo(new Periferia())
+        
+        this.modelMatrix = mat4.create()
+    }
+}
+
+class Centro extends Objeto3D {
     constructor() {
         super()
         const radio = 20
@@ -32,7 +44,7 @@ export class Centro extends Objeto3D {
     }
 }
 
-export class Periferia extends Objeto3D {
+class Periferia extends Objeto3D {
     constructor() {
         super()
         this.filas = 8
