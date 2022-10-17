@@ -8,7 +8,7 @@ import { Superficie } from "./superficie.js";
 import { superficeBarrido } from "./superficieBarrido.js";
 import { superficieRevolucion } from "./superficieRevolucion.js";
 import { BezierCubica } from "./bezier/bezier3.js";
-import {Centro} from "./elementosEscena/centro.js"
+import {Periferia, Centro} from "./elementosEscena/centro.js"
 
 var mat4 = glMatrix.mat4;
 
@@ -40,6 +40,7 @@ export class Escena {
         // this.supRev = new Superficie(20,10,revData[0],revData[1])
         // this.curva2 = new LineaCurva([[0, 3, 0], [3, 1, 0], [3, -1, 0], [0, -3, 0]])
         this.plataforma = new Centro()
+        this.periferia = new Periferia()
     }
 
     actualizar(){
@@ -53,6 +54,7 @@ export class Escena {
     dibujar(){
         this.ejes.dibujar()
         this.plataforma.dibujar(this.matriz)
+        this.periferia.dibujar(this.matriz)
         // this.plano.dibujar(this.matriz)
         // this.camara.actualizar()
         // this.esferaDirigible.actualizar()

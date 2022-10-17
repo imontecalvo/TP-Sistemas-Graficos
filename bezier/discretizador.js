@@ -1,4 +1,4 @@
-export function discretizar(curva, deltaU, esRecorrido = false) {
+export function discretizar(curva, deltaU, esRecorrido = false, invertirNormales = false) {
     const puntos = []
     const tangentes = []
     const normales = []
@@ -15,7 +15,8 @@ export function discretizar(curva, deltaU, esRecorrido = false) {
 
         puntos.push(punto)
         tangentes.push(tangente)
-        normales.push(productoVectorial(tangente, binormal))
+        if(invertirNormales) normales.push(productoVectorial(tangente, binormal))
+        else normales.push(productoVectorial(binormal, tangente))
 
         u+=deltaU
     }
