@@ -4,9 +4,7 @@ var vec3 = glMatrix.vec3;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(filas, columnas) {
-        this.filas = filas;
-        this.columnas = columnas;
+    constructor() {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.posicion = vec3.fromValues(0, 0, 0);
@@ -110,5 +108,71 @@ export class Objeto3D {
         this.escala[0] = this.escala[0] * x;
         this.escala[1] = this.escala[1] * y;
         this.escala[2] = this.escala[2] * z;
+    }
+
+    crearMalla() {
+        function getVertexIndex(i, j, columnas) {
+            return i * (columnas + 1) + j;
+        }
+    
+        // Buffer de indices de los triángulos
+        let indexBuffer = [];
+    
+        for (let i = 0; i < this.filas; i++) {
+            for (let j = 0; j <= this.columnas; j++) {
+                indexBuffer.push(getVertexIndex(i, j, this.columnas));
+                indexBuffer.push(getVertexIndex(i + 1, j, this.columnas));
+                if (j == this.columnas && i < this.filas - 1) {
+                    indexBuffer.push(getVertexIndex(i + 1, j, this.columnas));
+                    indexBuffer.push(getVertexIndex(i, j, this.columnas) + 1);
+                }
+            }
+        }
+    
+        // Creación e Inicialización de los buffers
+    
+        let webgl_position_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_position_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferPos), gl.STATIC_DRAW);
+        webgl_position_buffer.itemSize = 3;
+        webgl_position_buffer.numItems = this.bufferPos.length / 3;
+    
+        let webgl_normal_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);
+        webgl_normal_buffer.itemSize = 3;
+        webgl_normal_buffer.numItems = this.bufferPos.length / 3;
+    
+        // webgl_uvs_buffer = gl.createBuffer();
+        // gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
+        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
+        // webgl_uvs_buffer.itemSize = 2;
+        // webgl_uvs_buffer.numItems = uvBuffer.length / 2;
+    
+    
+        let webgl_index_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webgl_index_buffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexBuffer), gl.STATIC_DRAW);
+        webgl_index_buffer.itemSize = 1;
+        webgl_index_buffer.numItems = indexBuffer.length;
+    
+        return {
+            webgl_position_buffer,
+            webgl_normal_buffer,
+            // webgl_uvs_buffer,
+            webgl_index_buffer
+        }
+    }
+
+    calcularNormalesDibujadas(){
+        for (let i = 0; i < this.bufferPos.length-3; i+=3) {
+            this.bufferNormDibujadas.push(this.bufferPos[i])
+            this.bufferNormDibujadas.push(this.bufferPos[i+1])
+            this.bufferNormDibujadas.push(this.bufferPos[i+2])
+
+            this.bufferNormDibujadas.push(this.bufferPos[i] + this.bufferNorm[i])
+            this.bufferNormDibujadas.push(this.bufferPos[i+1] + this.bufferNorm[i+1])
+            this.bufferNormDibujadas.push(this.bufferPos[i+2] + this.bufferNorm[i+2])
+        }
     }
 }

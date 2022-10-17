@@ -1,12 +1,12 @@
-export function discretizar(curva, ejeBinormal, deltaU, esRecorrido = false) {
+export function discretizar(curva, deltaU, esRecorrido = false) {
     const puntos = []
     const tangentes = []
     const normales = []
     let binormal = []
 
-    if (ejeBinormal == "x") binormal = [1, 0, 0]
-    else if (ejeBinormal == "y") binormal = [0, 1, 0]
-    else if (ejeBinormal == "z") binormal = [0, 0, 1]
+    if (curva.ejeBinormal == "x") binormal = [1, 0, 0]
+    else if (curva.ejeBinormal == "y") binormal = [0, 1, 0]
+    else if (curva.ejeBinormal == "z") binormal = [0, 0, 1]
 
     let u = 0
     while ( u-1 <= 10**(-15)){
@@ -15,7 +15,7 @@ export function discretizar(curva, ejeBinormal, deltaU, esRecorrido = false) {
 
         puntos.push(punto)
         tangentes.push(tangente)
-        normales.push(productoVectorial(binormal, tangente))
+        normales.push(productoVectorial(tangente, binormal))
 
         u+=deltaU
     }

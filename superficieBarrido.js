@@ -13,8 +13,8 @@ export function superficeBarrido(curva, recorrido, columnas, niveles) {
 
     let puntosTransformados = []
     let normalesTransformadas = []
-    const puntosCurva = discretizar(curva, "z", 1 / columnas, false)
-    const puntosRecorrido = discretizar(recorrido, "y", 1 / (niveles-1), true)
+    const puntosCurva = discretizar(curva, 1 / columnas, false)
+    const puntosRecorrido = discretizar(recorrido, 1 / (niveles-1), true)
     // console.log("recorrido:", puntosRecorrido)
 
     // Recorro c/u de los niveles del recorrido

@@ -1,9 +1,10 @@
 export class BezierCubica {
-    constructor(puntosControl) {
+    constructor(puntosControl, ejeBinormal) {
         this.p0 = puntosControl[0];
         this.p1 = puntosControl[1];
         this.p2 = puntosControl[2];
         this.p3 = puntosControl[3];
+        this.ejeBinormal = ejeBinormal
     }
 
     base0(u) { return (1 - u) * (1 - u) * (1 - u) }
