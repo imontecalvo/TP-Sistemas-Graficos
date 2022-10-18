@@ -1,11 +1,21 @@
-import { BezierCubica } from "./bezier/bezier3.js";
-import { discretizar } from "./bezier/discretizador.js";
-import { gl, glProgramCurva } from "./web-gl.js";
+import { BezierCubica } from "../bezier/bezier3.js"
+import { discretizar } from "../bezier/discretizador.js"
+import { Objeto3D } from "../objeto3d.js"
+import { superficieRevolucion } from "../superficieRevolucion.js";
+// Columnas: cant de puntos que forman un segmento transversal de la torre MENOS 1
+// Filas: cant niveles MAS 1
 
-var mat4 = glMatrix.mat4;
-
-export class LineaCurva {
-    constructor(puntosDeControl) {
+export class Muralla extends Objeto3D {
+    constructor() {
+        super()
+        this.lados = 8
+        this.filas = this.lados-1
+        this.columnas = 35
+        var puntosCurva = []
+        this.curvaLado = new BezierCubica([[17,-1.5,0],[17,-0.5,0],[17,-0.1,0],[17,0,0]], "z")
+        this.curvaCentro = new BezierCubica([[6,5,0],[6.9,7,0],[7.1,7,0],[8,5,0]], "z")
+        const puntosPendiente = discretizar(this.curvaLado, 1, false)
+        const puntosCentro = discretizar(this.curvaCentro, 1/10, false)
 
         const h = 0.5
         const a = 0.25
@@ -33,7 +43,7 @@ export class LineaCurva {
         const balconDLadoI = new BezierCubica(pControlBalconILadoD.map(p => [0.5 + p[0], p[1], p[2]]), "z")
         const balconPisoD = new BezierCubica(pControlBalconPiso.map(p => [0.25 + p[0], p[1], p[2]]), "z")
 
-        const puntosLadoI = discretizar(ladoI, 1 / 9, false)
+        const puntosLadoI = discretizar(ladoI, 1 / 9, false, false)
         const puntosBalconILadoI = discretizar(balconILadoI, 1, false)
         const puntosBalconITecho = discretizar(balconITecho, 1, false)
         const puntosBalconILadoD = discretizar(balconILadoD, 1, false)
@@ -43,9 +53,10 @@ export class LineaCurva {
         const puntosBalconDLadoI = discretizar(balconDLadoI, 1, false)
         const puntosBalconDTecho = discretizar(balconDTecho, 1, false)
         const puntosBalconDLadoD = discretizar(balconDLadoD, 1, false)
-        const puntosLadoD = discretizar(ladoD, 1 / 9, false)
+        const puntosLadoD = discretizar(ladoD, 1 / 9, false, true)
 
-        const pos = puntosLadoI.posicion.concat(
+        const pos = 
+        puntosLadoI.posicion.concat(
             puntosBalconILadoI.posicion,
             puntosBalconITecho.posicion,
             puntosBalconILadoD.posicion,
@@ -57,39 +68,39 @@ export class LineaCurva {
             puntosLadoD.posicion.reverse()
         )
 
-        // this.curva = new BezierCubica(puntosDeControl)
-        this.vertices = pos
-        this.bufferPos = [].concat(...pos)
-        this.bufferColor = [].concat(...this.vertices.map(x => [0, 0, 0]))
-        console.log("puntos curvita: ", this.vertices)
+        const norm = 
+        puntosLadoI.normal.concat(
+            puntosBalconILadoI.normal,
+            puntosBalconITecho.normal,
+            puntosBalconILadoD.normal,
+            puntosBalconPiso.normal,
+            puntosBalconPisoD.normal,
+            puntosBalconDLadoI.normal,
+            puntosBalconDTecho.normal,
+            puntosBalconDLadoD.normal,
+            puntosLadoD.normal.reverse()
+        )
+
+
+        // puntosCurva = {
+        //     posicion:puntosPendiente.posicion.concat(puntosCentro.posicion),
+        //     normal:puntosPendiente.normal.concat(puntosCentro.normal),
+        // }
         
-    }
+        puntosCurva = {
+            posicion:pos,
+            normal:norm,
+        }
 
-    dibujar() {
-        // console.log("dibu curva: ", this.bufferPos)
-        gl.useProgram(glProgramCurva);
-        var trianglesVerticeBuffer = gl.createBuffer();                               // creo el buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);                   // activo el buffer
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferPos), gl.STATIC_DRAW);   // cargo los datos en el buffer 
+        console.log("topee: ", 1-1/this.filas)
+        const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1, 1-1/this.lados, 1/this.lados)
+        // console.log("puntos curva: ", data[0])
 
-        var trianglesColorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferColor), gl.STATIC_DRAW);
-
-        var vertexPositionAttribute = gl.getAttribLocation(glProgramCurva, "aVertexPosition");
-        gl.enableVertexAttribArray(vertexPositionAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-        gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-
-        var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
-        gl.enableVertexAttribArray(vertexColorAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-        gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
-        
-        gl.drawArrays(gl.LINE_STRIP, 0, 36);
+        this.bufferPos = data[0]
+        this.bufferNorm = data[1]
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+        this.mallaDeTriangulos = this.crearMalla()
+        this.color = [0,0,0]
     }
 }
-
-// agregar 3er componente a pcontrol
-// corregir desplazamientos en parte de arriba
-// Reverse al ultimo lado

@@ -8,7 +8,8 @@ import { Superficie } from "./superficie.js";
 import { superficeBarrido } from "./superficieBarrido.js";
 import { superficieRevolucion } from "./superficieRevolucion.js";
 import { BezierCubica } from "./bezier/bezier3.js";
-import {Periferia, Centro, Terreno} from "./elementosEscena/terreno.js"
+import {Terreno} from "./elementosEscena/terreno.js"
+import {Muralla} from "./elementosEscena/muralla.js"
 
 var mat4 = glMatrix.mat4;
 
@@ -26,7 +27,7 @@ export class Escena {
         // this.esferita = new Esfera(50,50,2, [0,0,0])
         // this.ref = new Esfera(20,20,0.2,[1,0,0])
         // this.ref.trasladar(0,0,5)
-        // this.curva = new LineaCurva([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
+        this.curva = new LineaCurva([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
         
         // this.recorrido = new LineaCurva([[0,2,3], [3,2,0],[0,2,-3],[-3,2,0]])
         // let curva = new BezierCubica([[-5, 5, 0], [-0.5, 0, 0], [0.5, 0, 0], [5, 5, 0]],"z")
@@ -43,6 +44,7 @@ export class Escena {
         // this.plataforma = new Centro()
         // this.periferia = new Periferia()
         this.terreno = new Terreno()
+        this.muralla = new Muralla()
         // this.terreno.trasladar(15,5,2)
     }
 
@@ -56,8 +58,9 @@ export class Escena {
 
     dibujar(){
         this.ejes.dibujar()
-        this.centro.dibujar(this.matriz)
+        // this.centro.dibujar(this.matriz)
         this.terreno.dibujar(this.matriz)
+        this.muralla.dibujar(this.matriz)
         // this.plataforma.dibujar(this.matriz)
         // this.periferia.dibujar(this.matriz)
         // this.esferita.dibujar(this.matriz)

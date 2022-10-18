@@ -3,13 +3,14 @@ import { productoVectorial, discretizar } from "./bezier/discretizador.js";
 var mat4 = glMatrix.mat4;
 var vec4 = glMatrix.vec4;
 
-export function superficieRevolucion(puntosCurva, columnas, niveles) {
+export function superficieRevolucion(puntosCurva, columnas, niveles, tope = 1, delta = 1/(niveles-1)) {
     let puntosTransformados = []
     let normalesTransformadas = []
-    const puntosRecorrido = getRecorrido(niveles)
-    console.log("puntos curva: ", puntosCurva)
+    const puntosRecorrido = getRecorrido(niveles, tope, delta)
+    // console.log("puntos curva: ", puntosCurva)
     // Recorro c/u de los niveles del recorrido
     for (let i = 0; i < niveles; i++) {
+        console.log("nivel: ", i)
         const matrizDeNivel = generarMatrizDeNivel(puntosRecorrido.posicion[i],
             puntosRecorrido.normal[i],
             puntosRecorrido.binormal,
@@ -58,21 +59,21 @@ function generarMatrizDeNivel(pos, normal, binormal, tangente) {
     ]
 }
 
-function getRecorrido(niveles){
+function getRecorrido(niveles, tope, delta){
     const posiciones = []
     const normales = []
     const tangentes = []
     const binormales = []
-
+    console.log("tope: ", tope)
     let i = 0
-    while ( i-1 <= 10**(-15)){
+    while ( i-tope <= 10**(-15)){
         console.log(1/(niveles-1), i)
         posiciones.push([0, 0, 0])
         binormales.push([0,1,0])
         tangentes.push([Math.cos(i*2*Math.PI), 0, Math.sin(i*2*Math.PI)])
         normales.push(productoVectorial([Math.cos(i*2*Math.PI), 0, Math.sin(i*2*Math.PI)],[0,1,0]))
 
-        i+=1/(niveles-1)
+        i+=delta
     }
     return {posicion:posiciones, tangente: tangentes, normal:normales, binormal:[0,1,0]}
 }

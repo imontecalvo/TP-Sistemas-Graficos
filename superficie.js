@@ -85,5 +85,4 @@ function crearMalla(superficie) {
         // webgl_uvs_buffer,
         webgl_index_buffer
     }
-
 }
