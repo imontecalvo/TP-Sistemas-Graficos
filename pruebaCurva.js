@@ -9,17 +9,15 @@ export class LineaCurva {
 
         const h = 0.5
         const a = 0.25
-
+        const ancho = 2
         //muro
-        // const pControlLadoI = [[6, 0, 0], [6.10, 1.60, 0], [6.40, 2.33, 0], [6.5, 4, 0]]
-        // const ladoI = new BezierCubica(pControlLadoI, "z")
-        // const puntosLadoI = discretizar(ladoI, 1 / this.columnas, false)
-        const pControlLadoI = [[6, 0, 0], [6.10, 1.60, 0], [6.40, 2.33, 0], [6.5, 4, 0]]
-        const pControlBalconILadoI = [[6.5, 4,0], [6.5, 4 + h * 0.3,0], [6.5, 4 + h * 0.6,0], [6.5, 4 + h,0]]
+        const radio = 10
+        const pControlLadoI = [[radio, 0, 0], [radio + 0.10, 1.60, 0], [radio + .40, 2.33, 0], [radio + .5, 4, 0]]
+        const pControlBalconILadoI = [[radio + .5, 4, 0], [radio + .5, 4 + h * 0.3, 0], [radio + .5, 4 + h * 0.6, 0], [radio + .5, 4 + h, 0]]
         console.log("balcon: ", pControlBalconILadoI)
-        const pControlBalconITecho = [[6.5, 4 + h, 0], [6.5 + a * 0.3, 4 + h,0], [6.5 + a * 0.6, 4 + h,0], [6.5 + a, 4 + h,0]]
-        const pControlBalconILadoD = [[6.5 + a, 4 + h,0], [6.5 + a, 4 + h * 0.6,0], [6.5 + a, 4 + h * 0.3,0], [6.5 + a, 4,0]]
-        const pControlBalconPiso = [[6.5 + a, 4,0], [6.5 + 1.3 * a, 4,0], [6.5 + 1.6 * a, 4,0], [6.5 + 2 * a, 4,0]]
+        const pControlBalconITecho = [[radio + .5, 4 + h, 0], [radio + .5 + a * 0.3, 4 + h, 0], [radio + .5 + a * 0.6, 4 + h, 0], [radio + .5 + a, 4 + h, 0]]
+        const pControlBalconILadoD = [[radio + .5 + a, 4 + h, 0], [radio + .5 + a, 4 + h * 0.6, 0], [radio + .5 + a, 4 + h * 0.3, 0], [radio + .5 + a, 4, 0]]
+        const pControlBalconPiso = [[radio + .5 + a, 4, 0], [radio + .5 + 1.3 * a, 4, 0], [radio + .5 + 1.6 * a, 4, 0], [radio + .5 + 2 * a, 4, 0]]
 
         const ladoI = new BezierCubica(pControlLadoI, "z")
         const balconILadoI = new BezierCubica(pControlBalconILadoI, "z")
@@ -27,7 +25,7 @@ export class LineaCurva {
         const balconILadoD = new BezierCubica(pControlBalconILadoD, "z")
         const balconPiso = new BezierCubica(pControlBalconPiso, "z")
 
-        const ladoD = new BezierCubica(pControlLadoI.map(p => [6 + 8 - p[0], p[1], p[2]]), "z")
+        const ladoD = new BezierCubica(pControlLadoI.map(p => [2 * radio + ancho - p[0], p[1], p[2]]), "z")
         const balconDLadoD = new BezierCubica(pControlBalconILadoI.map(p => [1 + p[0], p[1], p[2]]), "z")
         const balconDTecho = new BezierCubica(pControlBalconITecho.map(p => [0.75 + p[0], p[1], p[2]]), "z")
         const balconDLadoI = new BezierCubica(pControlBalconILadoD.map(p => [0.5 + p[0], p[1], p[2]]), "z")
@@ -57,17 +55,46 @@ export class LineaCurva {
             puntosLadoD.posicion.reverse()
         )
 
+        //porton
+        // const ptosCtrlAbajo = [[-1.5, 0, 0], [-1, 0, 0], [1, 0, 0], [1.5, 0, 0]]
+        // const ptosCtrlIzq = [[-1.5, 0, 0], [-1.5, 1, 0], [-1.5, 2, 0], [-1.5, 3, 0]]
+        // const ptosCtrlArriba = [[-1.5, 3, 0], [-1, 3, 0], [1, 3, 0], [1.5, 3, 0]]
+        // const ptosCtrlDerecha = [[1.5, 3, 0], [1.5, 2, 0], [1.5, 1, 0], [1.5, 0, 0]]
+
+        // const curvaAbajo = new BezierCubica(ptosCtrlAbajo, "z")
+        // const curvaIzq = new BezierCubica(ptosCtrlIzq, "z")
+        // const curvaArriba = new BezierCubica(ptosCtrlArriba, "z")
+        // const curvaDerecha = new BezierCubica(ptosCtrlDerecha, "z")
+
+        // const puntosAbajo = discretizar(curvaAbajo, 1, false)
+        // const puntosIzq = discretizar(curvaIzq, 1, false)
+        // const puntosArriba = discretizar(curvaArriba, 1, false)
+        // const puntosDerecha = discretizar(curvaDerecha, 1, false)
+
+        // const pos =
+        //     puntosAbajo.posicion.concat(
+        //         puntosIzq.posicion,
+        //         puntosArriba.posicion,
+        //         puntosDerecha.posicion
+        //     )
+
+
+
         // this.curva = new BezierCubica(puntosDeControl)
         this.vertices = pos
         this.bufferPos = [].concat(...pos)
         this.bufferColor = [].concat(...this.vertices.map(x => [0, 0, 0]))
         console.log("puntos curvita: ", this.vertices)
-        
+
     }
 
     dibujar() {
         // console.log("dibu curva: ", this.bufferPos)
         gl.useProgram(glProgramCurva);
+        const mat = mat4.create()
+        var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
+        gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+
         var trianglesVerticeBuffer = gl.createBuffer();                               // creo el buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);                   // activo el buffer
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferPos), gl.STATIC_DRAW);   // cargo los datos en el buffer 
@@ -85,7 +112,7 @@ export class LineaCurva {
         gl.enableVertexAttribArray(vertexColorAttribute);
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
         gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
-        
+
         gl.drawArrays(gl.LINE_STRIP, 0, 36);
     }
 }

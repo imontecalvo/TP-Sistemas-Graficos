@@ -3,22 +3,18 @@ import { discretizar } from "./bezier/discretizador.js";
 var mat4 = glMatrix.mat4;
 var vec4 = glMatrix.vec4;
 
-export function superficeBarrido(curva, recorrido, columnas, niveles) {
-    //filas = niveles-1
-    // let m = mat4.fromValues(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
-    // let v = vec4.fromValues(1, 1, 1, 1)
-    // mat4.transpose(m, m)
-    // vec4.transformMat4(v, v, m)
-    // console.log("pruebaaa matriz: ", v)
+export function superficeBarrido(puntosCurva, recorrido, columnas, niveles) {
+
+    
+    // filas = niveles-1
 
     let puntosTransformados = []
     let normalesTransformadas = []
-    const puntosCurva = discretizar(curva, 1 / columnas, false)
     const puntosRecorrido = discretizar(recorrido, 1 / (niveles-1), true)
-    // console.log("recorrido:", puntosRecorrido)
 
     // Recorro c/u de los niveles del recorrido
     for (let i = 0; i < niveles; i++) {
+        console.log("nivel: ", i)
         const matrizDeNivel = generarMatrizDeNivel(puntosRecorrido.posicion[i],
             puntosRecorrido.normal[i],
             puntosRecorrido.binormal,
@@ -45,10 +41,8 @@ export function superficeBarrido(curva, recorrido, columnas, niveles) {
             normalesTransformadas.push(normalVec4[0])
             normalesTransformadas.push(normalVec4[1])
             normalesTransformadas.push(normalVec4[2])
-            // console.log("NORMALES- x: ", normalVec4[0], " y: ", normalVec4[1], " z: ", normalVec4[2])
         }
     }
-    // console.log("puntoss: ", puntosTransformados)
     return [puntosTransformados, normalesTransformadas]
 }
 

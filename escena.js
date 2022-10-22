@@ -1,5 +1,5 @@
-import {CamaraInteractuableArrastre} from "./camara.js"
-import {Esfera, Plano} from "./esfera.js"
+import { CamaraInteractuableArrastre } from "./camara.js"
+import { Esfera, Plano } from "./esfera.js"
 import { EsferaDirigible } from "./esferaDirigible.js";
 import { Camara } from "./camara2.js";
 import { EjesEscena } from "./ejesEscena.js";
@@ -8,13 +8,13 @@ import { Superficie } from "./superficie.js";
 import { superficeBarrido } from "./superficieBarrido.js";
 import { superficieRevolucion } from "./superficieRevolucion.js";
 import { BezierCubica } from "./bezier/bezier3.js";
-import {Terreno} from "./elementosEscena/terreno.js"
-import {Muralla} from "./elementosEscena/muralla.js"
+import { Terreno } from "./elementosEscena/terreno.js"
+import { Muralla } from "./elementosEscena/muralla.js"
 
 var mat4 = glMatrix.mat4;
 
 export class Escena {
-    constructor(){
+    constructor() {
         this.ejes = new EjesEscena()
         this.matriz = mat4.create()
         this.camara = new Camara()
@@ -23,12 +23,19 @@ export class Escena {
         // this.plano = new Esfera(100,100,1)
         // this.plano.trasladar(0,0,0)
         // this.camera = new CamaraInteractuableArrastre()
-        this.centro = new Esfera(20,20,0.2,[0,0,0])
+        this.centro = new Esfera(20, 20, 0.2, [0, 0, 0])
         // this.esferita = new Esfera(50,50,2, [0,0,0])
         // this.ref = new Esfera(20,20,0.2,[1,0,0])
         // this.ref.trasladar(0,0,5)
-        this.curva = new LineaCurva([[-5,5,0], [-0.5,0,0],[0.5,0,0],[5,5,0]])
+        this.curva = new LineaCurva([[-5, 5, 0], [-0.5, 0, 0], [0.5, 0, 0], [5, 5, 0]])
         
+        this.esfera1 = new Esfera(20,20,0.2,[0,0,0])
+        this.esfera1.trasladar(0,0,7)
+
+        this.esfera2 = new Esfera(20,20,0.2,[0,0,0])
+        this.esfera2.trasladar(4.949747562408447,0,4.949747562408447)
+        
+
         // this.recorrido = new LineaCurva([[0,2,3], [3,2,0],[0,2,-3],[-3,2,0]])
         // let curva = new BezierCubica([[-5, 5, 0], [-0.5, 0, 0], [0.5, 0, 0], [5, 5, 0]],"z")
         // let recorrido = new BezierCubica([[10, 0, 0,], [4, 0, -12], [-4, 0, -12], [-10, 0, 0]],"y")
@@ -48,19 +55,21 @@ export class Escena {
         // this.terreno.trasladar(15,5,2)
     }
 
-    actualizar(){
+    actualizar() {
         this.camara.actualizar()
     }
 
-    obtenerVista(){
-        return this.camara.generarVista([0,0,0])
+    obtenerVista() {
+        return this.camara.generarVista([0, 0, 0])
     }
 
-    dibujar(){
+    dibujar() {
         this.ejes.dibujar()
         // this.centro.dibujar(this.matriz)
         this.terreno.dibujar(this.matriz)
         this.muralla.dibujar(this.matriz)
+        this.esfera1.dibujar(this.matriz)
+        this.esfera2.dibujar(this.matriz)
         // this.plataforma.dibujar(this.matriz)
         // this.periferia.dibujar(this.matriz)
         // this.esferita.dibujar(this.matriz)
