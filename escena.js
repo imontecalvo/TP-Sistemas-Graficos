@@ -66,7 +66,7 @@ export class Escena {
     dibujar() {
         this.ejes.dibujar()
         // this.centro.dibujar(this.matriz)
-        this.terreno.dibujar(this.matriz)
+        // this.terreno.dibujar(this.matriz)
         this.muralla.dibujar(this.matriz)
         this.esfera1.dibujar(this.matriz)
         this.esfera2.dibujar(this.matriz)
@@ -77,7 +77,7 @@ export class Escena {
         // this.camara.actualizar()
         // this.esferaDirigible.actualizar()
         // this.esferaDirigible.dibujar(this.matriz)
-        // this.curva.dibujar()
+        this.curva.dibujar()
         // this.recorrido.dibujar()
         // this.curva2.dibujar()
         // this.ref.dibujar(this.matriz, "red")

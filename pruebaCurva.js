@@ -11,7 +11,7 @@ export class LineaCurva {
         const a = 0.25
         const ancho = 2
         //muro
-        const radio = 10
+        const radio = 6
         const pControlLadoI = [[radio, 0, 0], [radio + 0.10, 1.60, 0], [radio + .40, 2.33, 0], [radio + .5, 4, 0]]
         const pControlBalconILadoI = [[radio + .5, 4, 0], [radio + .5, 4 + h * 0.3, 0], [radio + .5, 4 + h * 0.6, 0], [radio + .5, 4 + h, 0]]
         console.log("balcon: ", pControlBalconILadoI)
@@ -43,7 +43,7 @@ export class LineaCurva {
         const puntosBalconDLadoD = discretizar(balconDLadoD, 1, false)
         const puntosLadoD = discretizar(ladoD, 1 / 9, false)
 
-        const pos = puntosLadoI.posicion.concat(
+        const puntosCurvaMuralla = puntosLadoI.posicion.concat(
             puntosBalconILadoI.posicion,
             puntosBalconITecho.posicion,
             puntosBalconILadoD.posicion,
@@ -55,6 +55,47 @@ export class LineaCurva {
             puntosLadoD.posicion.reverse()
         )
 
+        var mat4 = glMatrix.mat4;
+        var vec4 = glMatrix.vec4;
+
+        const anchoPorton = 2
+        let posInicio = []
+        let normInicio = []
+        let posFin = []
+        let normFin = []
+
+        const matInicioMuralla = mat4.create()
+        const matFinMuralla = mat4.create()
+
+        const mat = mat4.create()
+        // mat4.translate(mat,mat, [-1,0,0])
+        mat4.rotateY(mat, mat, Math.PI / 2)
+        mat4.translate(mat, mat, [-radio-1, 0, 0])
+        mat4.translate(matInicioMuralla, matInicioMuralla, [-1,0,0])
+        mat4.multiply(matInicioMuralla, matInicioMuralla, mat)
+        
+        // mat4.translate(matInicioMuralla, matInicioMuralla, [-anchoPorton, 0, 0])
+        // mat4.translate(matInicioMuralla, matInicioMuralla, [0, 0, -anchoPorton])
+        
+        // mat4.scale(matInicioMuralla, matInicioMuralla, [2,4,2])
+        // mat4.rotate(matInicioMuralla, matFinMuralla, 3.14/2, [0,1,0])
+        // mat4.transpose(matInicioMuralla, matInicioMuralla)
+        // console.log("maat: ", matInicioMuralla)
+        // mat4.transpose(matFinMuralla, matFinMuralla)
+
+        for (let i = 0; i < puntosCurvaMuralla.length; i++) {
+            const posActualInicio = vec4.fromValues(puntosCurvaMuralla[i][0],puntosCurvaMuralla[i][1],puntosCurvaMuralla[i][2], 1)
+            const posActualFin = [puntosCurvaMuralla[i][0],puntosCurvaMuralla[i][1],puntosCurvaMuralla[i][2], 1]
+
+            vec4.transformMat4(posActualInicio, posActualInicio, matInicioMuralla)
+            vec4.transformMat4(posActualFin, posActualFin, matFinMuralla)
+
+            posInicio.push(posActualInicio[0], posActualInicio[1], posActualInicio[2])
+            posFin.push(posActualFin[0], posActualFin[1], posActualFin[2])
+        }
+
+        const pos = posInicio
+        console.log("curvaaaaSasd: ", posInicio)
         //porton
         // const ptosCtrlAbajo = [[-1.5, 0, 0], [-1, 0, 0], [1, 0, 0], [1.5, 0, 0]]
         // const ptosCtrlIzq = [[-1.5, 0, 0], [-1.5, 1, 0], [-1.5, 2, 0], [-1.5, 3, 0]]
@@ -79,6 +120,63 @@ export class LineaCurva {
         //     )
 
 
+        // Recta entrada
+        // let pos = [[0, 0, 7], [6.062177658081055, 0, 3.5],]
+
+        // Marco puerta
+        // const largo = 3
+        // const anchoMarco = 0.25
+        // const alto = 2
+        // const profundidad = 1
+
+        // const ptosCtrlAbajoDer = [[largo / 2 + anchoMarco, 0, profundidad / 2], [largo / 2 + anchoMarco * 0.5, 0, profundidad / 2], [largo / 2 + anchoMarco * 0.2, 0, profundidad / 2], [largo / 2, 0, profundidad / 2]]
+        // const ptosCtrlLadoDerInt = [[largo / 2, 0, profundidad / 2], [largo / 2, alto * 0.2, profundidad / 2], [largo / 2, alto * 0.5, profundidad / 2], [largo / 2, alto, profundidad / 2]]
+        // const ptosCtrlArribaInt = [[largo / 2, alto, profundidad / 2], [0.5 * largo / 2, alto, profundidad / 2], [-0.5 * largo / 2, alto, profundidad / 2], [-largo / 2, alto, profundidad / 2]]
+        // const ptosCtrlLadoIzqInt = ptosCtrlLadoDerInt.map(x => ([x[0] - largo, x[1], x[2]])).reverse()
+        // const ptosCtrlAbajoIzq = ptosCtrlAbajoDer.map(x => ([x[0] - largo - anchoMarco, x[1], x[2]]))
+        // const ptosCtrlLadoIzqExt = ptosCtrlLadoDerInt.map(x => ([x[0] - largo - anchoMarco, x[1], x[2]]))
+        // const ptosCtrlArribaExtIzq = [[-largo / 2 - anchoMarco, alto + anchoMarco, profundidad / 2], [-largo / 2 - anchoMarco * 0.5, alto + anchoMarco, profundidad / 2], [-largo / 2 - anchoMarco * 0.3, alto + anchoMarco, profundidad / 2], [-largo / 2, alto + anchoMarco, profundidad / 2]]
+        // const ptosCtrlArribaExt = ptosCtrlArribaInt.map(x => ([x[0], x[1] + anchoMarco, x[2]])).reverse()
+        // const ptosCtrlArribaExtDer = [[largo / 2, alto+anchoMarco, profundidad / 2], [largo / 2 + anchoMarco * 0.3, alto+anchoMarco, profundidad / 2], [largo / 2 + anchoMarco * 0.5, alto+anchoMarco, profundidad / 2], [largo / 2 + anchoMarco, alto+anchoMarco, profundidad / 2]]
+        // const ptosCtrlLadoDerExt = ptosCtrlLadoDerInt.map(x => ([x[0] + anchoMarco, x[1], x[2]])).reverse()
+
+        // const curvaAbajoDer = new BezierCubica(ptosCtrlAbajoDer, "z")
+        // const curvaLadoDerInt = new BezierCubica(ptosCtrlLadoDerInt, "z")
+        // const curvaArribaInt = new BezierCubica(ptosCtrlArribaInt, "z")
+        // const curvaLadoIzqInt = new BezierCubica(ptosCtrlLadoIzqInt, "z")
+        // const curvaLadoAbajoIzq = new BezierCubica(ptosCtrlAbajoIzq, "z")
+        // const curvaLadoIzqExt = new BezierCubica(ptosCtrlLadoIzqExt, "z")
+        // const curvaArribaExtIzq = new BezierCubica(ptosCtrlArribaExtIzq, "z")
+        // const curvaArribaExt = new BezierCubica(ptosCtrlArribaExt, "z")
+        // const curvaArribaExtDer = new BezierCubica(ptosCtrlArribaExtDer, "z")
+        // const curvaLadoDerExt = new BezierCubica(ptosCtrlLadoDerExt, "z")
+
+        // const ptosAbajoDer = discretizar(curvaAbajoDer, 1, false)
+        // const ptosLadoDerInt = discretizar(curvaLadoDerInt, 1, false)
+        // const ptosArribaInt = discretizar(curvaArribaInt, 1, false)
+        // const ptosLadoIzqInt = discretizar(curvaLadoIzqInt, 1, false)
+        // const ptosAbajoIzq = discretizar(curvaLadoAbajoIzq, 1, false)
+        // const ptosLadoIzqExt = discretizar(curvaLadoIzqExt, 1, false)
+        // const ptosArribaExtIzq = discretizar(curvaArribaExtIzq, 1, false)
+        // const ptosArribaExt = discretizar(curvaArribaExt, 1, false)
+        // const ptosArribaExtDer = discretizar(curvaArribaExtDer, 1, false)
+        // const ptosLadoDerExt = discretizar(curvaLadoDerExt, 1, false)
+
+        // const pos =
+        //     ptosAbajoDer.posicion.concat(
+        //         ptosLadoDerInt.posicion,
+        //         ptosArribaInt.posicion,
+        //         ptosLadoIzqInt.posicion,
+        //         ptosAbajoIzq.posicion,
+        //         ptosLadoIzqExt.posicion,
+        //         ptosArribaExtIzq.posicion,
+        //         ptosArribaExt.posicion,
+        //         ptosArribaExtDer.posicion,
+        //         ptosLadoDerExt.posicion,
+        //     )
+
+
+        // pos = [[largo / 2 + anchoMarco, 0, 0], [largo / 2, 0, 0], [largo / 2, alto, 0], [-largo / 2, alto, 0], [-largo / 2, 0, 0], [-largo / 2 - anchoMarco, 0, 0], [-largo / 2 - anchoMarco, alto+anchoMarco, 0], [largo / 2 + anchoMarco, alto+anchoMarco, 0], [largo / 2 + anchoMarco, 0, 0]]
 
         // this.curva = new BezierCubica(puntosDeControl)
         this.vertices = pos
@@ -89,6 +187,7 @@ export class LineaCurva {
     }
 
     dibujar() {
+        const puntos = 2 * 18;
         // console.log("dibu curva: ", this.bufferPos)
         gl.useProgram(glProgramCurva);
         const mat = mat4.create()
@@ -113,7 +212,7 @@ export class LineaCurva {
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
         gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.LINE_STRIP, 0, 36);
+        gl.drawArrays(gl.LINE_STRIP, 0, puntos);
     }
 }
 

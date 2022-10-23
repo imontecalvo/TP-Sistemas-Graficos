@@ -1,6 +1,6 @@
 import { gl, glProgram, glProgramCurva } from "./web-gl.js";
 var mat4 = glMatrix.mat4;
-var vec3 = glMatrix.vec3;
+var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
@@ -16,6 +16,17 @@ export class Objeto3D {
 
     trasladar(x,y,z){
         mat4.translate(this.matrizModelado, this.matrizModelado, [x,y,z]);
+    }
+
+    obtenerPosicion(){
+        const pos = vec4.fromValues(0,0,0,1)
+        vec4.transformMat4(pos, pos, this.matrizModelado)
+        return [pos[0],pos[1],pos[2]]
+    }
+
+    trasladarRelativo(x,y,z){
+        const pos = this.obtenerPosicion()
+        mat4.translate(this.matrizModelado, this.matrizModelado, [pos[0]+x,pos[1]+y,pos[2]+z]);
     }
 
     rotarX(rad){
