@@ -51,7 +51,7 @@ export class Escena {
         // this.plataforma = new Centro()
         // this.periferia = new Periferia()
         this.terreno = new Terreno()
-        this.muralla = new Muralla()
+        this.muralla = new Muralla(2,6)
         // this.terreno.trasladar(15,5,2)
     }
 
@@ -66,10 +66,10 @@ export class Escena {
     dibujar() {
         this.ejes.dibujar()
         // this.centro.dibujar(this.matriz)
-        // this.terreno.dibujar(this.matriz)
+        this.terreno.dibujar(this.matriz)
         this.muralla.dibujar(this.matriz)
-        this.esfera1.dibujar(this.matriz)
-        this.esfera2.dibujar(this.matriz)
+        // this.esfera1.dibujar(this.matriz)
+        // this.esfera2.dibujar(this.matriz)
         // this.plataforma.dibujar(this.matriz)
         // this.periferia.dibujar(this.matriz)
         // this.esferita.dibujar(this.matriz)
@@ -77,7 +77,7 @@ export class Escena {
         // this.camara.actualizar()
         // this.esferaDirigible.actualizar()
         // this.esferaDirigible.dibujar(this.matriz)
-        this.curva.dibujar()
+        // this.curva.dibujar()
         // this.recorrido.dibujar()
         // this.curva2.dibujar()
         // this.ref.dibujar(this.matriz, "red")
