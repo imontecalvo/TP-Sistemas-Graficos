@@ -10,8 +10,6 @@ export class LineaCurva2 {
         this.vertices = discretizar(this.curva, "z", 1 / 8, false).posicion
         this.bufferPos = []
         this.bufferColor = [].concat(...this.vertices.map(x => [0, 0, 0]))
-        console.log(this.bufferPos)
-        // console.log(this.bufferPos)
 
         this.recorrido = new BezierCubica([0,2,3], [3,2,0],[0,2,-3],[-3,2,0])
         this.verticesRecorrido = discretizar(this.recorrido, "y", 1/4, true)

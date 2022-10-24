@@ -33,7 +33,6 @@ class Centro extends Objeto3D {
         }
         
         const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1)
-        console.log("puntos curva: ", data[0])
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
@@ -61,7 +60,6 @@ class Periferia extends Objeto3D {
         }
         
         const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1)
-        console.log("puntos curva: ", data[0])
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]

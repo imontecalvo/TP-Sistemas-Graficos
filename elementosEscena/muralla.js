@@ -14,40 +14,57 @@ export class Muralla extends Objeto3D {
     constructor(altura, lados) {
         super()
         this.lados = lados
-        this.filas = this.lados - 1 + 2 + 4
+        this.filas = this.lados - 1  + 2 + 4
         this.columnas = 35
         this.largoEntrada = 2
         const h = 0.25
         const a = 0.25
         const radio = 6;
+        const anguloEntrada = Math.PI * 2 / (2 * this.lados)
 
         const puntosCurva = this.obtenerPuntosCurva(altura, h, a, radio)
         const data = superficieRevolucion(puntosCurva, this.columnas, this.lados, 1 - 1 / this.lados, 1 / this.lados)
 
-        const posPorton = this.obtenerPosPorton(data)
-        const anguloEntrada = Math.PI * 2 / (2 * this.lados)
+        //Rotamos para que la entrada quede de frente
+        const matRot = mat4.create()
+        mat4.rotateY(matRot,matRot,-anguloEntrada)
+        
+        let posicionMuralla = []
+        let normalesMuralla = []
+        for (let i = 0; i<data[0].length;i+=3){
+            const pos = [data[0][i], data[0][i+1], data[0][i+2], 1]
+            const norm = [data[1][i], data[1][i+1], data[1][i+2], 1]
+            vec4.transformMat4(pos,pos,matRot)
+            vec4.transformMat4(norm,norm,matRot)
 
+            posicionMuralla.push(pos[0],pos[1],pos[2])
+            normalesMuralla.push(norm[0],norm[1],norm[2])
+
+        }
+
+        // Creacion entrada
+        const posPorton = this.obtenerPosPorton(posicionMuralla)
         const entrada = new Entrada(2, this.largoEntrada, 0.25)
         entrada.trasladar(posPorton[0], posPorton[1], posPorton[2])
-        entrada.rotarY(Math.PI * 2 / (2 * this.lados))
         this.agregarHijo(entrada)
 
-        const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, posPorton, anguloEntrada)
-        const caras = this.obtenerCarasExtremos(extremos, anguloEntrada)
+        // Extremos y tapas de muralla
+        const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, posPorton)
+        const caras = this.obtenerCarasExtremos(extremos)
 
-
+        // Creacion torres
         for (let i = 0; i < this.lados; i++){
             const torre = new TorreMuralla(altura)
-            torre.rotarY(Math.PI * 2 / (this.lados) * i-Math.PI/2)
-            torre.trasladar(radio+1,0,0)
+            torre.rotarY(Math.PI * 2 / (this.lados) * i-Math.PI/(this.lados))
+            torre.trasladar(0,0,radio+1)
             this.agregarHijo(torre)
         }
 
-        this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion, data[0], extremos.fin.posicion, caras.fin.posicion)
-        this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal, data[1], extremos.fin.normal, caras.fin.normal)
+        this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion,posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
+        this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal,normalesMuralla, extremos.fin.normal,caras.fin.normal)
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
-
+        
         this.mallaDeTriangulos = this.crearMalla()
         this.color = [0, 0, 0]
     }
@@ -130,7 +147,7 @@ export class Muralla extends Objeto3D {
         }
     }
 
-    obtenerExtremosMuralla(puntosMuralla, radio, anchoPorton, posPorton, anguloRotacion) {
+    obtenerExtremosMuralla(puntosMuralla, radio, anchoPorton, posPorton) {
         const puntosCurvaMuralla = {
             posicion: puntosMuralla.posicion.reverse(),
             normal: puntosMuralla.normal.reverse()
@@ -148,18 +165,13 @@ export class Muralla extends Objeto3D {
         mat4.rotateY(mat, mat, Math.PI / 2)
         mat4.translate(mat, mat, [-radio - 1, 0, 0])
 
-        mat4.translate(matInicioMuralla, matInicioMuralla, [posPorton[0], posPorton[1], posPorton[2]])
-        mat4.rotateY(matInicioMuralla, matInicioMuralla, anguloRotacion)
-        mat4.translate(matInicioMuralla, matInicioMuralla, [-anchoPorton / 2 - 0.25, 0, 0])
+        mat4.translate(matInicioMuralla, matInicioMuralla, [-anchoPorton / 2 - 0.25, 0, posPorton[2]])
         mat4.multiply(matInicioMuralla, matInicioMuralla, mat)
 
-        mat4.translate(matFinMuralla, matFinMuralla, [posPorton[0], posPorton[1], posPorton[2]])
-        mat4.rotateY(matFinMuralla, matFinMuralla, anguloRotacion)
-        mat4.translate(matFinMuralla, matFinMuralla, [anchoPorton / 2 + 0.25, 0, 0])
+        mat4.translate(matFinMuralla, matFinMuralla, [anchoPorton / 2 + 0.25, 0, posPorton[2]])
         mat4.multiply(matFinMuralla, matFinMuralla, mat)
 
         const mat2Normales = mat4.create()
-        mat4.rotateY(mat2Normales, mat2Normales, anguloRotacion)
         mat4.rotateY(mat2Normales, mat2Normales, Math.PI / 2)
 
         for (let i = 0; i < puntosCurvaMuralla.posicion.length; i++) {
@@ -195,7 +207,7 @@ export class Muralla extends Objeto3D {
 
     }
 
-    obtenerCarasExtremos(extremos, anguloRotacion) {
+    obtenerCarasExtremos(extremos) {
         const posInicio = extremos.inicio.posicion.map((x, i) => {
             if (i % 3 == 1) return 0
             return x
@@ -209,12 +221,8 @@ export class Muralla extends Objeto3D {
         const normInicio = []
         const normFin = []
 
-        const mat2Normales = mat4.create()
-        mat4.rotateY(mat2Normales, mat2Normales, anguloRotacion)
-        mat4.rotateY(mat2Normales, mat2Normales, Math.PI / 2)
         for (let i = 0; i < posInicio.length / 3; i++) {
-            const normActual = [0, 0, 1, 1]
-            vec4.transformMat4(normActual, normActual, mat2Normales)
+            const normActual = [1, 0, 0, 1]
             normInicio.push(normActual[0], normActual[1], normActual[2])
             normFin.push(-normActual[0], normActual[1], -normActual[2])
         }
@@ -231,10 +239,10 @@ export class Muralla extends Objeto3D {
         }
     }
 
-    obtenerPosPorton(data){
-        const lastPointIdx = data[0].length - 1
-        const inicio = [data[0][3 * 17], 0, data[0][3 * 17 + 2]]
-        const final = [data[0][lastPointIdx - (3 * 17 + 2)], 0, data[0][lastPointIdx - (3 * 17)]]
+    obtenerPosPorton(pos){
+        const lastPointIdx = pos.length - 1
+        const inicio = [pos[3 * 17], 0, pos[3 * 17 + 2]]
+        const final = [pos[lastPointIdx - (3 * 17 + 2)], 0, pos[lastPointIdx - (3 * 17)]]
         const posPorton = [(inicio[0] + final[0]) / 2, 0, (inicio[2] + final[2]) / 2]
 
         return posPorton

@@ -98,7 +98,6 @@ export class Objeto3D {
         var trianglesVerticeBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNormDibujadas), gl.STATIC_DRAW);
-        // console.log("norm dibujar: ", this.bufferNormDibujadas)
         var trianglesColorBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);

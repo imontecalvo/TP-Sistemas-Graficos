@@ -22,12 +22,8 @@ export class Superficie extends Objeto3D {
             this.bufferNormDibujadas.push(this.bufferPos[i+2] + this.bufferNorm[i+2])
         }
 
-
-        // console.log(this.bufferPos)
-        // console.log(this.bufferNormDibujadas)
         // this.bufferNormDibujadas=[0,0,0,0,1,1,3,0,0,3,0,4]
         this.mallaDeTriangulos = crearMalla(this)
-        // console.log("malla:" , this.mallaDeTriangulos)
         this.color = [0, 0, 0]
     }
 }

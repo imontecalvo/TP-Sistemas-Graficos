@@ -216,6 +216,11 @@ function setupVertexShaderMatrix() {
 function drawScene() {
     // escena.actualizar()
     // viewMatrix = escena.obtenerVista()
+    if(app.cambiosPendientes){
+        app.cambiosPendientes=false
+        escena = new Escena()
+    }
+
     escena.actualizar()
     viewMatrix = escena.obtenerVista()
     setupVertexShaderMatrix();
@@ -251,6 +256,7 @@ function animate() {
 
 function tick() {
     tiempo += 0.01
+    // console.log(app)
     requestAnimationFrame(tick);
     drawScene();
     // animate();

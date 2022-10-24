@@ -14,7 +14,6 @@ export class LineaCurva {
         const radio = 6
         const pControlLadoI = [[radio, 0, 0], [radio + 0.10, 1.60, 0], [radio + .40, 2.33, 0], [radio + .5, 4, 0]]
         const pControlBalconILadoI = [[radio + .5, 4, 0], [radio + .5, 4 + h * 0.3, 0], [radio + .5, 4 + h * 0.6, 0], [radio + .5, 4 + h, 0]]
-        console.log("balcon: ", pControlBalconILadoI)
         const pControlBalconITecho = [[radio + .5, 4 + h, 0], [radio + .5 + a * 0.3, 4 + h, 0], [radio + .5 + a * 0.6, 4 + h, 0], [radio + .5 + a, 4 + h, 0]]
         const pControlBalconILadoD = [[radio + .5 + a, 4 + h, 0], [radio + .5 + a, 4 + h * 0.6, 0], [radio + .5 + a, 4 + h * 0.3, 0], [radio + .5 + a, 4, 0]]
         const pControlBalconPiso = [[radio + .5 + a, 4, 0], [radio + .5 + 1.3 * a, 4, 0], [radio + .5 + 1.6 * a, 4, 0], [radio + .5 + 2 * a, 4, 0]]
@@ -80,7 +79,6 @@ export class LineaCurva {
         // mat4.scale(matInicioMuralla, matInicioMuralla, [2,4,2])
         // mat4.rotate(matInicioMuralla, matFinMuralla, 3.14/2, [0,1,0])
         // mat4.transpose(matInicioMuralla, matInicioMuralla)
-        // console.log("maat: ", matInicioMuralla)
         // mat4.transpose(matFinMuralla, matFinMuralla)
 
         for (let i = 0; i < puntosCurvaMuralla.length; i++) {
@@ -95,7 +93,6 @@ export class LineaCurva {
         }
 
         const pos = posInicio
-        console.log("curvaaaaSasd: ", posInicio)
         //porton
         // const ptosCtrlAbajo = [[-1.5, 0, 0], [-1, 0, 0], [1, 0, 0], [1.5, 0, 0]]
         // const ptosCtrlIzq = [[-1.5, 0, 0], [-1.5, 1, 0], [-1.5, 2, 0], [-1.5, 3, 0]]
@@ -182,13 +179,11 @@ export class LineaCurva {
         this.vertices = pos
         this.bufferPos = [].concat(...pos)
         this.bufferColor = [].concat(...this.vertices.map(x => [0, 0, 0]))
-        console.log("puntos curvita: ", this.vertices)
 
     }
 
     dibujar() {
         const puntos = 2 * 18;
-        // console.log("dibu curva: ", this.bufferPos)
         gl.useProgram(glProgramCurva);
         const mat = mat4.create()
         var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
