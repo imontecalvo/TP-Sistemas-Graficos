@@ -1,6 +1,7 @@
 import { Objeto3D } from "../objeto3d.js";
 import { TorreCastillo } from "./torreCastillo.js";
 import { PisosCastillo } from "./pisosCastillo.js";
+import { BezierCubica } from "../bezier/bezier3.js";
 
 export class Castillo extends Objeto3D{
     constructor(ancho, largo, cantPisos){
@@ -31,18 +32,14 @@ export class Castillo extends Objeto3D{
 }
 
 
-//Setear altura fija para piso
-//Crear caja de ancho:ancho, largo:largo, altura:alturaPiso*cantPisos
-//Divisiones
-    // Cant: cantPisos-1
-    // altura de c/division: i*alturaPiso, i>=1
-    // anchoDiv: anchoPiso+x
-    // largoDiv: largoPiso+x
-    // altoDiv: x
 
 // VENTANAS
+// Curva de BezierCubica
+// Crear barrido con caras
 
-// Ajustar altura variable de torres en funcion de la cantidad de pisos
-
-//alturaVariable+alturaFija-(alturaFija/2) = alturaPiso*cantPisos
-//alturaVariable = alturaPiso*cantPisos-(alturaFija/2)
+// Cantidad y posicion ventanas
+//     Setear ancho (y alto) ventanas
+//     Setear margen
+//     Setear espaciado
+//     Calcular cant de ventanas
+//     Posicionarlas
