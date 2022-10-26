@@ -4,9 +4,10 @@ import { discretizar } from "../bezier/discretizador.js";
 import { superficieRevolucion } from "../superficieRevolucion.js";
 
 export class TorreCastillo extends Objeto3D {
-    constructor(alturaVariable) {
+    constructor(alturaEdificio) {
         super()
         const alturaFija = 2.5
+        const alturaVariable = alturaEdificio - (alturaFija / 2)
         const radioInf = 1.0
         const radioSup = 1.5
 

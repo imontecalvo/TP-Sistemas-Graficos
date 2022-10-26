@@ -19,7 +19,7 @@ export class Escena {
         this.terreno = new Terreno()
         this.muralla = new Muralla(app.alturaMuralla,app.cantLados)
         // this.caja = new Caja(5,20,20)
-        this.castillo = new Castillo()
+        this.castillo = new Castillo(5,5,3)
     }
 
     actualizar() {
