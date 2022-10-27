@@ -1,55 +1,27 @@
-var mat4 = glMatrix.mat4;
+import { Objeto3D } from "./objeto3d.js"
+import { crearMalla } from "./geometria.js"
+
 var vec3 = glMatrix.vec3;
+var mat4 = glMatrix.mat4;
 
-// class Camara {
-//     constructor() {
-//         if (this.constructor == Camara) {
-//             throw new Error("No pueden instanciarse clases Abstractas.");
-//         }
-//     }
-
-//     generarVista(posHeli) {}
-
-//     actualizar() {}
-
-//     static crearConNumero(num) {
-//         switch (num) {
-//             case 1:
-//                 return new CamaraInteractuableArrastre();
-//             case 2:
-//                 return new CamaraTrasera();
-//             case 3:
-//                 return new CamaraLateral();
-//             case 4:
-//                 return new CamaraSuperior();
-//             case 5:
-//                 return new CamaraHombro();
-//             case 6:
-//                 return new CamaraFija();
-
-//             default:
-//                 return new CamaraGiratoria();
-//         }
-//     }
-// }
-
-
-export class CamaraInteractuableArrastre {
-
+export class CamaraOrbital {
     constructor() {
-        // var touchable = 'ontouchstart' in window
-        this.control = new ControlRaton();
+        this.control = new ControlRaton()
+        this.position = vec3.create()
     }
 
-    generarVista(posHeli) {
+    actualizar() {
+        this.control.actualizar()
+    }
+
+    generarVista(foco) {
 
         var posObserver = this.control.obtener_posicion();
         var scroll = posObserver.scroll;
 
         var matrizVista = mat4.create();
-
-        var ojo = vec3.fromValues(posHeli.x + scroll*posObserver.x, posHeli.y + scroll*posObserver.y, posHeli.z + scroll*posObserver.z);
-        var centro = vec3.fromValues(posHeli.x, posHeli.y, posHeli.z);
+        var ojo = vec3.fromValues(foco[0]+scroll*posObserver.x,foco[1]+scroll*posObserver.y,foco[2]+scroll*posObserver.z);
+        var centro = vec3.fromValues(foco[0], foco[1], foco[2]);
 
         mat4.lookAt(matrizVista,
             ojo,
@@ -60,9 +32,6 @@ export class CamaraInteractuableArrastre {
         return matrizVista;
     }
 
-    actualizar() {
-        this.control.actualizar();
-    }
 }
 
 function ControlRaton() {
@@ -99,9 +68,9 @@ function ControlRaton() {
     $('body').mouseup(function (event) {
         IS_MOUSE_DOWN = false;
     });
-
-    $('body').on("wheel",function (event) {
-        WHEEL_SCROLL += event.originalEvent.deltaY / 12;
+    
+    $('body').on("wheel", function (event) {
+        WHEEL_SCROLL += event.originalEvent.deltaY / 100;
         WHEEL_SCROLL = Math.max(0.01, Math.min(6, WHEEL_SCROLL));
     });
 
@@ -150,6 +119,6 @@ function ControlRaton() {
 }
 
 
-const FACTOR_VELOCIDAD = 0.01;
-const RADIO = 20;
+const FACTOR_VELOCIDAD = 0.001;
+const RADIO = 0.1;
 var JOYSTICK_CONTROLLER = null;

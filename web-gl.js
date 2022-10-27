@@ -188,20 +188,11 @@ function makeShader(src, type) {
 
 
 function setupVertexShaderMatrix() {
-    // Objeto3D.MODEL_MATRIX_UNIFORM = gl.getUniformLocation(glProgram, "uModelMatrix");
-    // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-    // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
-    // var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-
-    // mat4.identity(viewMatrix)
-    // mat4.translate(viewMatrix, viewMatrix, [0., 0, -30]);
-    // mat4.rotate(viewMatrix, viewMatrix, tiempo*Math.PI, [0, 1, 0]);
     gl.useProgram(glProgram);
     var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
     var projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
     var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
 
-    // gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
     gl.uniformMatrix4fv(viewMatrixUniform, false, viewMatrix);
     gl.uniformMatrix4fv(projMatrixUniform, false, projMatrix);
     gl.uniformMatrix4fv(normalMatrixUniform, false, normalMatrix);
@@ -214,8 +205,6 @@ function setupVertexShaderMatrix() {
 }
 
 function drawScene() {
-    // escena.actualizar()
-    // viewMatrix = escena.obtenerVista()
     if(app.cambiosPendientes){
         app.cambiosPendientes=false
         escena = new Escena()
@@ -225,33 +214,6 @@ function drawScene() {
     viewMatrix = escena.obtenerVista()
     setupVertexShaderMatrix();
     escena.dibujar()
-
-    // var esfera = new Esfera(100,100,1)
-    // esfera.trasladar(1,0,0)
-    // esfera.trasladar(0,0,-2)
-    // var esfera2 = new Esfera(100,100,0.5)
-    // esfera.trasladar(1,3,3)
-    // esfera2.trasladar(-4,0,0)
-    // var plano = new Plano(2,2,100,100)
-    // plano.trasladar(0,0,0)
-    // plano.dibujar()
-    // esfera.dibujar()
-    // esfera2.dibujar()
-}
-
-
-function animate() {
-
-    rotate_angle += 1;
-    mat4.identity(modelMatrix);
-    mat4.rotate(modelMatrix, modelMatrix, rotate_angle, [1.0, 0.0, 1.0]);
-
-
-    mat4.identity(normalMatrix);
-    mat4.multiply(normalMatrix, viewMatrix, modelMatrix);
-    mat4.invert(normalMatrix, normalMatrix);
-    mat4.transpose(normalMatrix, normalMatrix);
-
 }
 
 function tick() {

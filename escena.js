@@ -1,4 +1,4 @@
-import { Camara } from "./camara2.js";
+import { CamaraOrbital } from "./camara.js";
 import { EjesEscena } from "./ejesEscena.js";
 import { LineaCurva } from "./pruebaCurva.js";
 import { Terreno } from "./elementosEscena/terreno.js"
@@ -12,7 +12,7 @@ export class Escena {
     constructor() {
         this.ejes = new EjesEscena()
         this.matriz = mat4.create()
-        this.camara = new Camara()
+        this.camara = new CamaraOrbital([0,0,0])
 
         this.curva = new LineaCurva([[-5, 5, 0], [-0.5, 0, 0], [0.5, 0, 0], [5, 5, 0]])
 
@@ -31,20 +31,17 @@ export class Escena {
     }
 
     obtenerVista() {
-        return this.camara.generarVista([0, 0, 0])
+        let foco
+        if (app.camara == "Orbital") foco = [0,0,0]
+        else if (app.camara == "Orbital catapulta") foco = this.catapulta.obtenerPosicion()
+        return this.camara.generarVista(foco)
     }
 
     dibujar() {
         this.ejes.dibujar()
         this.terreno.dibujar(this.matriz)
-        // this.ventana.dibujar(this.matriz)
         this.muralla.dibujar(this.matriz)
         this.catapulta.dibujar(this.matriz)
-        // this.cil.dibujar(this.matriz)
         this.castillo.dibujar(this.matriz)
-        // this.caja.dibujar(this.matriz)
-        // this.caja2.dibujar(this.matriz)
-        // this.curva.dibujar()
-
     }
 }

@@ -69,15 +69,13 @@
 			f2.add(app, 'aperturaPorton', 0, 90.0).name("Apertura portón");
 			f2.add(app, 'rotacionCatapulta', 0.0, 360.0).name("Rotación y catapulta");
 
-			gui.add(app, 'camara', ["Orbital", "Primera persona", "Segunda persona"]).name("Cámara");
+			gui.add(app, 'camara', ["Orbital", "Orbital catapulta", "Primera persona"]).name("Cámara");
 			gui.add(app, 'rendering', ["Default", "Normales"]).name("Rendering")
 			
 			gui.add(app, 'dibujarNormales').name("Dibujar normales");
 
-			// f1.open();
-			// f2.open();
-			console.log(app)
-
+			f1.open();
+			f2.open();
 		};
 
 		GUI();
