@@ -57,8 +57,10 @@ function ControlRaton() {
 
     // seteo handlers del raton
     $("body").mousemove(function (e) {
-        MOUSE.x = e.clientX || e.pageX;
-        MOUSE.y = e.clientY || e.pageY
+        if (IS_MOUSE_DOWN){
+            MOUSE.x = e.clientX || e.pageX;
+            MOUSE.y = e.clientY || e.pageY
+        }
     });
 
     $('body').mousedown(function (event) {

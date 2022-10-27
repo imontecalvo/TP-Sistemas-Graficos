@@ -245,7 +245,7 @@ class Brazo extends Objeto3D {
     actualizar(){
         this.colgante.resetearMatriz()
 
-        this.colgante.trasladar(0, 0, this.anchoTablon / 2)
+        this.colgante.trasladar(0, 0.07, this.anchoTablon / 2-0.1)
         this.colgante.rotarX(-app.anguloCatapulta)
     }
 }
