@@ -45,7 +45,12 @@
 			camara: "Orbital catapulta",
 			rendering: "Default",
 			dibujarNormales: false,
-			// disparar,
+			disparando:false,
+			anguloCatapulta:0,
+			disparar:()=>{
+				app.disparando=true
+				app.anguloCatapulta = 0;
+			},
 
 		};
 
@@ -64,10 +69,11 @@
 			f1.add(app, 'cantLados', 4.0, 8.0).name("Cantidad de lados").step(1);
 			f1.add(app, 'alturaMuralla', 1.0, 5.0).name("Altura muralla");
 			f1.add(app, 'actualizar').name("Actualizar");
-
+			
 			var f2 = gui.addFolder('Escena');
 			f2.add(app, 'aperturaPorton', 0, 90.0).name("Apertura portón");
 			f2.add(app, 'rotacionCatapulta', 0.0, 360.0).name("Rotación y catapulta");
+			f1.add(app, 'disparar').name("Disparar!");
 
 			gui.add(app, 'camara', ["Orbital", "Orbital catapulta", "Primera persona"]).name("Cámara");
 			gui.add(app, 'rendering', ["Default", "Normales"]).name("Rendering")

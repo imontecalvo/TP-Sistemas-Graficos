@@ -6,34 +6,55 @@ import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 import { Esfera } from "./esfera.js";
 
-var angulo = 0*2 * Math.PI / 4
+const angulo = 0
 
 export class Catapulta extends Objeto3D {
     constructor() {
         super()
         //MEDIDAS: ALTO, LARGO, ANCHO
-        const alturaCatapulta = 2
-        const medidasTablon = [0.15, 1.8, 3.5]
-        const elevacion = 0.3
-        const tablon = new Caja(medidasTablon[0], medidasTablon[1], medidasTablon[2])
+        this.alturaCatapulta = 2
+        this.medidasTablon = [0.15, 1.8, 3.5]
+        this.elevacion = 0.3
+        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2])
         tablon.trasladar(0, 0, -0.5)
 
         //3.5/2-(2*(0.3 + 0.15)+0.5)
 
         this.agregarHijo(tablon)
-        this.agregarRuedas(elevacion + medidasTablon[0] / 2, 0.07, medidasTablon[1], medidasTablon[2])
-        this.agregarPilares(medidasTablon[0], medidasTablon[1], medidasTablon[2], elevacion + medidasTablon[0] / 2, alturaCatapulta)
+        this.agregarRuedas(this.elevacion + this.medidasTablon[0] / 2, 0.07, this.medidasTablon[1], this.medidasTablon[2])
+        this.agregarPilares(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], this.elevacion + this.medidasTablon[0] / 2, this.alturaCatapulta)
 
-        let brazo = new Brazo(medidasTablon[2], medidasTablon[0] / 2 + alturaCatapulta - 0.12)
-        this.agregarHijo(brazo)
+        this.brazo = new Brazo(this.medidasTablon[2], this.medidasTablon[0] / 2 + this.alturaCatapulta - 0.12)
+        this.agregarHijo(this.brazo)
         // brazo.trasladar(0, alturaCatapulta + elevacion + medidasTablon[0], 0.5)
         // brazo.trasladar(0, alturaCatapulta + elevacion + medidasTablon[0], 0)
-        brazo.trasladar(0, alturaCatapulta, 0)
-        brazo.rotarX(angulo)
-        brazo.trasladar(0, 0, -0.80)
+        
+        // this.brazo.trasladar(0, this.alturaCatapulta, 0)
+        // this.brazo.rotarX(angulo)
+        // this.brazo.trasladar(0, 0, -0.80)
+        
         // brazo.trasladar(0, -alturaCatapulta - elevacion - medidasTablon[0], -0.5)
 
-        this.trasladar(0, elevacion + medidasTablon[0]/2, 0)
+        this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
+    }
+
+    actualizar() {
+        // console.log(angulo)
+        this.resetearMatriz()
+        this.brazo.resetearMatriz()
+        // console.log("LLEGAA")
+
+        this.brazo.actualizar()
+
+        this.rotarY(Math.PI / 8)
+        this.trasladar(0, 0, 22)
+        this.rotarY(Math.PI)
+
+        this.brazo.trasladar(0, this.alturaCatapulta, 0)
+        this.brazo.rotarX(app.anguloCatapulta)
+        this.brazo.trasladar(0, 0, -0.80)
+
+        this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
     }
 
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {
@@ -200,6 +221,7 @@ class Pilar extends Objeto3D {
 class Brazo extends Objeto3D {
     constructor(anchoTablon, elevacion) {
         super()
+        this.anchoTablon = anchoTablon
         const largoBarra = 4.5
         const anchoBarra = 0.25
         const barra = new Barra(0.18, largoBarra, anchoBarra)
@@ -211,15 +233,20 @@ class Brazo extends Objeto3D {
         pala.trasladar(0, 0, anchoTablon / 2 - largoBarra)
         this.agregarHijo(pala)
 
-        const colgante = new Colgante(anchoTablon, 0 + 0.08, anchoBarra)
-        colgante.trasladar(0, 0, anchoTablon / 2 )
-        colgante.rotarX(-angulo)
-        this.agregarHijo(colgante)
+        this.colgante = new Colgante(anchoTablon, 0 + 0.08, anchoBarra)
+        this.agregarHijo(this.colgante)
 
         const radioMunicion = 0.35
         const municion = new Esfera(radioMunicion)
         municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
         this.agregarHijo(municion)
+    }
+
+    actualizar(){
+        this.colgante.resetearMatriz()
+
+        this.colgante.trasladar(0, 0, this.anchoTablon / 2)
+        this.colgante.rotarX(-app.anguloCatapulta)
     }
 }
 

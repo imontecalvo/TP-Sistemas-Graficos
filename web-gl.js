@@ -218,6 +218,11 @@ function drawScene() {
 
 function tick() {
     tiempo += 0.01
+    // console.log(app.disparando,app.anguloCatapulta<Math.PI/2 )
+    if(app.disparando && app.anguloCatapulta<Math.PI/2){
+        app.anguloCatapulta = tiempo*0.1*Math.PI/2
+        // console.log("disparando", app.anguloCatapulta)
+    }
     // console.log(app)
     requestAnimationFrame(tick);
     drawScene();

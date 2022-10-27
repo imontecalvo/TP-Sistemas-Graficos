@@ -14,6 +14,10 @@ export class Objeto3D {
         this.hijos.push(hijo)
     }
 
+    resetearMatriz(){
+        this.matrizModelado = mat4.create();
+    }
+
     trasladar(x,y,z){
         mat4.translate(this.matrizModelado, this.matrizModelado, [x,y,z]);
     }

@@ -21,9 +21,7 @@ export class Escena {
         this.castillo = new Castillo(5,5,3)
         
         this.catapulta = new Catapulta()
-        this.catapulta.rotarY(Math.PI/8)
-        this.catapulta.trasladar(0,0,22)
-        this.catapulta.rotarY(Math.PI)
+
     }
 
     actualizar() {
@@ -40,8 +38,9 @@ export class Escena {
     dibujar() {
         this.ejes.dibujar()
         this.terreno.dibujar(this.matriz)
-        this.muralla.dibujar(this.matriz)
+        // this.muralla.dibujar(this.matriz)
+        this.catapulta.actualizar()
         this.catapulta.dibujar(this.matriz)
-        this.castillo.dibujar(this.matriz)
+        // this.castillo.dibujar(this.matriz)
     }
 }
