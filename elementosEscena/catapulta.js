@@ -6,21 +6,34 @@ import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 import { Esfera } from "./esfera.js";
 
+var angulo = 0*2 * Math.PI / 4
+
 export class Catapulta extends Objeto3D {
     constructor() {
         super()
         //MEDIDAS: ALTO, LARGO, ANCHO
-        const alturaCatapulta = 1.8
+        const alturaCatapulta = 2
         const medidasTablon = [0.15, 1.8, 3.5]
         const elevacion = 0.3
         const tablon = new Caja(medidasTablon[0], medidasTablon[1], medidasTablon[2])
+        tablon.trasladar(0, 0, -0.5)
+
+        //3.5/2-(2*(0.3 + 0.15)+0.5)
 
         this.agregarHijo(tablon)
         this.agregarRuedas(elevacion + medidasTablon[0] / 2, 0.07, medidasTablon[1], medidasTablon[2])
         this.agregarPilares(medidasTablon[0], medidasTablon[1], medidasTablon[2], elevacion + medidasTablon[0] / 2, alturaCatapulta)
-        this.agregarHijo(new Brazo(medidasTablon[2], medidasTablon[0] / 2 + alturaCatapulta - 0.12))
 
-        this.trasladar(0,elevacion + medidasTablon[0],0)
+        let brazo = new Brazo(medidasTablon[2], medidasTablon[0] / 2 + alturaCatapulta - 0.12)
+        this.agregarHijo(brazo)
+        // brazo.trasladar(0, alturaCatapulta + elevacion + medidasTablon[0], 0.5)
+        // brazo.trasladar(0, alturaCatapulta + elevacion + medidasTablon[0], 0)
+        brazo.trasladar(0, alturaCatapulta, 0)
+        brazo.rotarX(angulo)
+        brazo.trasladar(0, 0, -0.80)
+        // brazo.trasladar(0, -alturaCatapulta - elevacion - medidasTablon[0], -0.5)
+
+        this.trasladar(0, elevacion + medidasTablon[0]/2, 0)
     }
 
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {
@@ -28,17 +41,17 @@ export class Catapulta extends Objeto3D {
         multiplicadores.forEach((x) => {
             console.log(x)
             const rueda = new Cilindro(radio, ancho, 20)
-            rueda.trasladar(x[0] * (largoTablon + ancho) / 2, 0, x[1] * (anchoTablon / 2) - (x[1] * radio))
+            rueda.trasladar(x[0] * (largoTablon + ancho) / 2, 0, x[1] * (anchoTablon / 2) - (x[1] * radio) - 0.5)
             rueda.rotarY(Math.PI / 2)
             this.agregarHijo(rueda)
         })
 
         const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10)
-        eje1.trasladar(0, 0, (anchoTablon / 2) - radio)
+        eje1.trasladar(0, 0, (anchoTablon / 2) - radio - 0.5)
         eje1.rotarY(Math.PI / 2)
 
         const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10)
-        eje2.trasladar(0, 0, -(anchoTablon / 2) + radio)
+        eje2.trasladar(0, 0, -(anchoTablon / 2) + radio - 0.5)
         eje2.rotarY(Math.PI / 2)
 
         this.agregarHijo(eje1)
@@ -50,19 +63,23 @@ export class Catapulta extends Objeto3D {
         const largoPilar = 1
         const anchoPilar = 0.15
         const pilar1 = new Pilar(altoPilar, largoPilar, anchoPilar)
-        pilar1.trasladar(largoTablon / 2 - 0.2, elevacion, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2)
+        pilar1.trasladar(largoTablon / 2 - 0.2, elevacion, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2 - 0.5)
         pilar1.rotarY(Math.PI / 2)
 
         const pilar2 = new Pilar(altoPilar, largoPilar, anchoPilar)
-        pilar2.trasladar(-largoTablon / 2 + 0.2, elevacion, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2)
+        pilar2.trasladar(-largoTablon / 2 + 0.2, elevacion, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2 - 0.5)
         pilar2.rotarY(Math.PI / 2)
 
         this.agregarHijo(pilar1)
         this.agregarHijo(pilar2)
 
         const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20)
-        ejePilar.trasladar(0, elevacion + altoPilar - 0.2, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2)
+        console.log(ejePilar.obtenerPosicion())
+        // ejePilar.trasladar(0, -alturaCatapulta - elevacion -0.15, 0)
+
+        ejePilar.trasladar(0, elevacion + altoPilar - 0.2, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2 - 0.5)
         ejePilar.rotarY(Math.PI / 2)
+
 
         this.agregarHijo(ejePilar)
     }
@@ -142,11 +159,11 @@ class Pilar extends Objeto3D {
     }
 
     obtenerPuntosCurva(alto, largo) {
-        const largoSup =largo * (3 / 20)
+        const largoSup = largo * (3 / 20)
 
         const t1 = [[-largo / 2, 0, 0], [(0.3) * ((-largoSup) - (-largo / 2)) - largo / 2, (0.3) * (alto), 0], [(0.6) * ((-largoSup) - (-largo / 2)) - largo / 2, (0.6) * (alto), 0], [-largoSup, alto, 0]]
         const t2 = [[-largoSup, alto, 0], [-largoSup / 2, alto, 0], [largoSup / 2, alto, 0], [largoSup, alto, 0]]
-        const t3 = [[largoSup, alto, 0], [(0.3) * ((largo / 2)-largoSup) + largoSup, (0.6) * alto, 0], [(0.6) * ((largo / 2)-largoSup) + largoSup, (0.3) * alto, 0], [largo / 2, 0, 0]]
+        const t3 = [[largoSup, alto, 0], [(0.3) * ((largo / 2) - largoSup) + largoSup, (0.6) * alto, 0], [(0.6) * ((largo / 2) - largoSup) + largoSup, (0.3) * alto, 0], [largo / 2, 0, 0]]
         const t4 = [[largo / 2, 0, 0], [largo / 4, 0, 0], [-largo / 4, 0, 0], [-largo / 2, 0, 0]]
 
         const curvaT1 = new BezierCubica(t1, "z")
@@ -183,23 +200,25 @@ class Pilar extends Objeto3D {
 class Brazo extends Objeto3D {
     constructor(anchoTablon, elevacion) {
         super()
-        const largoBarra = 5
+        const largoBarra = 4.5
         const anchoBarra = 0.25
         const barra = new Barra(0.18, largoBarra, anchoBarra)
-        barra.trasladar(0, elevacion, anchoTablon / 2)
+        barra.trasladar(0, 0, anchoTablon / 2)
         barra.rotarY(-Math.PI / 2)
         this.agregarHijo(barra)
 
         const pala = new Caja(0.1, 1, 1)
-        pala.trasladar(0, elevacion, anchoTablon / 2 - largoBarra)
+        pala.trasladar(0, 0, anchoTablon / 2 - largoBarra)
         this.agregarHijo(pala)
 
-        const colgante = new Colgante(anchoTablon, elevacion + 0.08, anchoBarra)
+        const colgante = new Colgante(anchoTablon, 0 + 0.08, anchoBarra)
+        colgante.trasladar(0, 0, anchoTablon / 2 )
+        colgante.rotarX(-angulo)
         this.agregarHijo(colgante)
 
         const radioMunicion = 0.35
         const municion = new Esfera(radioMunicion)
-        municion.trasladar(0, elevacion+radioMunicion+0.1, anchoTablon / 2 - largoBarra)
+        municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
         this.agregarHijo(municion)
     }
 }
@@ -299,24 +318,28 @@ class Colgante extends Objeto3D {
 
         // EJE
         const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20)
-        eje.trasladar(0, elevacion, anchoTablon / 2 - 0.10)
+        eje.trasladar(0, 0, 0)
+        // eje.trasladar(0, 0, anchoTablon / 2 - 0.10)
         eje.rotarY(Math.PI / 2)
         this.agregarHijo(eje)
 
         // PILARES
         const pilar1 = new Pilar(0.4, 0.3, 0.05)
-        pilar1.trasladar(anchoBarra/2+0.1, elevacion - 0.30, anchoTablon / 2 - 0.10)
+        pilar1.trasladar(anchoBarra / 2 + 0.1, 0 - 0.30, 0)
+        // pilar1.trasladar(anchoBarra / 2 + 0.1, 0 - 0.30, anchoTablon / 2 - 0.10)
         pilar1.rotarY(Math.PI / 2)
         this.agregarHijo(pilar1)
 
         const pilar2 = new Pilar(0.4, 0.3, 0.05)
-        pilar2.trasladar(-anchoBarra/2-0.1, elevacion - 0.30, anchoTablon / 2 - 0.10)
+        pilar2.trasladar(-anchoBarra / 2 - 0.1, 0 - 0.30, 0)
+        // pilar2.trasladar(-anchoBarra / 2 - 0.1, 0 - 0.30, anchoTablon / 2 - 0.10)
         pilar2.rotarY(Math.PI / 2)
         this.agregarHijo(pilar2)
 
         //BLOQUE
-        const bloque = new Caja(0.6,2.5 * anchoBarra+0.1,0.6)
-        bloque.trasladar(0, elevacion - 0.30 - 0.6, anchoTablon / 2 - 0.10)
+        const bloque = new Caja(0.6, 2.5 * anchoBarra + 0.1, 0.6)
+        bloque.trasladar(0, 0 - 0.30 - 0.6, 0)
+        // bloque.trasladar(0, 0 - 0.30 - 0.6, anchoTablon / 2 - 0.10)
         this.agregarHijo(bloque)
     }
 }
