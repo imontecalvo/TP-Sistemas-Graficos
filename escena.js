@@ -3,9 +3,8 @@ import { EjesEscena } from "./ejesEscena.js";
 import { LineaCurva } from "./pruebaCurva.js";
 import { Terreno } from "./elementosEscena/terreno.js"
 import { Muralla } from "./elementosEscena/muralla.js"
-import {Caja} from "./elementosEscena/caja.js"
 import { Castillo } from "./elementosEscena/castillo.js";
-import { Ventana } from "./elementosEscena/pisosCastillo.js";
+import { Catapulta } from "./elementosEscena/catapulta.js";
 
 var mat4 = glMatrix.mat4;
 
@@ -19,9 +18,12 @@ export class Escena {
 
         this.terreno = new Terreno()
         this.muralla = new Muralla(app.alturaMuralla,app.cantLados)
-        // this.caja = new Caja(5,20,20)
         this.castillo = new Castillo(5,5,3)
-        this.ventana = new Ventana(0.75,0.75)
+        
+        this.catapulta = new Catapulta()
+        this.catapulta.rotarY(Math.PI/8)
+        this.catapulta.trasladar(0,0,22)
+        this.catapulta.rotarY(Math.PI)
     }
 
     actualizar() {
@@ -36,10 +38,13 @@ export class Escena {
         this.ejes.dibujar()
         this.terreno.dibujar(this.matriz)
         // this.ventana.dibujar(this.matriz)
-        // this.muralla.dibujar(this.matriz)
+        this.muralla.dibujar(this.matriz)
+        this.catapulta.dibujar(this.matriz)
+        // this.cil.dibujar(this.matriz)
         this.castillo.dibujar(this.matriz)
         // this.caja.dibujar(this.matriz)
-        this.curva.dibujar()
+        // this.caja2.dibujar(this.matriz)
+        // this.curva.dibujar()
 
     }
 }

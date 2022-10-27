@@ -48,7 +48,7 @@ export class Objeto3D {
     async dibujar(matrizPadre) {
         gl.useProgram(glProgram);
         var mat = mat4.create();
-        mat4.multiply(mat, this.matrizModelado, matrizPadre);
+        mat4.multiply(mat, matrizPadre, this.matrizModelado);
         var matNorm = mat4.create()
         mat4.invert(matNorm, mat);
         mat4.transpose(matNorm, matNorm);
@@ -77,7 +77,7 @@ export class Objeto3D {
             
             gl.drawElements(gl.TRIANGLE_STRIP, this.mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
             
-            if (this.bufferNormDibujadas){
+            if (this.bufferNormDibujadas && app.dibujarNormales){
                 this.dibujarNormales(mat);
             }
         }

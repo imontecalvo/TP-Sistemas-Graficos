@@ -43,7 +43,8 @@
 			aperturaPorton: 0.0,
 			rotacionCatapulta: 0.0,
 			camara: "Orbital",
-			rendering: "Default"
+			rendering: "Default",
+			dibujarNormales: false,
 			// disparar,
 
 		};
@@ -70,6 +71,8 @@
 
 			gui.add(app, 'camara', ["Orbital", "Primera persona", "Segunda persona"]).name("Cámara");
 			gui.add(app, 'rendering', ["Default", "Normales"]).name("Rendering")
+			
+			gui.add(app, 'dibujarNormales').name("Dibujar normales");
 
 			// f1.open();
 			// f2.open();
