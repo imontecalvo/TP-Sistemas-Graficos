@@ -86,43 +86,43 @@ function setupWebGL() {
 
 function loadShaders() {
 
-    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva()).done(function(res1,res2){
+    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva()).done(function (res1, res2) {
         //this code is executed when all ajax calls are done     
         initWebGL();
     });
 
     function loadVS() {
-        return  $.ajax({
+        return $.ajax({
             url: "./shaders/vertex.glsl",
-            success: function(result){
-                vs_source=result;
+            success: function (result) {
+                vs_source = result;
             }
         });
-    }   
+    }
 
     function loadFS() {
-        return  $.ajax({
+        return $.ajax({
             url: "./shaders/fragment.glsl",
-            success: function(result){
-                fs_source=result;
+            success: function (result) {
+                fs_source = result;
             }
         });
     }
 
     function loadVSCurva() {
-        return  $.ajax({
+        return $.ajax({
             url: "./shaders/vlinea.glsl",
-            success: function(result){
-                vs_src_curva=result;
+            success: function (result) {
+                vs_src_curva = result;
             }
         });
     }
 
     function loadFSCurva() {
-        return  $.ajax({
+        return $.ajax({
             url: "./shaders/flinea.glsl",
-            success: function(result){
-                fs_src_curva=result;
+            success: function (result) {
+                fs_src_curva = result;
             }
         });
     }
@@ -134,7 +134,7 @@ function loadShaders() {
 function initShaders() {
     //get shader source
     // var fs_source = document.getElementById('shader-fs').innerHTML,
-        // vs_source = document.getElementById('shader-vs').innerHTML;
+    // vs_source = document.getElementById('shader-vs').innerHTML;
 
 
     //compile shaders    
@@ -205,8 +205,8 @@ function setupVertexShaderMatrix() {
 }
 
 function drawScene() {
-    if(app.cambiosPendientes){
-        app.cambiosPendientes=false
+    if (app.cambiosPendientes) {
+        app.cambiosPendientes = false
         escena = new Escena()
     }
 
@@ -218,11 +218,21 @@ function drawScene() {
 
 function tick() {
     // console.log(app.disparando,app.anguloCatapulta<Math.PI/2 )
-    if(app.disparando && app.anguloCatapulta<Math.PI/2){
+    // app.tiempo = 0
+    if (app.disparando) {
         tiempo += 0.01
-        app.anguloCatapulta = tiempo+tiempo*0.7*Math.PI/2
-        // app.anguloCatapulta = 0
-        // console.log("disparando", app.anguloCatapulta)
+        if (app.anguloCatapulta < Math.PI / 2) {
+            app.anguloCatapulta = (7 * tiempo ** 2) * 0.7 * Math.PI / 2
+            app.tiempo = 0
+            app.velInicial = app.radioMC * (9.8) * (Math.PI/2) * tiempo
+            // app.anguloCatapulta = 0
+            // console.log("disparando", app.anguloCatapulta)
+        }else{
+            app.tiempo += 0.01
+            app.moverMunicion = true
+            // console.log(app.tiempo)
+            // console.log(app.moverMunicion, app.velInicial)
+        }
     }
     // console.log(app)
     requestAnimationFrame(tick);
@@ -232,4 +242,4 @@ function tick() {
 
 window.onload = loadShaders;
 
-export { gl, glProgram, glProgramCurva }
+export { gl, glProgram, glProgramCurva}

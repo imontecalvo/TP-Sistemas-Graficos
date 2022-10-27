@@ -18,31 +18,24 @@ export class Catapulta extends Objeto3D {
         const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2])
         tablon.trasladar(0, 0, -0.5)
 
-        //3.5/2-(2*(0.3 + 0.15)+0.5)
-
         this.agregarHijo(tablon)
         this.agregarRuedas(this.elevacion + this.medidasTablon[0] / 2, 0.07, this.medidasTablon[1], this.medidasTablon[2])
         this.agregarPilares(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], this.elevacion + this.medidasTablon[0] / 2, this.alturaCatapulta)
 
         this.brazo = new Brazo(this.medidasTablon[2], this.medidasTablon[0] / 2 + this.alturaCatapulta - 0.12)
         this.agregarHijo(this.brazo)
-        // brazo.trasladar(0, alturaCatapulta + elevacion + medidasTablon[0], 0.5)
-        // brazo.trasladar(0, alturaCatapulta + elevacion + medidasTablon[0], 0)
-        
-        // this.brazo.trasladar(0, this.alturaCatapulta, 0)
-        // this.brazo.rotarX(angulo)
-        // this.brazo.trasladar(0, 0, -0.80)
-        
-        // brazo.trasladar(0, -alturaCatapulta - elevacion - medidasTablon[0], -0.5)
+
+        this.municionMov = new Esfera(0.35)
+        this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
+        this.municionMov.ocultar()
+        this.agregarHijo(this.municionMov)
 
         this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
     }
 
     actualizar() {
-        // console.log(angulo)
         this.resetearMatriz()
         this.brazo.resetearMatriz()
-        // console.log("LLEGAA")
 
         this.brazo.actualizar()
 
@@ -55,6 +48,19 @@ export class Catapulta extends Objeto3D {
         this.brazo.trasladar(0, 0, -0.80)
 
         this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
+
+        if (app.moverMunicion) {
+            this.municionMov.mostrar()
+            this.brazo.municion.ocultar()
+
+            if (this.municionMov.obtenerPosicion()[1] > 0.35) {
+                this.municionMov.resetearMatriz()
+                this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
+                const x = 2*app.velInicial * app.tiempo
+                const y = - (1 / 2) * 9.8 * (app.tiempo) * (app.tiempo)
+                this.municionMov.trasladar(0, y, x)
+            }
+        }
     }
 
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {
@@ -105,29 +111,6 @@ export class Catapulta extends Objeto3D {
         this.agregarHijo(ejePilar)
     }
 }
-
-
-// Piezas:
-// Box: (an:3.7, l: 1.5, al: 1.7)
-
-// - TablonInf
-// - Ruedas (4)
-// - Ejes Ruedas (2)
-// - Pilares (2)
-// - Eje Brazo
-
-// - Brazo (ancho:3.5)
-//     - Barra
-//     - Pala
-//     - Municion quieta
-//     - Colgante
-//          - Pilares (2)
-//          - Eje
-//          - Bloque
-// - Municion en movimiento
-
-//ALTO - LARGO - ANCHO
-// TABLON: x,1.5,2.7
 
 class Pilar extends Objeto3D {
     constructor(alto, largo, ancho) {
@@ -237,15 +220,18 @@ class Brazo extends Objeto3D {
         this.agregarHijo(this.colgante)
 
         const radioMunicion = 0.35
-        const municion = new Esfera(radioMunicion)
-        municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
-        this.agregarHijo(municion)
+        this.municion = new Esfera(radioMunicion)
+        this.municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
+        console.log(this.municion.obtenerPosicion())
+        this.agregarHijo(this.municion)
+
+        app.radioMC = -(anchoTablon / 2 - largoBarra)
     }
 
-    actualizar(){
+    actualizar() {
         this.colgante.resetearMatriz()
 
-        this.colgante.trasladar(0, 0.07, this.anchoTablon / 2-0.1)
+        this.colgante.trasladar(0, 0.07, this.anchoTablon / 2 - 0.1)
         this.colgante.rotarX(-app.anguloCatapulta)
     }
 }

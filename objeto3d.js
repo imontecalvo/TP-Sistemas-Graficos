@@ -8,40 +8,62 @@ export class Objeto3D {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
+        this.oculto = false
+    }
+
+    ocultar(){
+        this.oculto = true
+    }
+
+    mostrar(){
+        this.oculto = false
     }
 
     agregarHijo(hijo) {
         this.hijos.push(hijo)
     }
 
-    resetearMatriz(){
+    obtenerMatrizModelado() {
+        return this.matrizModelado
+    }
+
+    obtenerPosicionAbsoluta(matrizPadre) {
+        var mat = mat4.create();
+        mat4.multiply(mat, matrizPadre, this.matrizModelado);
+
+        const pos = vec4.fromValues(0, 0, 0, 1)
+        vec4.transformMat4(pos, pos, mat)
+        return [pos[0], pos[1], pos[2]]
+    }
+
+    resetearMatriz() {
         this.matrizModelado = mat4.create();
     }
 
-    trasladar(x,y,z){
-        mat4.translate(this.matrizModelado, this.matrizModelado, [x,y,z]);
+    trasladar(x, y, z) {
+        mat4.translate(this.matrizModelado, this.matrizModelado, [x, y, z]);
     }
 
-    obtenerPosicion(){
-        const pos = vec4.fromValues(0,0,0,1)
+    obtenerPosicion() {
+        const pos = vec4.fromValues(0, 0, 0, 1)
         vec4.transformMat4(pos, pos, this.matrizModelado)
-        return [pos[0],pos[1],pos[2]]
+        return [pos[0], pos[1], pos[2]]
     }
 
-    trasladarRelativo(x,y,z){
+    trasladarRelativo(x, y, z) {
         const pos = this.obtenerPosicion()
-        mat4.translate(this.matrizModelado, this.matrizModelado, [pos[0]+x,pos[1]+y,pos[2]+z]);
+        mat4.translate(this.matrizModelado, this.matrizModelado, [pos[0] + x, pos[1] + y, pos[2] + z]);
     }
 
-    rotarX(rad){
+    rotarX(rad) {
         mat4.rotateX(this.matrizModelado, this.matrizModelado, rad);
     }
 
-    rotarY(rad){
+    rotarY(rad) {
         mat4.rotateY(this.matrizModelado, this.matrizModelado, rad);
     }
 
-    rotarZ(rad){
+    rotarZ(rad) {
         mat4.rotateZ(this.matrizModelado, this.matrizModelado, rad);
     }
 
@@ -50,6 +72,8 @@ export class Objeto3D {
     }
 
     async dibujar(matrizPadre) {
+        if (this.oculto) return
+
         gl.useProgram(glProgram);
         var mat = mat4.create();
         mat4.multiply(mat, matrizPadre, this.matrizModelado);
@@ -78,10 +102,10 @@ export class Objeto3D {
             gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
-            
+
             gl.drawElements(gl.TRIANGLE_STRIP, this.mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
-            
-            if (this.bufferNormDibujadas && app.dibujarNormales){
+
+            if (this.bufferNormDibujadas && app.dibujarNormales) {
                 this.dibujarNormales(mat);
             }
         }
@@ -91,8 +115,8 @@ export class Objeto3D {
         }
     }
 
-    dibujarNormales(mat){
-        const color = [].concat(this.bufferNorm.map(x => [1,1,1]))
+    dibujarNormales(mat) {
+        const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
         var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
@@ -115,8 +139,8 @@ export class Objeto3D {
         gl.enableVertexAttribArray(vertexColorAttribute);
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
         gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
-        
-        gl.drawArrays(gl.LINES, 0, 2*this.bufferNormDibujadas.length/3);
+
+        gl.drawArrays(gl.LINES, 0, 2 * this.bufferNormDibujadas.length / 3);
     }
 
 
@@ -124,10 +148,10 @@ export class Objeto3D {
         function getVertexIndex(i, j, columnas) {
             return i * (columnas + 1) + j;
         }
-    
+
         // Buffer de indices de los triángulos
         let indexBuffer = [];
-    
+
         for (let i = 0; i < this.filas; i++) {
             for (let j = 0; j <= this.columnas; j++) {
                 indexBuffer.push(getVertexIndex(i, j, this.columnas));
@@ -138,34 +162,34 @@ export class Objeto3D {
                 }
             }
         }
-    
+
         // Creación e Inicialización de los buffers
-    
+
         let webgl_position_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, webgl_position_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferPos), gl.STATIC_DRAW);
         webgl_position_buffer.itemSize = 3;
         webgl_position_buffer.numItems = this.bufferPos.length / 3;
-    
+
         let webgl_normal_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);
         webgl_normal_buffer.itemSize = 3;
         webgl_normal_buffer.numItems = this.bufferPos.length / 3;
-    
+
         // webgl_uvs_buffer = gl.createBuffer();
         // gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
         // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
         // webgl_uvs_buffer.itemSize = 2;
         // webgl_uvs_buffer.numItems = uvBuffer.length / 2;
-    
-    
+
+
         let webgl_index_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webgl_index_buffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexBuffer), gl.STATIC_DRAW);
         webgl_index_buffer.itemSize = 1;
         webgl_index_buffer.numItems = indexBuffer.length;
-    
+
         return {
             webgl_position_buffer,
             webgl_normal_buffer,
@@ -174,15 +198,15 @@ export class Objeto3D {
         }
     }
 
-    calcularNormalesDibujadas(){
-        for (let i = 0; i < this.bufferPos.length-3; i+=3) {
+    calcularNormalesDibujadas() {
+        for (let i = 0; i < this.bufferPos.length - 3; i += 3) {
             this.bufferNormDibujadas.push(this.bufferPos[i])
-            this.bufferNormDibujadas.push(this.bufferPos[i+1])
-            this.bufferNormDibujadas.push(this.bufferPos[i+2])
+            this.bufferNormDibujadas.push(this.bufferPos[i + 1])
+            this.bufferNormDibujadas.push(this.bufferPos[i + 2])
 
             this.bufferNormDibujadas.push(this.bufferPos[i] + this.bufferNorm[i])
-            this.bufferNormDibujadas.push(this.bufferPos[i+1] + this.bufferNorm[i+1])
-            this.bufferNormDibujadas.push(this.bufferPos[i+2] + this.bufferNorm[i+2])
+            this.bufferNormDibujadas.push(this.bufferPos[i + 1] + this.bufferNorm[i + 1])
+            this.bufferNormDibujadas.push(this.bufferPos[i + 2] + this.bufferNorm[i + 2])
         }
     }
 }

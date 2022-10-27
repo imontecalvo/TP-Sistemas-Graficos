@@ -24,7 +24,7 @@ export class Esfera extends Objeto3D{
                 var u = j / this.columnas;
                 var v = i / this.filas;
 
-                var pos = this.obtenerPosicion(u, v);
+                var pos = this.obtenerPosicionPunto(u, v);
                 this.bufferPos.push(pos[0]);
                 this.bufferPos.push(pos[1]);
                 this.bufferPos.push(pos[2]);
@@ -38,7 +38,7 @@ export class Esfera extends Objeto3D{
         }
     }
 
-    obtenerPosicion(u, v) {
+    obtenerPosicionPunto(u, v) {
 
         var x = this.radio * Math.sin(u * Math.PI) * Math.cos(v * 2 * Math.PI);
         var y = this.radio * Math.sin(u * Math.PI) * Math.sin(v * 2 * Math.PI);
@@ -47,9 +47,9 @@ export class Esfera extends Objeto3D{
     }
 
     obtenerNormal(u, v) {
-        var p0 = this.obtenerPosicion(u, v);
-        var p1 = this.obtenerPosicion(u + 0.001, v);
-        var p2 = this.obtenerPosicion(u, v + 0.001);
+        var p0 = this.obtenerPosicionPunto(u, v);
+        var p1 = this.obtenerPosicionPunto(u + 0.001, v);
+        var p2 = this.obtenerPosicionPunto(u, v + 0.001);
         var v1 = [p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]];
         var v2 = [p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]];
 

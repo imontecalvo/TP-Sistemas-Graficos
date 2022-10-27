@@ -178,46 +178,49 @@ export class LineaCurva {
         // this.curva = new BezierCubica(puntosDeControl)
 
         //VENTANA
-        const ancho = 0.75
-        const altura = 0.75
+        // const ancho = 0.75
+        // const altura = 0.75
         
-        // const t1 = [[ancho, 0, 0],[ancho*0.6, 0, 0],[ancho*0.3, 0, 0],[0, 0, 0]].reverse()
-        // const t2 = [[ancho, altura, 0],[ancho, altura*0.6, 0],[ancho, altura*0.3, 0],[ancho, 0, 0]].reverse()
-        // const t3 = [[0, altura, 0], [ancho * 2 / 15, altura + 0.3, 0], [ancho * 13 / 15, altura + 0.3, 0], [ancho, altura, 0]].reverse()
-        // const t4 = [[0, 0, 0], [0, altura * 0.3, 0], [0, altura * 0.6, 0], [0, altura, 0]].reverse()
+        // // const t1 = [[ancho, 0, 0],[ancho*0.6, 0, 0],[ancho*0.3, 0, 0],[0, 0, 0]].reverse()
+        // // const t2 = [[ancho, altura, 0],[ancho, altura*0.6, 0],[ancho, altura*0.3, 0],[ancho, 0, 0]].reverse()
+        // // const t3 = [[0, altura, 0], [ancho * 2 / 15, altura + 0.3, 0], [ancho * 13 / 15, altura + 0.3, 0], [ancho, altura, 0]].reverse()
+        // // const t4 = [[0, 0, 0], [0, altura * 0.3, 0], [0, altura * 0.6, 0], [0, altura, 0]].reverse()
 
-        // const tramos = [t1,t2,t3,t4]
-        // const data = obtenerPuntosCurva(tramos)
-        // console.log("D4t4: ", data)
-        // const pos = data.posicion
-        const t1 = [[0, 0, 0], [0, altura * 0.3, 0], [0, altura * 0.6, 0], [0, altura, 0]]
-        const t2 = [[0, altura, 0], [ancho * 2 / 15, altura + 0.3, 0], [ancho * 13 / 15, altura + 0.3, 0], [ancho, altura, 0]]
-        const t3 = [[ancho, altura, 0], [ancho, altura * 0.6, 0], [ancho, altura * 0.3, 0], [ancho, 0, 0]]
-        const t4 = [[ancho, 0, 0], [ancho * 0.6, 0, 0], [ancho * 0.3, 0, 0], [0, 0, 0]]
+        // // const tramos = [t1,t2,t3,t4]
+        // // const data = obtenerPuntosCurva(tramos)
+        // // console.log("D4t4: ", data)
+        // // const pos = data.posicion
+        // const t1 = [[0, 0, 0], [0, altura * 0.3, 0], [0, altura * 0.6, 0], [0, altura, 0]]
+        // const t2 = [[0, altura, 0], [ancho * 2 / 15, altura + 0.3, 0], [ancho * 13 / 15, altura + 0.3, 0], [ancho, altura, 0]]
+        // const t3 = [[ancho, altura, 0], [ancho, altura * 0.6, 0], [ancho, altura * 0.3, 0], [ancho, 0, 0]]
+        // const t4 = [[ancho, 0, 0], [ancho * 0.6, 0, 0], [ancho * 0.3, 0, 0], [0, 0, 0]]
 
-        const ladoIzq = new BezierCubica(t1, "z")
-        const ladoArriba = new BezierCubica(t2, "z")
-        const ladoDer = new BezierCubica(t3, "z")
-        const ladoAbajo = new BezierCubica(t4, "z")
+        // const ladoIzq = new BezierCubica(t1, "z")
+        // const ladoArriba = new BezierCubica(t2, "z")
+        // const ladoDer = new BezierCubica(t3, "z")
+        // const ladoAbajo = new BezierCubica(t4, "z")
 
-        //Obtenemos el poligono que forma la curva
-        const puntosLadoIzq = discretizar(ladoIzq, 1, false, true)
-        const puntosLadoArriba = discretizar(ladoArriba, 1 / 9, false, true)
-        const puntosLadoDer = discretizar(ladoDer, 1, false, true)
-        const puntosLadoAbajo = discretizar(ladoAbajo, 1, false, true)
+        // //Obtenemos el poligono que forma la curva
+        // const puntosLadoIzq = discretizar(ladoIzq, 1, false, true)
+        // const puntosLadoArriba = discretizar(ladoArriba, 1 / 9, false, true)
+        // const puntosLadoDer = discretizar(ladoDer, 1, false, true)
+        // const puntosLadoAbajo = discretizar(ladoAbajo, 1, false, true)
 
 
-        const pos = puntosLadoIzq.posicion.concat(
-            puntosLadoArriba.posicion,
-            puntosLadoDer.posicion,
-            puntosLadoAbajo.posicion
-        )
+        // const pos = puntosLadoIzq.posicion.concat(
+        //     puntosLadoArriba.posicion,
+        //     puntosLadoDer.posicion,
+        //     puntosLadoAbajo.posicion
+        // )
 
-        const norm = puntosLadoIzq.normal.concat(
-            puntosLadoArriba.normal,
-            puntosLadoDer.normal,
-            puntosLadoAbajo.normal
-        )
+        // const norm = puntosLadoIzq.normal.concat(
+        //     puntosLadoArriba.normal,
+        //     puntosLadoDer.normal,
+        //     puntosLadoAbajo.normal
+        // )
+
+        // TRAYECTORIA
+        const pos = [0, 0.44999998807907104, -2.75, 0, 5.918574810028076, 0.49699291586875916,0, 5.917105197906494, 0.5042499899864197, 0, 5.9146552085876465, 0.5163451433181763,0, 5.911224842071533, 0.5332782864570618,0, 5.906815052032471, 0.5550495386123657,0, 5.901424884796143, 0.5816588401794434,0, 5.895054817199707, 0.6131061911582947,0, 5.887704849243164, 0.6493915915489197,0, 5.879374980926514, 0.6905150413513184,0, 5.870065212249756, 0.7364765405654907,0, 5.859775066375732, 0.7872760891914368,0, 5.848505020141602, 0.8429136872291565,0, 5.836255073547363, 0.9033893346786499,0, 5.823025226593018, 0.968703031539917,0, 5.808815002441406, 1.0388548374176025,0, 5.7936248779296875, 1.113844633102417,0, 5.777454853057861, 1.19367253780365,0, 5.760304927825928, 1.2783384323120117,0, 5.742175102233887, 1.367842435836792,0, 5.72306489944458, 1.4621844291687012,0, 5.702974796295166, 1.5613645315170288,0, 5.6819047927856445, 1.6653826236724854,0, 5.659854888916016, 1.7742388248443604,0, 5.636825084686279, 1.8879330158233643,0, 5.612814903259277, 2.006465435028076,0, 5.587824821472168, 2.129835605621338,0, 5.561854839324951, 2.2580440044403076,0, 5.534904956817627, 2.3910906314849854,0, 5.506975173950195, 2.528975009918213,0, 5.478065013885498, 2.6716976165771484,0, 5.448174953460693, 2.819258213043213,0, 5.417304992675781, 2.9716567993164062,0, 5.385455131530762, 3.1288936138153076,0, 5.352624893188477, 3.290968418121338,0, 5.318815231323242, 3.457881212234497,0, 5.284025192260742, 3.629631996154785,0, 5.248254776000977, 3.8062210083007812,0, 5.211504936218262, 3.9876480102539062,0, 0.7206549644470215, 26.158023834228516]
 
         this.vertices = pos
         this.bufferPos = [].concat(...pos)
@@ -226,7 +229,7 @@ export class LineaCurva {
     }
 
     dibujar() {
-        const puntos = 16;
+        const puntos = 40;
         gl.useProgram(glProgramCurva);
         const mat = mat4.create()
         var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
