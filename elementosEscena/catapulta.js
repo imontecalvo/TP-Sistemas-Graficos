@@ -56,11 +56,13 @@ export class Catapulta extends Objeto3D {
             if (this.municionMov.obtenerPosicion()[1] > 0.35) {
                 this.municionMov.resetearMatriz()
                 this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
-                const x = 2*app.velInicial * app.tiempo
+                const x = 2 * app.velInicial * app.tiempo
                 const y = - (1 / 2) * 9.8 * (app.tiempo) * (app.tiempo)
                 this.municionMov.trasladar(0, y, x)
             }
         }
+
+        this.rotarY(app.rotacionCatapulta * 2 * Math.PI / 360)
     }
 
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {

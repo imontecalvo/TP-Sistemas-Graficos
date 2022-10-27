@@ -74,8 +74,8 @@
 			
 			var f2 = gui.addFolder('Escena');
 			f2.add(app, 'aperturaPorton', 0, 90.0).name("Apertura portón");
-			f2.add(app, 'rotacionCatapulta', 0.0, 360.0).name("Rotación y catapulta");
-			f1.add(app, 'disparar').name("Disparar!");
+			f2.add(app, 'rotacionCatapulta', 0.0, 360.0).name("Rotación catapulta");
+			f2.add(app, 'disparar').name("Disparar!");
 
 			gui.add(app, 'camara', ["Orbital", "Orbital catapulta", "Primera persona"]).name("Cámara");
 			gui.add(app, 'rendering', ["Default", "Normales"]).name("Rendering")
