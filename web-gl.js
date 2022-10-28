@@ -207,6 +207,12 @@ function setupVertexShaderMatrix() {
 function drawScene() {
     if (app.cambiosPendientes) {
         app.cambiosPendientes = false
+        app.moverMunicion = false
+        app.disparando = false
+        app.tiempo = 0
+        app.anguloCatapulta = 0
+        tiempo = 0
+
         escena = new Escena()
     }
 
@@ -219,15 +225,31 @@ function drawScene() {
 function tick() {
     // console.log(app.disparando,app.anguloCatapulta<Math.PI/2 )
     // app.tiempo = 0
+    // $('body').on("keydown", function (event) {
+    //     switch (event.key) {
+    //         case "1":
+    //             app.camara = "Orbital";
+
+    //         case "2":
+    //             app.camara = "Orbital catapulta";
+
+
+    //         case "3":
+    //             app.camara = "Primera persona";
+
+    //     }
+
+    // });
+
     if (app.disparando) {
         tiempo += 0.01
         if (app.anguloCatapulta < Math.PI / 2) {
             app.anguloCatapulta = (7 * tiempo ** 2) * 0.7 * Math.PI / 2
             app.tiempo = 0
-            app.velInicial = app.radioMC * (9.8) * (Math.PI/2) * tiempo
+            app.velInicial = app.radioMC * (9.8) * (Math.PI / 2) * tiempo
             // app.anguloCatapulta = 0
             // console.log("disparando", app.anguloCatapulta)
-        }else{
+        } else {
             app.tiempo += 0.01
             app.moverMunicion = true
             // console.log(app.tiempo)
@@ -242,4 +264,4 @@ function tick() {
 
 window.onload = loadShaders;
 
-export { gl, glProgram, glProgramCurva}
+export { gl, glProgram, glProgramCurva }

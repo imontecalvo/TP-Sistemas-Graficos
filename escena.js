@@ -28,7 +28,7 @@ export class Escena {
         this.muralla = new Muralla(app.alturaMuralla,app.cantLados)
         this.muralla.trasladar(0,0.4,0)
 
-        this.castillo = new Castillo(5,5,3)
+        this.castillo = new Castillo(app.ancho,app.largo,app.cantPisos)
         this.castillo.trasladar(0,0.4,0)
         
         this.catapulta = new Catapulta()
@@ -53,9 +53,13 @@ export class Escena {
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
         this.agua.dibujar(this.matriz)
+
+        this.muralla.actualizar()
         this.muralla.dibujar(this.matriz)
+
         this.catapulta.actualizar()
         this.catapulta.dibujar(this.matriz)
+
         this.castillo.dibujar(this.matriz)
     }
 }

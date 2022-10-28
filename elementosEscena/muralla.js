@@ -14,7 +14,7 @@ export class Muralla extends Objeto3D {
     constructor(altura, lados) {
         super()
         this.lados = lados
-        this.filas = this.lados - 1  + 2 + 4
+        this.filas = this.lados - 1 + 2 + 4
         this.columnas = 35
         this.largoEntrada = 2
         const h = 0.25
@@ -27,46 +27,55 @@ export class Muralla extends Objeto3D {
 
         //Rotamos para que la entrada quede de frente
         const matRot = mat4.create()
-        mat4.rotateY(matRot,matRot,-anguloEntrada)
-        
+        mat4.rotateY(matRot, matRot, -anguloEntrada)
+
         let posicionMuralla = []
         let normalesMuralla = []
-        for (let i = 0; i<data[0].length;i+=3){
-            const pos = [data[0][i], data[0][i+1], data[0][i+2], 1]
-            const norm = [data[1][i], data[1][i+1], data[1][i+2], 1]
-            vec4.transformMat4(pos,pos,matRot)
-            vec4.transformMat4(norm,norm,matRot)
+        for (let i = 0; i < data[0].length; i += 3) {
+            const pos = [data[0][i], data[0][i + 1], data[0][i + 2], 1]
+            const norm = [data[1][i], data[1][i + 1], data[1][i + 2], 1]
+            vec4.transformMat4(pos, pos, matRot)
+            vec4.transformMat4(norm, norm, matRot)
 
-            posicionMuralla.push(pos[0],pos[1],pos[2])
-            normalesMuralla.push(norm[0],norm[1],norm[2])
+            posicionMuralla.push(pos[0], pos[1], pos[2])
+            normalesMuralla.push(norm[0], norm[1], norm[2])
 
         }
 
         // Creacion entrada
-        const posPorton = this.obtenerPosPorton(posicionMuralla)
-        const entrada = new Entrada(2, this.largoEntrada, 0.25)
-        entrada.trasladar(posPorton[0], posPorton[1], posPorton[2])
-        this.agregarHijo(entrada)
+        this.posPorton = this.obtenerPosPorton(posicionMuralla)
+        this.entrada = new Entrada(2, this.largoEntrada, 0.25)
+        this.entrada.trasladar(this.posPorton[0], this.posPorton[1], this.posPorton[2])
+        this.agregarHijo(this.entrada)
 
         // Extremos y tapas de muralla
-        const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, posPorton)
+        const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
         const caras = this.obtenerCarasExtremos(extremos)
 
         // Creacion torres
-        for (let i = 0; i < this.lados; i++){
+        for (let i = 0; i < this.lados; i++) {
             const torre = new TorreMuralla(altura)
-            torre.rotarY(Math.PI * 2 / (this.lados) * i-Math.PI/(this.lados))
-            torre.trasladar(0,0,radio+1)
+            torre.rotarY(Math.PI * 2 / (this.lados) * i - Math.PI / (this.lados))
+            torre.trasladar(0, 0, radio + 1)
             this.agregarHijo(torre)
         }
 
-        this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion,posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
-        this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal,normalesMuralla, extremos.fin.normal,caras.fin.normal)
+        this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion, posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
+        this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal, normalesMuralla, extremos.fin.normal, caras.fin.normal)
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
-        
+
         this.mallaDeTriangulos = this.crearMalla()
         this.color = [0, 0, 0]
+    }
+
+    actualizar() {
+        this.entrada.porton.resetearMatriz()
+
+        this.entrada.porton.trasladar(0, 2, 0)
+        this.entrada.porton.rotarX((-app.aperturaPorton / 360) * Math.PI * 2)
+        this.entrada.porton.trasladar(0, - 2, 0)
+
     }
 
     obtenerPuntosCurva(altura, h, a, radio) {
@@ -239,7 +248,7 @@ export class Muralla extends Objeto3D {
         }
     }
 
-    obtenerPosPorton(pos){
+    obtenerPosPorton(pos) {
         const lastPointIdx = pos.length - 1
         const inicio = [pos[3 * 17], 0, pos[3 * 17 + 2]]
         const final = [pos[lastPointIdx - (3 * 17 + 2)], 0, pos[lastPointIdx - (3 * 17)]]

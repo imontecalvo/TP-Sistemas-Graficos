@@ -9,7 +9,7 @@ export class CamaraPrimeraPersona {
     constructor() {
         this.persona = new Objeto3D()
         this.control = new ControlFPCam()
-        this.persona.trasladar(20, 2, 20)
+        this.persona.trasladar(0, 2, 20)
     }
 
     actualizar() {
@@ -43,10 +43,6 @@ export class CamaraPrimeraPersona {
     }
 }
 
-// Dos objetos: persona y foco
-// foco -> direccionable (orbital) con posicion relativa de la persona
-// Persona -> movs w,a,s,d
-
 
 function ControlFPCam() {
 
@@ -62,8 +58,8 @@ function ControlFPCam() {
     var WHEEL_SCROLL = 1;
 
     var IS_MOUSE_DOWN = false;
-    var ALFA = 0;
-    // var ALFA = Math.PI/4;
+    // var ALFA = 0;
+    var ALFA = Math.PI;
     var BETA = Math.PI / 2;
 
     const FACTOR_VELOCIDAD = 0.005;

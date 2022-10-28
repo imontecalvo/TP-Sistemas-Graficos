@@ -5,7 +5,7 @@ import { BezierCubica } from "../bezier/bezier3.js"
 import { discretizar } from "../bezier/discretizador.js"
 
 export class PisosCastillo extends Objeto3D {
-    constructor(largo, ancho, cantPisos, alturaPiso) {
+    constructor(ancho, largo, cantPisos, alturaPiso) {
         super()
         const pisos = new Caja(cantPisos * alturaPiso, largo, ancho)
         this.agregarHijo(pisos)

@@ -11,6 +11,8 @@ export class Camara{
         this.orbital = new CamaraOrbital()
         this.orbitalCatapulta = new CamaraOrbital()
         this.primeraPersona = new CamaraPrimeraPersona()
+
+        this.control = ControlTipoCam()
     }
 
     actualizar(){
@@ -27,6 +29,27 @@ export class Camara{
     }
 }
 
+function ControlTipoCam(){
+    $('body').on("keydown", function (event) {
+        switch (event.key) {
+            case "1":
+                app.camara = "Orbital";
+                app.refreshGUI()
+                break;
+
+            case "2":
+                app.camara = "Orbital catapulta";
+                app.refreshGUI()
+                break;
+
+
+            case "3":
+                app.camara = "Primera persona";
+                app.refreshGUI()
+                break;
+        }
+    });
+}
 
 // export class CamaraOrbital {
 //     constructor() {
