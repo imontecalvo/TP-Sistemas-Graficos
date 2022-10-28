@@ -31,7 +31,7 @@ export class Escena {
     obtenerVista() {
         const data = {
             origen:[0,0,0],
-            posCatapulta:[this.catapulta.obtenerPosicion()]
+            posCatapulta:this.catapulta.obtenerPosicion()
         }
 
         return this.camara.generarVista(data)

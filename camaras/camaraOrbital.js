@@ -15,7 +15,7 @@ export class CamaraOrbital {
     }
 
     generarVista(foco) {
-
+        // console.log(foco)
         var posObserver = this.control.obtener_posicion();
         var scroll = posObserver.scroll;
 

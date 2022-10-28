@@ -19,8 +19,9 @@ export class Camara{
     }
 
     generarVista(data){
-        if (app.camara == "Orbital") this.orbital.generarVista([0,0,0])
-        else if (app.camara == "Orbital catapulta") this.orbitalCatapulta.generarVista(data.posCatapulta)
+        // console.log(data)
+        if (app.camara == "Orbital") return this.orbital.generarVista(data.origen)
+        else if (app.camara == "Orbital catapulta") return this.orbitalCatapulta.generarVista(data.posCatapulta)
     }
 }
 
