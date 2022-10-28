@@ -72,7 +72,7 @@ export class Objeto3D {
         mat4.scale(this.matrizModelado, this.matrizModelado, [x, y, z]);
     }
 
-    async dibujar(matrizPadre) {
+    async dibujar(matrizPadre, forzarColor = false) {
         if (this.oculto) return
 
         gl.useProgram(glProgram);
@@ -85,7 +85,7 @@ export class Objeto3D {
         if (this.mallaDeTriangulos) {
             // this.configurarIluminacion()
 
-            const renderColor = app.rendering == "Default" ? true : false
+            const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
 
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
