@@ -17,8 +17,8 @@ export class EjesEscena {
     }
     
     dibujar() {
-        this.ejeX.dibujar(mat4.create())
-        this.ejeY.dibujar(mat4.create())
-        this.ejeZ.dibujar(mat4.create())
+        this.ejeX.dibujar(mat4.create(), true)
+        this.ejeY.dibujar(mat4.create(), true)
+        this.ejeZ.dibujar(mat4.create(), true)
     }
 }
