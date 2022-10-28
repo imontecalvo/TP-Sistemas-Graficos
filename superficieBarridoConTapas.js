@@ -12,7 +12,6 @@ export const superficieBarridoConTapas = (tramos, ancho) => {
 
     const cantPuntosCurva = columnas + 1
     const recorrido = new BezierCubica([[0, 0, ancho / 2], [0, 0, ancho / 3], [0, 0, -ancho / 3], [0, 0, -ancho / 2]], "y")
-    console.log("DAa4ta: ", puntosCurva)
     const data = superficeBarrido(puntosCurva, recorrido, columnas, 2)
     const caras = obtenerCaras(data, cantPuntosCurva, ancho)
 

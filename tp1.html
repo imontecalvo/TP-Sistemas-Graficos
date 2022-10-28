@@ -58,7 +58,8 @@
 				app.gui.destroy()
 				GUI()
 			},
-			gui:null
+			gui:null,
+			mostrarEjes:false
 		};
 
 		
@@ -83,6 +84,7 @@
 			gui.add(app, 'rendering', ["Default", "Normales"]).name("Rendering")
 
 			gui.add(app, 'dibujarNormales').name("Dibujar normales");
+			gui.add(app, 'mostrarEjes').name("Mostar ejes");
 
 			f1.open();
 			f2.open();

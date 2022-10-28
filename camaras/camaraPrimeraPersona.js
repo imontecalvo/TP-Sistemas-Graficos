@@ -100,21 +100,20 @@ function ControlFPCam() {
     });
 
     $('body').on("keydown", function (event) {
-        //console.log(event);
         switch (event.key) {
             case "a":
-                DERECHA += 0.3
+                DERECHA += 0.5
                 break;
 
             case "d":
-                DERECHA -= 0.3
+                DERECHA -= 0.5
                 break;
 
             case "w":
-                ADELANTE += 0.3
+                ADELANTE += 0.5
                 break;
             case "s":
-                ADELANTE -= 0.3
+                ADELANTE -= 0.5
                 break;
         }
 
@@ -174,8 +173,6 @@ function ControlFPCam() {
             if (BETA > Math.PI) {
                 BETA = Math.PI - 0.001;
             }
-
-            // console.log("ALFA: " + ALFA + " BETA: " + BETA);
 
         }
 

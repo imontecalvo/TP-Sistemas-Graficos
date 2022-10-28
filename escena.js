@@ -15,22 +15,20 @@ export class Escena {
         this.matriz = mat4.create()
         this.camara = new Camara()
 
-        this.curva = new LineaCurva([[-5, 5, 0], [-0.5, 0, 0], [0.5, 0, 0], [5, 5, 0]])
-
         this.terreno = new Terreno()
 
-        this.puente = new Caja(0.2,2,8,[63/255,147/255,68/255])
-        this.puente.trasladar(0,-0.2,10+7/2)
+        this.puente = new Caja(0.2, 2, 8, [63 / 255, 147 / 255, 68 / 255])
+        this.puente.trasladar(0, -0.2, 10 + 7 / 2)
 
-        this.agua = new Caja(0.2,50,50,[101/255,218/255,223/255])
-        this.agua.trasladar(0,-0.8,0)
+        this.agua = new Caja(0.2, 50, 50, [101 / 255, 218 / 255, 223 / 255])
+        this.agua.trasladar(0, -0.8, 0)
 
-        this.muralla = new Muralla(app.alturaMuralla,app.cantLados)
-        this.muralla.trasladar(0,0.4,0)
+        this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
+        this.muralla.trasladar(0, 0.4, 0)
 
-        this.castillo = new Castillo(app.ancho,app.largo,app.cantPisos)
-        this.castillo.trasladar(0,0.4,0)
-        
+        this.castillo = new Castillo(app.ancho, app.largo, app.cantPisos)
+        this.castillo.trasladar(0, 0.4, 0)
+
         this.catapulta = new Catapulta()
 
     }
@@ -41,15 +39,16 @@ export class Escena {
 
     obtenerVista() {
         const data = {
-            origen:[0,0,0],
-            posCatapulta:this.catapulta.obtenerPosicion()
+            origen: [0, 0, 0],
+            posCatapulta: this.catapulta.obtenerPosicion()
         }
 
         return this.camara.generarVista(data)
     }
 
     dibujar() {
-        // this.ejes.dibujar()
+        if (app.mostrarEjes) this.ejes.dibujar()
+        
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
         this.agua.dibujar(this.matriz)

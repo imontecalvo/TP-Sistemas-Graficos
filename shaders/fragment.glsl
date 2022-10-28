@@ -5,6 +5,7 @@ precision highp float;
 varying vec3 vNormal;
 varying vec3 vPosWorld;
 varying vec3 vColor;
+varying vec2 vUv;
 
 void main(void) {
     vec3 ambientColor = vec3(0.5,0.5,0.5);

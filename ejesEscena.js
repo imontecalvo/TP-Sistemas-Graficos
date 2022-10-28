@@ -20,12 +20,11 @@ export class EjesEscena {
 
 class Eje {
     constructor(tipo) {
-        // super(30, 30)
         this.filas = 30
         this.columnas = 30
         this.tipo = tipo
-        this.radio = 0.1
-        this.largo = 10
+        this.radio = 0.05
+        this.largo = 15
         if (tipo=="X") this.color = [1, 0, 0]
         if (tipo=="Y") this.color = [0, 1, 0]
         if (tipo=="Z") this.color = [0, 0, 1]

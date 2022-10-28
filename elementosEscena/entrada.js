@@ -76,9 +76,9 @@ class MarcoPorton extends Objeto3D {
         const ptosCtrlLadoIzqInt = ptosCtrlLadoDerInt.map(x => ([x[0] - largo, x[1], x[2]])).reverse()
         const ptosCtrlAbajoIzq = ptosCtrlAbajoDer.map(x => ([x[0] - largo - anchoMarco, x[1], x[2]]))
         const ptosCtrlLadoIzqExt = ptosCtrlLadoDerInt.map(x => ([x[0] - largo - anchoMarco, x[1], x[2]]))
-        const ptosCtrlArribaExtIzq = [[-largo / 2 - anchoMarco, alto + anchoMarco, profundidad / 2], [-largo / 2 - anchoMarco * 0.5, alto + anchoMarco, profundidad / 2], [-largo / 2 - anchoMarco * 0.3, alto + anchoMarco, profundidad / 2], [-largo / 2, alto + anchoMarco, profundidad / 2]]
-        const ptosCtrlArribaExt = ptosCtrlArribaInt.map(x => ([x[0], x[1] + anchoMarco, x[2]])).reverse()
-        const ptosCtrlArribaExtDer = [[largo / 2, alto + anchoMarco, profundidad / 2], [largo / 2 + anchoMarco * 0.3, alto + anchoMarco, profundidad / 2], [largo / 2 + anchoMarco * 0.5, alto + anchoMarco, profundidad / 2], [largo / 2 + anchoMarco, alto + anchoMarco, profundidad / 2]]
+        const ptosCtrlArribaExtIzq = [[-largo / 2 - anchoMarco, app.alturaMuralla+0.25, profundidad / 2], [-largo / 2 - anchoMarco * 0.5, app.alturaMuralla+0.25, profundidad / 2], [-largo / 2 - anchoMarco * 0.3, app.alturaMuralla+0.25, profundidad / 2], [-largo / 2, app.alturaMuralla+0.25, profundidad / 2]]
+        const ptosCtrlArribaExt = ptosCtrlArribaInt.map(x => ([x[0], x[1] + app.alturaMuralla+0.25-alto, x[2]])).reverse()
+        const ptosCtrlArribaExtDer = [[largo / 2, app.alturaMuralla+0.25, profundidad / 2], [largo / 2 + anchoMarco * 0.3, app.alturaMuralla+0.25, profundidad / 2], [largo / 2 + anchoMarco * 0.5, app.alturaMuralla+0.25, profundidad / 2], [largo / 2 + anchoMarco, app.alturaMuralla+0.25, profundidad / 2]]
         const ptosCtrlLadoDerExt = ptosCtrlLadoDerInt.map(x => ([x[0] + anchoMarco, x[1], x[2]])).reverse()
 
         const curvaAbajoDer = new BezierCubica(ptosCtrlAbajoDer, "z")

@@ -21,7 +21,6 @@ export class Terreno extends Objeto3D{
 class Centro extends Objeto3D {
     constructor() {
         super([63/255,147/255,68/255])
-        this.colorr()
         const radio = 10
         this.filas = 40
         this.columnas = 3

@@ -4,7 +4,7 @@ var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(color = [0,0,0]) {
+    constructor(color = [0, 0, 0]) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
@@ -12,15 +12,11 @@ export class Objeto3D {
         this.color = color
     }
 
-    colorr(){
-        console.log("colorr: ", this.color)
-    }
-
-    ocultar(){
+    ocultar() {
         this.oculto = true
     }
 
-    mostrar(){
+    mostrar() {
         this.oculto = false
     }
 
@@ -87,8 +83,10 @@ export class Objeto3D {
         mat4.transpose(matNorm, matNorm);
 
         if (this.mallaDeTriangulos) {
+            // this.configurarIluminacion()
+
             const renderColor = app.rendering == "Default" ? true : false
-            
+
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
 
@@ -110,6 +108,11 @@ export class Objeto3D {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
             gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
+            var vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
+            gl.enableVertexAttribArray(vertexUVAttribute);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
+            gl.vertexAttribPointer(vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
+
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
 
             gl.drawElements(gl.TRIANGLE_STRIP, this.mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
@@ -122,6 +125,21 @@ export class Objeto3D {
         for (let hijo of this.hijos) {
             await hijo.dibujar(mat);
         }
+    }
+
+    configurarIluminacion(){
+        var ambientColorUniform = gl.getUniformLocation(glProgram, "uAmbientColor");
+        gl.uniform3f(ambientColorUniform, 0.6, 0.6, 0.6 );
+
+        var lightColorUniform = gl.getUniformLocation(glProgram, "uDirectionalColor");
+        gl.uniform3f(lightColorUniform, 1.2, 1.1, 0.7);
+
+        var lightDirectionUniform = gl.getUniformLocation(glProgram, "uLightPosition");
+        gl.uniform3fv(lightDirectionUniform, [10.0,30, 3.0]);
+
+        var useLightingUniform = gl.getUniformLocation(glProgram, "uUseLighting");
+        gl.uniform1f(useLightingUniform, true);
+
     }
 
     dibujarNormales(mat) {
@@ -158,6 +176,18 @@ export class Objeto3D {
             return i * (columnas + 1) + j;
         }
 
+        let uvBuffer = []
+
+        for (var i = 0; i <= this.filas; i++) {
+            for (var j = 0; j <= this.columnas; j++) {
+                var u=j/this.columnas;
+                var v=i/this.filas;
+
+                uvBuffer.push(u);
+                uvBuffer.push(v);
+            }
+        }
+
         // Buffer de indices de los triángulos
         let indexBuffer = [];
 
@@ -186,11 +216,11 @@ export class Objeto3D {
         webgl_normal_buffer.itemSize = 3;
         webgl_normal_buffer.numItems = this.bufferPos.length / 3;
 
-        // webgl_uvs_buffer = gl.createBuffer();
-        // gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
-        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
-        // webgl_uvs_buffer.itemSize = 2;
-        // webgl_uvs_buffer.numItems = uvBuffer.length / 2;
+        let webgl_uvs_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
+        webgl_uvs_buffer.itemSize = 2;
+        webgl_uvs_buffer.numItems = uvBuffer.length / 2;
 
 
         let webgl_index_buffer = gl.createBuffer();
@@ -202,7 +232,7 @@ export class Objeto3D {
         return {
             webgl_position_buffer,
             webgl_normal_buffer,
-            // webgl_uvs_buffer,
+            webgl_uvs_buffer,
             webgl_index_buffer
         }
     }

@@ -68,7 +68,6 @@ export class Catapulta extends Objeto3D {
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {
         const multiplicadores = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
         multiplicadores.forEach((x) => {
-            console.log(x)
             const rueda = new Cilindro(radio, ancho, 20, [89 / 255, 67 / 255, 46 / 255])
             rueda.trasladar(x[0] * (largoTablon + ancho) / 2, 0, x[1] * (anchoTablon / 2) - (x[1] * radio) - 0.5)
             rueda.rotarY(Math.PI / 2)
