@@ -7,12 +7,12 @@ import { discretizar } from "../bezier/discretizador.js"
 export class PisosCastillo extends Objeto3D {
     constructor(ancho, largo, cantPisos, alturaPiso) {
         super()
-        const pisos = new Caja(cantPisos * alturaPiso, largo, ancho)
+        const pisos = new Caja(cantPisos * alturaPiso, largo, ancho,[238/255,226/255,121/255])
         this.agregarHijo(pisos)
 
         const anchoBorde = 0.15
         for (let i = 1; i < cantPisos; i++) {
-            const borde = new Caja(anchoBorde, largo + anchoBorde, ancho + anchoBorde)
+            const borde = new Caja(anchoBorde, largo + anchoBorde, ancho + anchoBorde,[208/255,197/255,105/255])
             borde.trasladar(0, i * alturaPiso - anchoBorde / 2, 0)
             this.agregarHijo(borde)
         }
@@ -66,7 +66,7 @@ export class PisosCastillo extends Objeto3D {
 
 export class Ventana extends Objeto3D {
     constructor(altura, largo) {
-        super()
+        super([62/255,62/255,62/255])
         this.filas = 5
         this.columnas = 16 - 1
         const ancho = 0.15
@@ -83,7 +83,6 @@ export class Ventana extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerCaras(data, cantPuntosCurva, ancho) {

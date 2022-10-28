@@ -15,7 +15,7 @@ export class Catapulta extends Objeto3D {
         this.alturaCatapulta = 2
         this.medidasTablon = [0.15, 1.8, 3.5]
         this.elevacion = 0.3
-        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2])
+        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], [103 / 255, 78 / 255, 55 / 255])
         tablon.trasladar(0, 0, -0.5)
 
         this.agregarHijo(tablon)
@@ -25,7 +25,7 @@ export class Catapulta extends Objeto3D {
         this.brazo = new Brazo(this.medidasTablon[2], this.medidasTablon[0] / 2 + this.alturaCatapulta - 0.12)
         this.agregarHijo(this.brazo)
 
-        this.municionMov = new Esfera(0.35)
+        this.municionMov = new Esfera(0.35, [100 / 255, 100 / 255, 100 / 255])
         this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
         this.municionMov.ocultar()
         this.agregarHijo(this.municionMov)
@@ -69,17 +69,17 @@ export class Catapulta extends Objeto3D {
         const multiplicadores = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
         multiplicadores.forEach((x) => {
             console.log(x)
-            const rueda = new Cilindro(radio, ancho, 20)
+            const rueda = new Cilindro(radio, ancho, 20, [89 / 255, 67 / 255, 46 / 255])
             rueda.trasladar(x[0] * (largoTablon + ancho) / 2, 0, x[1] * (anchoTablon / 2) - (x[1] * radio) - 0.5)
             rueda.rotarY(Math.PI / 2)
             this.agregarHijo(rueda)
         })
 
-        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10)
+        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, [41 / 255, 24 / 255, 24 / 255])
         eje1.trasladar(0, 0, (anchoTablon / 2) - radio - 0.5)
         eje1.rotarY(Math.PI / 2)
 
-        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10)
+        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, [41 / 255, 24 / 255, 24 / 255])
         eje2.trasladar(0, 0, -(anchoTablon / 2) + radio - 0.5)
         eje2.rotarY(Math.PI / 2)
 
@@ -102,8 +102,7 @@ export class Catapulta extends Objeto3D {
         this.agregarHijo(pilar1)
         this.agregarHijo(pilar2)
 
-        const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20)
-        console.log(ejePilar.obtenerPosicion())
+        const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20, [41 / 255, 24 / 255, 24 / 255])
         // ejePilar.trasladar(0, -alturaCatapulta - elevacion -0.15, 0)
 
         ejePilar.trasladar(0, elevacion + altoPilar - 0.2, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2 - 0.5)
@@ -116,7 +115,7 @@ export class Catapulta extends Objeto3D {
 
 class Pilar extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super()
+        super([89 / 255, 67 / 255, 46 / 255])
         this.filas = 5
         this.columnas = 8 - 1
         const puntosCurva = this.obtenerPuntosCurva(alto, largo)
@@ -132,7 +131,6 @@ class Pilar extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerCaras(data, cantPuntosCurva, ancho) {
@@ -214,7 +212,7 @@ class Brazo extends Objeto3D {
         barra.rotarY(-Math.PI / 2)
         this.agregarHijo(barra)
 
-        const pala = new Caja(0.1, 1, 1)
+        const pala = new Caja(0.1, 1, 1, [89 / 255, 67 / 255, 46 / 255])
         pala.trasladar(0, 0, anchoTablon / 2 - largoBarra)
         this.agregarHijo(pala)
 
@@ -222,9 +220,8 @@ class Brazo extends Objeto3D {
         this.agregarHijo(this.colgante)
 
         const radioMunicion = 0.35
-        this.municion = new Esfera(radioMunicion)
+        this.municion = new Esfera(radioMunicion, [100 / 255, 100 / 255, 100 / 255])
         this.municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
-        console.log(this.municion.obtenerPosicion())
         this.agregarHijo(this.municion)
 
         app.radioMC = -(anchoTablon / 2 - largoBarra)
@@ -240,7 +237,7 @@ class Brazo extends Objeto3D {
 
 class Barra extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super()
+        super([89 / 255, 67 / 255, 46 / 255])
         this.filas = 5
         this.columnas = 7
         const puntosCurva = this.obtenerPuntosCurva(alto, largo)
@@ -256,7 +253,6 @@ class Barra extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerCaras(data, cantPuntosCurva, ancho) {
@@ -332,7 +328,7 @@ class Colgante extends Objeto3D {
         super()
 
         // EJE
-        const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20)
+        const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20, [41 / 255, 24 / 255, 24 / 255])
         eje.trasladar(0, 0, 0)
         // eje.trasladar(0, 0, anchoTablon / 2 - 0.10)
         eje.rotarY(Math.PI / 2)
@@ -352,8 +348,8 @@ class Colgante extends Objeto3D {
         this.agregarHijo(pilar2)
 
         //BLOQUE
-        const bloque = new Caja(0.6, 2.5 * anchoBarra + 0.1, 0.6)
-        bloque.trasladar(0, 0 - 0.30 - 0.6, 0)
+        const bloque = new Caja(0.75, 2.5 * anchoBarra + 0.1, 0.75, [115 / 255, 115 / 255, 115 / 255])
+        bloque.trasladar(0, 0 - 0.37 - 0.6, 0)
         // bloque.trasladar(0, 0 - 0.30 - 0.6, anchoTablon / 2 - 0.10)
         this.agregarHijo(bloque)
     }

@@ -11,9 +11,12 @@ uniform mat4 normalMatrix;
             
 uniform vec3 uColor;
 
+uniform bool renderColor;
+
 varying vec3 vNormal;    
 varying vec3 vPosWorld;  
 varying vec3 vColor;
+
 
 void main(void) {
     vec3 position = aVertexPosition;

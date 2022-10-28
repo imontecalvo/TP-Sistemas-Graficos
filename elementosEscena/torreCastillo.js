@@ -20,7 +20,7 @@ export class TorreCastillo extends Objeto3D {
 
 class Torre extends Objeto3D {
     constructor(alturaVariable, alturaFija, radioInf, radioSup) {
-        super()
+        super([225/255,214/255,121/255])
         this.filas = 20
         this.columnas = 2 + 5 + 2 - 1
 
@@ -33,7 +33,6 @@ class Torre extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
     obtenerPuntosCurva(alturaVariable, alturaFija, radioInf, radioSup) {
         //Puntos de control
@@ -73,7 +72,7 @@ class Torre extends Objeto3D {
 
 class TechoTorre extends Objeto3D {
     constructor(alturaVariable, alturaFija, radioSup) {
-        super()
+        super([38/255,87/255,136/255])
         this.filas = 20
         this.columnas = 10 - 1
         const puntosCurva = this.obtenerPuntosCurva(alturaVariable, alturaFija, radioSup)
@@ -85,7 +84,6 @@ class TechoTorre extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
     obtenerPuntosCurva(alturaVariable) {
         //Puntos de control

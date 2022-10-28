@@ -12,7 +12,7 @@ var vec4 = glMatrix.vec4;
 
 export class Muralla extends Objeto3D {
     constructor(altura, lados) {
-        super()
+        super([125/255,125/255,125/255])
         this.lados = lados
         this.filas = this.lados - 1 + 2 + 4
         this.columnas = 35
@@ -66,7 +66,6 @@ export class Muralla extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     actualizar() {

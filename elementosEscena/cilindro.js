@@ -3,8 +3,9 @@ import { BezierCubica } from "../bezier/bezier3.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 
 export class Cilindro extends Objeto3D {
-    constructor(radio, ancho, columnas) {
-        super()
+    constructor(radio, ancho, columnas, color =[0,0,0]) {
+        super(color)
+
         this.filas = 5
         this.columnas = columnas
         const puntosCurva = this.obtenerPuntosCurva(radio, columnas)
@@ -20,7 +21,6 @@ export class Cilindro extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerCaras(data, cantPuntosCurva, ancho, radio) {

@@ -8,7 +8,7 @@ import { Caja } from "./caja.js";
 export class Entrada extends Objeto3D {
     constructor(alto, largo, ancho) {
         super()
-        this.porton = new Caja(alto, largo, ancho)
+        this.porton = new Caja(alto, largo, ancho, [103 / 255, 78 / 255, 55 / 255])
         const marco = new MarcoPorton(alto, largo, ancho)
         this.agregarHijo(this.porton)
         this.agregarHijo(marco)
@@ -17,7 +17,7 @@ export class Entrada extends Objeto3D {
 
 class MarcoPorton extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super()
+        super([115 / 255, 115 / 255, 115 / 255])
         const anchoMarco = 0.25
         const profundidad = ancho + 4 * anchoMarco
 
@@ -36,7 +36,6 @@ class MarcoPorton extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerCaras(data, cantPuntosCurva, ancho, alto, anchoMarco) {

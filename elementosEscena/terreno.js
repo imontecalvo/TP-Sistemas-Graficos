@@ -20,7 +20,8 @@ export class Terreno extends Objeto3D{
 
 class Centro extends Objeto3D {
     constructor() {
-        super()
+        super([63/255,147/255,68/255])
+        this.colorr()
         const radio = 10
         this.filas = 40
         this.columnas = 3
@@ -42,13 +43,12 @@ class Centro extends Objeto3D {
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0,0,0]
     }
 }
 
 class Periferia extends Objeto3D {
     constructor() {
-        super()
+        super([63/255,147/255,68/255])
         this.filas = 8
         this.columnas = 3
         var puntosCurva = []
@@ -69,7 +69,6 @@ class Periferia extends Objeto3D {
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0,0,0]
     }
 }
 

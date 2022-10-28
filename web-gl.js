@@ -223,43 +223,21 @@ function drawScene() {
 }
 
 function tick() {
-    // console.log(app.disparando,app.anguloCatapulta<Math.PI/2 )
-    // app.tiempo = 0
-    // $('body').on("keydown", function (event) {
-    //     switch (event.key) {
-    //         case "1":
-    //             app.camara = "Orbital";
-
-    //         case "2":
-    //             app.camara = "Orbital catapulta";
-
-
-    //         case "3":
-    //             app.camara = "Primera persona";
-
-    //     }
-
-    // });
-
     if (app.disparando) {
         tiempo += 0.01
         if (app.anguloCatapulta < Math.PI / 2) {
             app.anguloCatapulta = (7 * tiempo ** 2) * 0.7 * Math.PI / 2
             app.tiempo = 0
             app.velInicial = app.radioMC * (9.8) * (Math.PI / 2) * tiempo
-            // app.anguloCatapulta = 0
-            // console.log("disparando", app.anguloCatapulta)
+
         } else {
             app.tiempo += 0.01
             app.moverMunicion = true
-            // console.log(app.tiempo)
-            // console.log(app.moverMunicion, app.velInicial)
         }
     }
-    // console.log(app)
+
     requestAnimationFrame(tick);
     drawScene();
-    // animate();
 }
 
 window.onload = loadShaders;

@@ -4,8 +4,9 @@ import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 
 export class Caja extends Objeto3D{
-    constructor(alto, largo, ancho) {
-        super()
+    constructor(alto, largo, ancho, color=[0,0,0]) {
+        super(color)
+
         this.filas = 5
         this.columnas = 7
         const puntosCurva = this.obtenerPuntosCurva(alto, largo)
@@ -21,7 +22,6 @@ export class Caja extends Objeto3D{
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerCaras(data, cantPuntosCurva, ancho) {

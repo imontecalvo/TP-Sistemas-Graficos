@@ -5,7 +5,7 @@ import { superficieRevolucion } from "../superficieRevolucion.js";
 
 export class TorreMuralla extends Objeto3D {
     constructor(altura) {
-        super()
+        super([115/255,115/255,115/255])
         this.filas = 20
         this.columnas = 18-1
         const puntosCurva = this.obtenerPuntosCurva(altura+0.85)
@@ -17,7 +17,6 @@ export class TorreMuralla extends Objeto3D {
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     obtenerPuntosCurva(altura) {

@@ -1,8 +1,8 @@
 import { Objeto3D } from "../objeto3d.js"
 
 export class Esfera extends Objeto3D{
-    constructor(radio) {
-        super()
+    constructor(radio, color=[0,0,0]) {
+        super(color)
         this.radio = radio
         this.filas = 20
         this.columnas = 20
@@ -14,7 +14,6 @@ export class Esfera extends Objeto3D{
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        this.color = [0, 0, 0]
     }
 
     generarGeometria() {

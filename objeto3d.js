@@ -4,11 +4,16 @@ var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor() {
+    constructor(color = [0,0,0]) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
         this.oculto = false
+        this.color = color
+    }
+
+    colorr(){
+        console.log("colorr: ", this.color)
     }
 
     ocultar(){
@@ -82,12 +87,16 @@ export class Objeto3D {
         mat4.transpose(matNorm, matNorm);
 
         if (this.mallaDeTriangulos) {
+            const renderColor = app.rendering == "Default" ? true : false
+            
             var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
 
             var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
             gl.uniformMatrix4fv(normalMatrixUniform, false, matNorm);
 
+            var rendering = gl.getUniformLocation(glProgram, "renderColor");
+            gl.uniform1i(rendering, renderColor);
             var colorUniform = gl.getUniformLocation(glProgram, "uColor");
             gl.uniform3fv(colorUniform, this.color);
 
