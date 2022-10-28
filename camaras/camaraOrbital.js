@@ -1,30 +1,23 @@
-import { Objeto3D } from "./objeto3d.js"
-import { crearMalla } from "./geometria.js"
-
 var vec3 = glMatrix.vec3;
 var mat4 = glMatrix.mat4;
 
-export class Camara {
+export class CamaraOrbital {
     constructor() {
-        this.control = new ControlRaton()
+        this.control = new ControlMouse()
         this.position = vec3.create()
     }
 
     actualizar() {
         this.control.actualizar()
-        // const posicion = this.control.obtener_posicion() 
-        // this.position = vec3.fromValues(posicion.x, posicion.y, posicion.z)
     }
 
-    generarVista(posHeli) {
-
+    generarVista(foco) {
         var posObserver = this.control.obtener_posicion();
-        // console.log(posObserver)
         var scroll = posObserver.scroll;
 
         var matrizVista = mat4.create();
-        var ojo = vec3.fromValues(posHeli[0]+scroll*posObserver.x,posHeli[0]+scroll*posObserver.y,posHeli[0]+scroll*posObserver.z);
-        var centro = vec3.fromValues(0, 0, 0);
+        var ojo = vec3.fromValues(foco[0] + scroll * posObserver.x, foco[1] + scroll * posObserver.y, foco[2] + scroll * posObserver.z);
+        var centro = vec3.fromValues(foco[0], foco[1], foco[2]);
 
         mat4.lookAt(matrizVista,
             ojo,
@@ -37,7 +30,7 @@ export class Camara {
 
 }
 
-function ControlRaton() {
+function ControlMouse() {
 
     var MOUSE = {
         x: 0,
@@ -55,13 +48,24 @@ function ControlRaton() {
     var BETA = Math.PI / 2;
 
     const FACTOR_VELOCIDAD = 0.01;
-    const RADIO = 10;
+    const RADIO = 20;
 
+    var puntosPorArrastre = 0
 
     // seteo handlers del raton
     $("body").mousemove(function (e) {
-        MOUSE.x = e.clientX || e.pageX;
-        MOUSE.y = e.clientY || e.pageY
+        if (IS_MOUSE_DOWN) {
+            MOUSE.x = e.clientX || e.pageX;
+            MOUSE.y = e.clientY || e.pageY
+            if (puntosPorArrastre == 0) {
+                PREV_MOUSE.x = MOUSE.x;
+                PREV_MOUSE.y = MOUSE.y;
+            }
+            puntosPorArrastre += 1
+
+        } else {
+            puntosPorArrastre = 0
+        }
     });
 
     $('body').mousedown(function (event) {
@@ -71,7 +75,7 @@ function ControlRaton() {
     $('body').mouseup(function (event) {
         IS_MOUSE_DOWN = false;
     });
-    
+
     $('body').on("wheel", function (event) {
         WHEEL_SCROLL += event.originalEvent.deltaY / 100;
         WHEEL_SCROLL = Math.max(0.01, Math.min(6, WHEEL_SCROLL));
@@ -94,27 +98,30 @@ function ControlRaton() {
             return;
         }
 
-        var deltaX = 0;
-        var deltaY = 0;
+        if (puntosPorArrastre > 1) {
+            var deltaX = 0;
+            var deltaY = 0;
 
-        if (PREV_MOUSE.x) {
-            deltaX = MOUSE.x - PREV_MOUSE.x;
-        }
-        if (PREV_MOUSE.y) {
-            deltaY = MOUSE.y - PREV_MOUSE.y;
-        }
+            if (PREV_MOUSE.x) {
+                deltaX = MOUSE.x - PREV_MOUSE.x;
+            }
+            if (PREV_MOUSE.y) {
+                deltaY = MOUSE.y - PREV_MOUSE.y;
+            }
 
-        PREV_MOUSE.x = MOUSE.x;
-        PREV_MOUSE.y = MOUSE.y;
+            PREV_MOUSE.x = MOUSE.x;
+            PREV_MOUSE.y = MOUSE.y;
 
-        ALFA = ALFA + deltaX * FACTOR_VELOCIDAD;
-        BETA = BETA + deltaY * FACTOR_VELOCIDAD;
+            ALFA = ALFA + deltaX * FACTOR_VELOCIDAD;
+            BETA = BETA + deltaY * FACTOR_VELOCIDAD;
 
-        if (BETA <= 0) {
-            BETA = 0.001;
-        }
-        if (BETA > Math.PI) {
-            BETA = Math.PI - 0.001;
+            if (BETA <= 0) {
+                BETA = 0.001;
+            }
+            if (BETA > Math.PI) {
+                BETA = Math.PI - 0.001;
+            }
+
         }
 
     }

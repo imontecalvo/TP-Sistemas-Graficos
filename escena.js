@@ -1,71 +1,63 @@
-import {CamaraInteractuableArrastre} from "./camara.js"
-import {Esfera, Plano} from "./esfera.js"
-import { EsferaDirigible } from "./esferaDirigible.js";
-import { Camara } from "./camara2.js";
-import { EjesEscena } from "./ejesEscena.js";
+import { Camara } from "./camaras/camara.js";
+import { EjesEscena } from "./elementosEscena/ejesEscena.js";
+import { Terreno } from "./elementosEscena/terreno.js"
+import { Muralla } from "./elementosEscena/muralla.js"
+import { Castillo } from "./elementosEscena/castillo.js";
+import { Catapulta } from "./elementosEscena/catapulta.js";
+import { Caja } from "./elementosEscena/caja.js";
 
 var mat4 = glMatrix.mat4;
 
 export class Escena {
-    constructor(){
+    constructor() {
         this.ejes = new EjesEscena()
         this.matriz = mat4.create()
         this.camara = new Camara()
-        // this.esferaDirigible = new EsferaDirigible(100, 100, 1)
-        // this.esferaDirigible.trasladar(-5,0,0)
-        this.plano = new Esfera(100,100,1)
-        this.plano.trasladar(0,0,0)
-        this.camera = new CamaraInteractuableArrastre()
-        this.centro = new Esfera(20,20,0.2)
 
-        // this.x1 = new Esfera(20,20,0.2)
-        // this.x1.trasladar(0.5,0,0)
-        // this.x2 = new Esfera(20,20,0.2)
-        // this.x2.trasladar(1.,0,0)
-        // this.x3 = new Esfera(20,20,0.2)
-        // this.x3.trasladar(1.5,0,0)
-        // this.x4 = new Esfera(20,20,0.2)
-        // this.x4.trasladar(2.,0,0)
-        // this.x5 = new Esfera(20,20,0.2)
-        // this.x5.trasladar(2.5,0,0)
+        this.terreno = new Terreno()
 
-        // this.y1 = new Esfera(20,20,0.2)
-        // this.y1.trasladar(0, 0.5,0)
-        // this.y2 = new Esfera(20,20,0.2)
-        // this.y2.trasladar(0, 1.,0)
-        // this.y3 = new Esfera(20,20,0.2)
-        // this.y3.trasladar(0, 1.5,0)
-        // this.y4 = new Esfera(20,20,0.2)
-        // this.y4.trasladar(0, 2.,0)
-        // this.y5 = new Esfera(20,20,0.2)
-        // this.y5.trasladar(0, 2.5,0)
+        this.puente = new Caja(0.2, 2, 8, [63 / 255, 147 / 255, 68 / 255])
+        this.puente.trasladar(0, -0.2, 10 + 7 / 2)
 
-        // this.z1 = new Esfera(20,20,0.2)
-        // this.z1.trasladar(0, 0, 0.5)
-        // this.z2 = new Esfera(20,20,0.2)
-        // this.z2.trasladar(0, 0, 1.)
-        // this.z3 = new Esfera(20,20,0.2)
-        // this.z3.trasladar(0, 0, 1.5)
-        // this.z4 = new Esfera(20,20,0.2)
-        // this.z4.trasladar(0, 0, 2.)
-        // this.z5 = new Esfera(20,20,0.2)
-        // this.z5.trasladar(0, 0, 2.5)
+        this.agua = new Caja(0.2, 50, 50, [101 / 255, 218 / 255, 223 / 255])
+        this.agua.trasladar(0, -0.8, 0)
+
+        this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
+        this.muralla.trasladar(0, 0.4, 0)
+
+        this.castillo = new Castillo(app.ancho, app.largo, app.cantPisos)
+        this.castillo.trasladar(0, 0.4, 0)
+
+        this.catapulta = new Catapulta()
+
     }
 
-    actualizar(){
+    actualizar() {
         this.camara.actualizar()
     }
 
-    obtenerVista(){
-        return this.camara.generarVista(this.centro.posicion)
+    obtenerVista() {
+        const data = {
+            origen: [0, 0, 0],
+            posCatapulta: this.catapulta.obtenerPosicion()
+        }
+
+        return this.camara.generarVista(data)
     }
 
-    dibujar(){
-        this.ejes.dibujar()
-        // this.plano.dibujar(this.matriz)
-        // this.camara.actualizar()
-        // this.esferaDirigible.actualizar()
-        // this.esferaDirigible.dibujar(this.matriz)
-        this.centro.dibujar(this.matriz)
+    dibujar() {
+        if (app.mostrarEjes) this.ejes.dibujar()
+        
+        this.terreno.dibujar(this.matriz)
+        this.puente.dibujar(this.matriz)
+        this.agua.dibujar(this.matriz)
+// 
+        this.muralla.actualizar()
+        this.muralla.dibujar(this.matriz)
+
+        this.catapulta.actualizar()
+        this.catapulta.dibujar(this.matriz)
+
+        this.castillo.dibujar(this.matriz)
     }
 }
