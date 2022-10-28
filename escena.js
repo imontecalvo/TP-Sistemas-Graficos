@@ -38,9 +38,8 @@ export class Escena {
     }
 
     dibujar() {
-        this.ejes.dibujar()
+        // this.ejes.dibujar()
         this.terreno.dibujar(this.matriz)
-        this.curva.dibujar()
         this.muralla.dibujar(this.matriz)
         this.catapulta.actualizar()
         this.catapulta.dibujar(this.matriz)

@@ -1,6 +1,7 @@
 import { Objeto3D } from "../objeto3d.js"
 import { crearMalla } from "../geometria.js"
 import { CamaraOrbital } from "./camaraOrbital.js";
+import { CamaraPrimeraPersona } from "./camaraPrimeraPersona.js";
 
 var vec3 = glMatrix.vec3;
 var mat4 = glMatrix.mat4;
@@ -9,19 +10,20 @@ export class Camara{
     constructor(){
         this.orbital = new CamaraOrbital()
         this.orbitalCatapulta = new CamaraOrbital()
-        // this.primeraPersona = 
+        this.primeraPersona = new CamaraPrimeraPersona()
     }
 
     actualizar(){
         if (app.camara == "Orbital") this.orbital.actualizar()
         else if (app.camara == "Orbital catapulta") this.orbitalCatapulta.actualizar()
-        // else if (app.camara == "Primera persona") this.primeraPersona.actualizar()
+        else if (app.camara == "Primera persona") this.primeraPersona.actualizar()
     }
 
     generarVista(data){
         // console.log(data)
         if (app.camara == "Orbital") return this.orbital.generarVista(data.origen)
         else if (app.camara == "Orbital catapulta") return this.orbitalCatapulta.generarVista(data.posCatapulta)
+        else if (app.camara == "Primera persona") return this.primeraPersona.generarVista()
     }
 }
 

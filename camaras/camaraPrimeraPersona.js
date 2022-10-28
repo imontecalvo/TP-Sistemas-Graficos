@@ -1,27 +1,37 @@
-import { Objeto3D } from "../objeto3d.js"
-import { crearMalla } from "../geometria.js"
+import { Objeto3D } from "../objeto3d.js";
+import { Esfera } from "../elementosEscena/esfera.js";
+import { Caja } from "../elementosEscena/caja.js";
 
-var vec3 = glMatrix.vec3;
 var mat4 = glMatrix.mat4;
+var vec3 = glMatrix.vec3;
 
-export class CamaraOrbital {
+export class CamaraPrimeraPersona {
     constructor() {
-        this.control = new ControlMouse()
-        this.position = vec3.create()
+        this.persona = new Objeto3D()
+        this.control = new ControlFPCam()
+        this.persona.trasladar(20, 2, 20)
     }
 
     actualizar() {
         this.control.actualizar()
     }
 
-    generarVista(foco) {
-        // console.log(foco)
-        var posObserver = this.control.obtener_posicion();
-        var scroll = posObserver.scroll;
+    generarVista() {
+        const data = this.control.obtenerPosicionPersona()
+        const posPreviaPersona = this.persona.obtenerPosicion()
+
+        this.persona.resetearMatriz()
+        this.persona.trasladar(posPreviaPersona[0], posPreviaPersona[1], posPreviaPersona[2])
+        this.persona.rotarY(data.angulo)
+        this.persona.trasladar(data.x, data.y,data.z)
+        this.control.resetCoords()
+
+        var posFoco = this.control.obtenerPosicionFoco();
+        const posPersona = this.persona.obtenerPosicion()
 
         var matrizVista = mat4.create();
-        var ojo = vec3.fromValues(foco[0] + scroll * posObserver.x, foco[1] + scroll * posObserver.y, foco[2] + scroll * posObserver.z);
-        var centro = vec3.fromValues(foco[0], foco[1], foco[2]);
+        var ojo = posPersona
+        var centro = vec3.fromValues(posPersona[0] + posFoco.x, posPersona[1] + posFoco.y, posPersona[2] + posFoco.z);
 
         mat4.lookAt(matrizVista,
             ojo,
@@ -31,10 +41,14 @@ export class CamaraOrbital {
 
         return matrizVista;
     }
-
 }
 
-function ControlMouse() {
+// Dos objetos: persona y foco
+// foco -> direccionable (orbital) con posicion relativa de la persona
+// Persona -> movs w,a,s,d
+
+
+function ControlFPCam() {
 
     var MOUSE = {
         x: 0,
@@ -48,11 +62,15 @@ function ControlMouse() {
     var WHEEL_SCROLL = 1;
 
     var IS_MOUSE_DOWN = false;
-    var ALFA = Math.PI / 4;
+    var ALFA = 0;
+    // var ALFA = Math.PI/4;
     var BETA = Math.PI / 2;
 
-    const FACTOR_VELOCIDAD = 0.01;
-    const RADIO = 20;
+    const FACTOR_VELOCIDAD = 0.005;
+    const RADIO = 4;
+
+    var DERECHA = 0;
+    var ADELANTE = 0;
 
     var puntosPorArrastre = 0
 
@@ -85,8 +103,43 @@ function ControlMouse() {
         WHEEL_SCROLL = Math.max(0.01, Math.min(6, WHEEL_SCROLL));
     });
 
+    $('body').on("keydown", function (event) {
+        //console.log(event);
+        switch (event.key) {
+            case "a":
+                DERECHA += 0.3
+                break;
+
+            case "d":
+                DERECHA -= 0.3
+                break;
+
+            case "w":
+                ADELANTE += 0.3
+                break;
+            case "s":
+                ADELANTE -= 0.3
+                break;
+        }
+
+    });
+
+    this.obtenerPosicionPersona = () => {
+        return {
+            x: DERECHA,
+            y: 0,
+            z: ADELANTE,
+            angulo: ALFA
+        }
+    }
+
+    this.resetCoords = () => {
+        DERECHA = 0
+        ADELANTE = 0
+    }
+
     // obtener posicion a partir de los valores Alfa y Beta
-    this.obtener_posicion = function () {
+    this.obtenerPosicionFoco = function () {
         return {
             x: RADIO * Math.sin(ALFA) * Math.sin(BETA),
             y: RADIO * Math.cos(BETA),
@@ -126,13 +179,10 @@ function ControlMouse() {
                 BETA = Math.PI - 0.001;
             }
 
+            // console.log("ALFA: " + ALFA + " BETA: " + BETA);
+
         }
 
     }
 
 }
-
-
-const FACTOR_VELOCIDAD = 0.001;
-const RADIO = 0.1;
-var JOYSTICK_CONTROLLER = null;
