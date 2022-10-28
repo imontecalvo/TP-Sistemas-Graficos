@@ -94,7 +94,7 @@ class TechoTorre extends Objeto3D {
 
         const alturaTecho = 2
 
-        const ptosCtrlTecho = [[radioSup / 2 + 0.2, alturaVariable + alturaFija, 0], [radioSup / 2 * 8 / 18, alturaVariable + alturaFija + alturaTecho / 3, 0], [0.15, alturaVariable + alturaFija + alturaTecho, 0], [0, alturaVariable + alturaFija + alturaTecho, 0]]
+        const ptosCtrlTecho = [[radioSup / 2 + 0.2, alturaVariable + alturaFija, 0], [radioSup / 2 * 8 / 18, alturaVariable + alturaFija + alturaTecho / 3, 0], [0.05, alturaVariable + alturaFija + alturaTecho, 0], [0, alturaVariable + alturaFija + alturaTecho, 0]]
 
         //Instanciamos las curvas
         const curvaTecho = new BezierCubica(ptosCtrlTecho, "z")

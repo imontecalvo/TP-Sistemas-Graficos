@@ -30,16 +30,3 @@ export class Castillo extends Objeto3D{
         this.agregarHijo(torre4)
     }
 }
-
-
-
-// VENTANAS
-// Curva de BezierCubica
-// Crear barrido con caras
-
-// Cantidad y posicion ventanas
-//     Setear ancho (y alto) ventanas
-//     Setear margen
-//     Setear espaciado
-//     Calcular cant de ventanas
-//     Posicionarlas

@@ -8,7 +8,10 @@ var mat4 = glMatrix.mat4;
 export class Terreno extends Objeto3D{
     constructor(){
         super()
-        this.agregarHijo(new Centro())
+        const centro = new Centro()
+        centro.trasladar(0,0.4,0)
+        this.agregarHijo(centro)
+        
         this.agregarHijo(new Periferia())
         
         this.modelMatrix = mat4.create()
