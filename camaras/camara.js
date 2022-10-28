@@ -1,5 +1,3 @@
-import { Objeto3D } from "../objeto3d.js"
-import { crearMalla } from "../geometria.js"
 import { CamaraOrbital } from "./camaraOrbital.js";
 import { CamaraPrimeraPersona } from "./camaraPrimeraPersona.js";
 

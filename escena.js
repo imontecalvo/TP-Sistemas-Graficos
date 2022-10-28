@@ -1,6 +1,5 @@
 import { Camara } from "./camaras/camara.js";
-import { EjesEscena } from "./ejesEscena.js";
-import { LineaCurva } from "./pruebaCurva.js";
+import { EjesEscena } from "./elementosEscena/ejesEscena.js";
 import { Terreno } from "./elementosEscena/terreno.js"
 import { Muralla } from "./elementosEscena/muralla.js"
 import { Castillo } from "./elementosEscena/castillo.js";
@@ -52,7 +51,7 @@ export class Escena {
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
         this.agua.dibujar(this.matriz)
-
+// 
         this.muralla.actualizar()
         this.muralla.dibujar(this.matriz)
 

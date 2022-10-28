@@ -1,6 +1,3 @@
-import { Objeto3D } from "../objeto3d.js"
-import { crearMalla } from "../geometria.js"
-
 var vec3 = glMatrix.vec3;
 var mat4 = glMatrix.mat4;
 

@@ -1,6 +1,5 @@
-import { Esfera, Plano } from "./esfera.js";
-import { Objeto3D } from "./objeto3d.js";
 import { Escena } from "./escena.js";
+
 var tiempo = 0;
 var mat4 = glMatrix.mat4;
 var vec3 = glMatrix.vec3;
