@@ -71,7 +71,7 @@ function ControlFPCam() {
     var puntosPorArrastre = 0
 
     // seteo handlers del raton
-    $("body").mousemove(function (e) {
+    $("canvas").mousemove(function (e) {
         if (IS_MOUSE_DOWN) {
             MOUSE.x = e.clientX || e.pageX;
             MOUSE.y = e.clientY || e.pageY
@@ -86,15 +86,15 @@ function ControlFPCam() {
         }
     });
 
-    $('body').mousedown(function (event) {
+    $('canvas').mousedown(function (event) {
         IS_MOUSE_DOWN = true;
     });
 
-    $('body').mouseup(function (event) {
+    $('canvas').mouseup(function (event) {
         IS_MOUSE_DOWN = false;
     });
 
-    $('body').on("wheel", function (event) {
+    $('canvas').on("wheel", function (event) {
         WHEEL_SCROLL += event.originalEvent.deltaY / 100;
         WHEEL_SCROLL = Math.max(0.01, Math.min(6, WHEEL_SCROLL));
     });

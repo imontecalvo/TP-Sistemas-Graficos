@@ -49,16 +49,18 @@ class Periferia extends Objeto3D {
     constructor() {
         super([63/255,147/255,68/255])
         this.filas = 8
-        this.columnas = 3
+        this.columnas = 5
         var puntosCurva = []
         this.curvaLado = new BezierCubica([[17,-1.5,0],[17,-0.5,0],[17,-0.1,0],[17,0,0]], "z")
         this.curvaCentro = new BezierCubica([[17,0,0],[18,0,0],[20,0,0],[40,0,0]], "z")
+        this.curvaLadoFuera = new BezierCubica([[40,0,0],[40,-0.5,0],[40,-0.75,0],[40,-1,0]], "z")
         const puntosPendiente = discretizar(this.curvaLado, 1, false)
         const puntosCentro = discretizar(this.curvaCentro, 1, false)
+        const puntosLadoFuera = discretizar(this.curvaLadoFuera, 1, false)
 
         puntosCurva = {
-            posicion:puntosPendiente.posicion.concat(puntosCentro.posicion),
-            normal:puntosPendiente.normal.concat(puntosCentro.normal),
+            posicion:puntosPendiente.posicion.concat(puntosCentro.posicion, puntosLadoFuera.posicion),
+            normal:puntosPendiente.normal.concat(puntosCentro.normal, puntosLadoFuera.normal),
         }
         
         const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1)
