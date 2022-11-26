@@ -1,4 +1,7 @@
 import { Escena } from "./escena.js";
+import ShadersManager from "./utils/shaderManager.js";
+
+var shadersManager;
 
 var tiempo = 0;
 var mat4 = glMatrix.mat4;
@@ -48,7 +51,7 @@ function initWebGL() {
     }
 
     if (gl) {
-
+        shadersManager = new ShadersManager([{vs:vs_source, fs:fs_source},{vs:vs_src_curva, fs:fs_src_curva}],gl);
         setupWebGL();
         initShaders();
         setupVertexShaderMatrix();
@@ -137,39 +140,56 @@ function initShaders() {
 
 
     //compile shaders    
-    vertexShader = makeShader(vs_source, gl.VERTEX_SHADER);
-    fragmentShader = makeShader(fs_source, gl.FRAGMENT_SHADER);
+    // vertexShader = makeShader(vs_source, gl.VERTEX_SHADER);
+    // fragmentShader = makeShader(fs_source, gl.FRAGMENT_SHADER);
 
-    vertexShaderCurva = makeShader(vs_src_curva, gl.VERTEX_SHADER);
-    fragmentShaderCurva = makeShader(fs_src_curva, gl.FRAGMENT_SHADER);
+    // vertexShaderCurva = makeShader(vs_src_curva, gl.VERTEX_SHADER);
+    // fragmentShaderCurva = makeShader(fs_src_curva, gl.FRAGMENT_SHADER);
 
-    //create program
-    glProgram = gl.createProgram();
+    // //create program
+    // glProgram = gl.createProgram();
 
-    glProgramCurva = gl.createProgram()
+    // glProgramCurva = gl.createProgram()
 
-    //attach and link shaders to the program
-    gl.attachShader(glProgram, vertexShader);
-    gl.attachShader(glProgram, fragmentShader);
-    gl.linkProgram(glProgram);
+    // //attach and link shaders to the program
+    // gl.attachShader(glProgram, vertexShader);
+    // gl.attachShader(glProgram, fragmentShader);
+    // gl.linkProgram(glProgram);
 
-    if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
-        alert("Unable to initialize the shader program.");
-    }
+    // if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
+    //     alert("Unable to initialize the shader program.");
+    // }
 
-    //...
+    // //...
 
-    gl.attachShader(glProgramCurva, vertexShaderCurva);
-    gl.attachShader(glProgramCurva, fragmentShaderCurva);
-    gl.linkProgram(glProgramCurva);
+    // gl.attachShader(glProgramCurva, vertexShaderCurva);
+    // gl.attachShader(glProgramCurva, fragmentShaderCurva);
+    // gl.linkProgram(glProgramCurva);
 
-    if (!gl.getProgramParameter(glProgramCurva, gl.LINK_STATUS)) {
-        alert("Unable to initialize the shader program.");
-    }
+    // if (!gl.getProgramParameter(glProgramCurva, gl.LINK_STATUS)) {
+    //     alert("Unable to initialize the shader program.");
+    // }
 
 
-    //use program
-    gl.useProgram(glProgram);
+    glProgram = shadersManager.getProgram("phong");
+    glProgramCurva = shadersManager.getProgram("curvas");
+
+    // //use program
+    // gl.useProgram(glProgram);
+    // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
+    // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
+    // glProgram.rendering = gl.getUniformLocation(glProgram, "renderColor");
+    // glProgram.colorUniform = gl.getUniformLocation(glProgram, "uColor");
+
+    // glProgram.vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
+    // gl.enableVertexAttribArray(glProgram.vertexPositionAttribute);
+
+    // glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
+    // gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
+
+    // glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
+    // gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
+
     gl.useProgram(glProgramCurva);
 }
 
@@ -188,19 +208,15 @@ function makeShader(src, type) {
 
 function setupVertexShaderMatrix() {
     gl.useProgram(glProgram);
-    var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
-    var projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
-    var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
 
-    gl.uniformMatrix4fv(viewMatrixUniform, false, viewMatrix);
-    gl.uniformMatrix4fv(projMatrixUniform, false, projMatrix);
-    gl.uniformMatrix4fv(normalMatrixUniform, false, normalMatrix);
+    gl.uniformMatrix4fv(glProgram.viewMatrixUniform, false, viewMatrix);
+    gl.uniformMatrix4fv(glProgram.projMatrixUniform, false, projMatrix);
+    gl.uniformMatrix4fv(glProgram.normalMatrixUniform, false, normalMatrix);
 
     gl.useProgram(glProgramCurva);
-    var viewMatrixUniformCurva = gl.getUniformLocation(glProgramCurva, "viewMatrix");
-    var projMatrixUniformCurva = gl.getUniformLocation(glProgramCurva, "projMatrix");
-    gl.uniformMatrix4fv(viewMatrixUniformCurva, false, viewMatrix);
-    gl.uniformMatrix4fv(projMatrixUniformCurva, false, projMatrix);
+
+    gl.uniformMatrix4fv(glProgramCurva.viewMatrixUniform, false, viewMatrix);
+    gl.uniformMatrix4fv(glProgramCurva.projMatrixUniform, false, projMatrix);
 }
 
 function drawScene() {

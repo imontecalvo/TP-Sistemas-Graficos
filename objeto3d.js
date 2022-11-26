@@ -87,31 +87,21 @@ export class Objeto3D {
 
             const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
 
-            var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-            gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+            gl.uniformMatrix4fv(glProgram.modelMatrixUniform, false, mat);
 
-            var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
-            gl.uniformMatrix4fv(normalMatrixUniform, false, matNorm);
+            gl.uniformMatrix4fv(glProgram.normalMatrixUniform, false, matNorm);
 
-            var rendering = gl.getUniformLocation(glProgram, "renderColor");
-            gl.uniform1i(rendering, renderColor);
-            var colorUniform = gl.getUniformLocation(glProgram, "uColor");
-            gl.uniform3fv(colorUniform, this.color);
+            gl.uniform1i(glProgram.rendering, renderColor);
+            gl.uniform3fv(glProgram.colorUniform, this.color);
 
-            var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition"); //referencia a aVertexPosition del shader
-            gl.enableVertexAttribArray(vertexPositionAttribute); //activo el atributo
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer); //linkeo mi buffer de posiciones al atributo activado (aVertexPosition)
-            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer);
+            gl.vertexAttribPointer(glProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            var vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-            gl.enableVertexAttribArray(vertexNormalAttribute);
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
-            gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(glProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            var vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
-            gl.enableVertexAttribArray(vertexUVAttribute);
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
-            gl.vertexAttribPointer(vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(glProgram.vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
 
