@@ -3,8 +3,8 @@ import { BezierCubica } from "../bezier/bezier3.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 
 export class Cilindro extends Objeto3D {
-    constructor(radio, ancho, columnas, color =[0,0,0]) {
-        super(color)
+    constructor(radio, ancho, columnas, material) {
+        super(material)
 
         this.filas = 5
         this.columnas = columnas

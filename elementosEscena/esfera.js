@@ -1,8 +1,8 @@
 import { Objeto3D } from "../objeto3d.js"
 
 export class Esfera extends Objeto3D{
-    constructor(radio, color=[0,0,0]) {
-        super(color)
+    constructor(radio, material) {
+        super(material)
         this.radio = radio
         this.filas = 20
         this.columnas = 20

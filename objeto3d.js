@@ -1,15 +1,15 @@
-import { gl, glProgram, glProgramCurva } from "./web-gl.js";
+import { gl, glProgramCurva } from "./web-gl.js";
 var mat4 = glMatrix.mat4;
 var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(color = [0, 0, 0]) {
+    constructor(material=window.materiales.ROJO) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
         this.oculto = false
-        this.color = color
+        this.material = material
     }
 
     ocultar() {
@@ -75,24 +75,23 @@ export class Objeto3D {
     async dibujar(matrizPadre, forzarColor = false) {
         if (this.oculto) return
 
-        gl.useProgram(glProgram);
         var mat = mat4.create();
         mat4.multiply(mat, matrizPadre, this.matrizModelado);
         var matNorm = mat4.create()
         mat4.invert(matNorm, mat);
         mat4.transpose(matNorm, matNorm);
-
+        
         if (this.mallaDeTriangulos) {
             // this.configurarIluminacion()
-
+            
             const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
+            
+            const glProgram = this.material.activar(renderColor)
+            // console.log(glProgram)
+            gl.useProgram(glProgram);
 
             gl.uniformMatrix4fv(glProgram.modelMatrixUniform, false, mat);
-
             gl.uniformMatrix4fv(glProgram.normalMatrixUniform, false, matNorm);
-
-            gl.uniform1i(glProgram.rendering, renderColor);
-            gl.uniform3fv(glProgram.colorUniform, this.color);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer);
             gl.vertexAttribPointer(glProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);

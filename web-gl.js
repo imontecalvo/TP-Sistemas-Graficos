@@ -1,4 +1,5 @@
 import { Escena } from "./escena.js";
+import initMateriales from "./utils/materiales/materialManager.js";
 import ShadersManager from "./utils/shaderManager.js";
 
 var shadersManager;
@@ -9,19 +10,7 @@ var vec3 = glMatrix.vec3;
 var escena = null;
 
 var gl = null,
-    canvas = null,
-
-    glProgram = null,
-    fragmentShader = null,
-    vertexShader = null,
-    fragmentShaderCurva = null,
-    vertexShaderCurva = null;
-
-var vertexPositionAttribute = null,
-    trianglesVerticeBuffer = null,
-    vertexNormalAttribute = null,
-    trianglesNormalBuffer = null,
-    trianglesIndexBuffer = null;
+    canvas = null
 
 var glProgramCurva = null
 var vs_source
@@ -33,11 +22,7 @@ var fs_src_curva
 var modelMatrix = mat4.create();
 var viewMatrix = mat4.create();
 var projMatrix = mat4.create();
-var normalMatrix = mat4.create();
 var rotate_angle = -1.57078;
-
-// var { vertices, normals, indices } = setupBuffers(new Plano(1,1));
-// var plano = new Objeto3D(buffers.webgl_position_buffer,buffers.webgl_normal_buffer, buffers.webgl_index_buffer)
 
 
 function initWebGL() {
@@ -52,9 +37,10 @@ function initWebGL() {
 
     if (gl) {
         shadersManager = new ShadersManager([{vs:vs_source, fs:fs_source},{vs:vs_src_curva, fs:fs_src_curva}],gl);
-        setupWebGL();
-        initShaders();
+        glProgramCurva = shadersManager.getProgram("curvas");
+        initMateriales()
         setupVertexShaderMatrix();
+        setupWebGL();
         tick();
 
     } else {
@@ -131,92 +117,8 @@ function loadShaders() {
 }
 
 
-
-
-function initShaders() {
-    //get shader source
-    // var fs_source = document.getElementById('shader-fs').innerHTML,
-    // vs_source = document.getElementById('shader-vs').innerHTML;
-
-
-    //compile shaders    
-    // vertexShader = makeShader(vs_source, gl.VERTEX_SHADER);
-    // fragmentShader = makeShader(fs_source, gl.FRAGMENT_SHADER);
-
-    // vertexShaderCurva = makeShader(vs_src_curva, gl.VERTEX_SHADER);
-    // fragmentShaderCurva = makeShader(fs_src_curva, gl.FRAGMENT_SHADER);
-
-    // //create program
-    // glProgram = gl.createProgram();
-
-    // glProgramCurva = gl.createProgram()
-
-    // //attach and link shaders to the program
-    // gl.attachShader(glProgram, vertexShader);
-    // gl.attachShader(glProgram, fragmentShader);
-    // gl.linkProgram(glProgram);
-
-    // if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
-    //     alert("Unable to initialize the shader program.");
-    // }
-
-    // //...
-
-    // gl.attachShader(glProgramCurva, vertexShaderCurva);
-    // gl.attachShader(glProgramCurva, fragmentShaderCurva);
-    // gl.linkProgram(glProgramCurva);
-
-    // if (!gl.getProgramParameter(glProgramCurva, gl.LINK_STATUS)) {
-    //     alert("Unable to initialize the shader program.");
-    // }
-
-
-    glProgram = shadersManager.getProgram("phong");
-    glProgramCurva = shadersManager.getProgram("curvas");
-
-    // //use program
-    // gl.useProgram(glProgram);
-    // glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-    // glProgram.normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
-    // glProgram.rendering = gl.getUniformLocation(glProgram, "renderColor");
-    // glProgram.colorUniform = gl.getUniformLocation(glProgram, "uColor");
-
-    // glProgram.vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
-    // gl.enableVertexAttribArray(glProgram.vertexPositionAttribute);
-
-    // glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-    // gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
-
-    // glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
-    // gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
-
-    gl.useProgram(glProgramCurva);
-}
-
-function makeShader(src, type) {
-    //compile the vertex shader
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, src);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.log("Error compiling shader: " + gl.getShaderInfoLog(shader));
-    }
-    return shader;
-}
-
-
 function setupVertexShaderMatrix() {
-    gl.useProgram(glProgram);
-
-    gl.uniformMatrix4fv(glProgram.viewMatrixUniform, false, viewMatrix);
-    gl.uniformMatrix4fv(glProgram.projMatrixUniform, false, projMatrix);
-    gl.uniformMatrix4fv(glProgram.normalMatrixUniform, false, normalMatrix);
-
-    gl.useProgram(glProgramCurva);
-
-    gl.uniformMatrix4fv(glProgramCurva.viewMatrixUniform, false, viewMatrix);
-    gl.uniformMatrix4fv(glProgramCurva.projMatrixUniform, false, projMatrix);
+    shadersManager.actualizarMatrices(viewMatrix, projMatrix);
 }
 
 function drawScene() {
@@ -257,4 +159,4 @@ function tick() {
 
 window.onload = loadShaders;
 
-export { gl, glProgram, glProgramCurva }
+export { gl, glProgramCurva, shadersManager }

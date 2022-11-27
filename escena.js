@@ -16,10 +16,10 @@ export class Escena {
 
         this.terreno = new Terreno()
 
-        this.puente = new Caja(0.2, 2, 8, [63 / 255, 147 / 255, 68 / 255])
+        this.puente = new Caja(0.2, 2, 8, window.materiales.PASTO)
         this.puente.trasladar(0, -0.2, 10 + 7 / 2)
 
-        this.agua = new Caja(0.2, 50, 50, [101 / 255, 218 / 255, 223 / 255])
+        this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
         this.agua.trasladar(0, -0.8, 0)
 
         this.muralla = new Muralla(app.alturaMuralla, app.cantLados)

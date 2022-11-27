@@ -10,12 +10,12 @@ class ShaderManager {
     }
 
     initShaders(shaders) {
-        this.crearShader(shaders[0],'phong');
+        this.crearShader(shaders[0], 'phong');
         this.crearShader(shaders[1], 'curvas');
     }
 
     crearShader(shader, id) {
-        const {gl} = this
+        const { gl } = this
 
         const vs_source = shader.vs
         const fs_source = shader.fs
@@ -25,7 +25,7 @@ class ShaderManager {
             var shader = gl.createShader(type);
             gl.shaderSource(shader, src);
             gl.compileShader(shader);
-        
+
             if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
                 console.log("Error compiling shader: " + gl.getShaderInfoLog(shader));
             }
@@ -53,8 +53,8 @@ class ShaderManager {
         this.inicializarShader(glProgram)
     }
 
-    inicializarShader(glProgram){
-        const {gl} = this
+    inicializarShader(glProgram) {
+        const { gl } = this
 
         gl.useProgram(glProgram);
         glProgram.modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
@@ -64,14 +64,14 @@ class ShaderManager {
 
         glProgram.rendering = gl.getUniformLocation(glProgram, "renderColor");
         glProgram.colorUniform = gl.getUniformLocation(glProgram, "uColor");
-    
+
         glProgram.vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
         gl.enableVertexAttribArray(glProgram.vertexPositionAttribute);
-    
-        if (glProgram.id == 'phong'){
+
+        if (glProgram.id == 'phong') {
             glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
             gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
-        
+
             glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
             gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
         }
@@ -79,13 +79,26 @@ class ShaderManager {
 
     getProgram = (id) => {
         if (this.programs.hasOwnProperty(id)) {
-          return this.programs[id];
+            return this.programs[id];
         } else {
-          const msg = `Unexisting shader program "${fileName}"`;
-          console.error(msg)
-          throw new Error(msg);
+            const msg = `Unexisting shader program "${fileName}"`;
+            console.error(msg)
+            throw new Error(msg);
         }
-      }
+    }
+
+    actualizarMatrices(viewMatrix, projMatrix) {
+        const { gl } = this
+        for (const id in this.programs) {
+            const program = this.programs[id]
+            // console.log(program)
+
+            gl.useProgram(program);
+
+            gl.uniformMatrix4fv(program.viewMatrixUniform, false, viewMatrix);
+            gl.uniformMatrix4fv(program.projMatrixUniform, false, projMatrix);
+        }
+    }
 }
 
 export default ShaderManager

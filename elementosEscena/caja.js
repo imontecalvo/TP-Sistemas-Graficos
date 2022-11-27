@@ -4,8 +4,8 @@ import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 
 export class Caja extends Objeto3D{
-    constructor(alto, largo, ancho, color=[0,0,0]) {
-        super(color)
+    constructor(alto, largo, ancho, material) {
+        super(material)
 
         this.filas = 5
         this.columnas = 7

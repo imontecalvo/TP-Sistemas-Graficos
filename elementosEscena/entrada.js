@@ -8,7 +8,7 @@ import { Caja } from "./caja.js";
 export class Entrada extends Objeto3D {
     constructor(alto, largo, ancho) {
         super()
-        this.porton = new Caja(alto, largo, ancho, [103 / 255, 78 / 255, 55 / 255])
+        this.porton = new Caja(alto, largo, ancho, window.materiales.MADERA_CLARA)
         const marco = new MarcoPorton(alto, largo, ancho)
         this.agregarHijo(this.porton)
         this.agregarHijo(marco)
@@ -17,7 +17,7 @@ export class Entrada extends Objeto3D {
 
 class MarcoPorton extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super([115 / 255, 115 / 255, 115 / 255])
+        super(window.materiales.PIEDRA_OSCURA)
         const anchoMarco = 0.25
         const profundidad = ancho + 4 * anchoMarco
 

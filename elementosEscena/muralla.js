@@ -12,7 +12,7 @@ var vec4 = glMatrix.vec4;
 
 export class Muralla extends Objeto3D {
     constructor(altura, lados) {
-        super([125/255,125/255,125/255])
+        super(window.materiales.PIEDRA)
         this.lados = lados
         this.filas = this.lados - 1 + 2 + 4
         this.columnas = 35

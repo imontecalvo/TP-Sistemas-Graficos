@@ -20,7 +20,7 @@ export class Terreno extends Objeto3D{
 
 class Centro extends Objeto3D {
     constructor() {
-        super([63/255,147/255,68/255])
+        super(window.materiales.PASTO)
         const radio = 10
         this.filas = 40
         this.columnas = 3
@@ -47,7 +47,7 @@ class Centro extends Objeto3D {
 
 class Periferia extends Objeto3D {
     constructor() {
-        super([63/255,147/255,68/255])
+        super(window.materiales.PASTO)
         this.filas = 8
         this.columnas = 5
         var puntosCurva = []
