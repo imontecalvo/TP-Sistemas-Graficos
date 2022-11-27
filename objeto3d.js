@@ -116,23 +116,9 @@ export class Objeto3D {
         }
     }
 
-    configurarIluminacion(){
-        var ambientColorUniform = gl.getUniformLocation(glProgram, "uAmbientColor");
-        gl.uniform3f(ambientColorUniform, 0.6, 0.6, 0.6 );
-
-        var lightColorUniform = gl.getUniformLocation(glProgram, "uDirectionalColor");
-        gl.uniform3f(lightColorUniform, 1.2, 1.1, 0.7);
-
-        var lightDirectionUniform = gl.getUniformLocation(glProgram, "uLightPosition");
-        gl.uniform3fv(lightDirectionUniform, [10.0,30, 3.0]);
-
-        var useLightingUniform = gl.getUniformLocation(glProgram, "uUseLighting");
-        gl.uniform1f(useLightingUniform, true);
-
-    }
 
     dibujarNormales(mat) {
-        const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
+        // const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
         var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
@@ -151,10 +137,10 @@ export class Objeto3D {
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
         gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-        var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
-        gl.enableVertexAttribArray(vertexColorAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-        gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
+        // var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
+        // gl.enableVertexAttribArray(vertexColorAttribute);
+        // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
+        // gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.LINES, 0, 2 * this.bufferNormDibujadas.length / 3);
     }
