@@ -30,8 +30,10 @@ export class Escena {
         // this.castillo.trasladar(0, 0.4, 0)
 // 
         // this.catapulta = new Catapulta()
-        this.esfera = new Esfera(3, window.materiales.AZUL)
-
+        this.esfera = new Esfera(3, window.materiales.PRUEBA)
+        this.esfera.trasladar(-5, -5, 2)
+        this.caja = new Caja(3, 3, 3, window.materiales.PRUEBA)
+        this.caja.trasladar(5,-5,0)
     }
 
     actualizar() {
@@ -54,7 +56,8 @@ export class Escena {
 
     dibujar() {
         this.esfera.dibujar(this.matriz)
-        // if (app.mostrarEjes) this.ejes.dibujar()
+        this.caja.dibujar(this.matriz)
+        if (app.mostrarEjes) this.ejes.dibujar()
         // 
         // this.terreno.dibujar(this.matriz)
         // this.puente.dibujar(this.matriz)

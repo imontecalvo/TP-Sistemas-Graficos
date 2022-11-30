@@ -116,6 +116,7 @@ class ShaderManager {
                 const program = this.programs[id]
                 
                 gl.useProgram(program);
+                // console.log(posCamaraMundo)
                 gl.uniform3fv(program.posCamaraUniform, posCamaraMundo);
             }
         }
