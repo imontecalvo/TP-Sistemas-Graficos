@@ -63,7 +63,7 @@ class ShaderManager {
         glProgram.viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
 
         glProgram.rendering = gl.getUniformLocation(glProgram, "renderColor");
-        glProgram.colorUniform = gl.getUniformLocation(glProgram, "uColor");
+        glProgram.colorDifusoUniform = gl.getUniformLocation(glProgram, "uColorDifuso");
 
         glProgram.vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
         gl.enableVertexAttribArray(glProgram.vertexPositionAttribute);
@@ -74,6 +74,11 @@ class ShaderManager {
 
             glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
             gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
+
+            glProgram.KaUniform = gl.getUniformLocation(glProgram, "Ka");
+            glProgram.KdUniform = gl.getUniformLocation(glProgram, "Kd");
+            glProgram.KsUniform = gl.getUniformLocation(glProgram, "Ks");
+            glProgram.glossinessUniform = gl.getUniformLocation(glProgram, "glossiness");
         }
     }
 

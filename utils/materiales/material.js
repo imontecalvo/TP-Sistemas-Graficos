@@ -24,14 +24,17 @@ class Material {
       //   gl.uniform3fv(shaderProgram.colorAmbienteUniform, this._colorArrayNormalized(this.colorAmbiente));
       //   gl.uniform3fv(shaderProgram.colorDifusoUniform, this._colorArrayNormalized(this.colorDifuso));
       //   gl.uniform3fv(shaderProgram.colorEspecularUniform, this._colorArrayNormalized(this.colorEspecular));
-      gl.uniform3fv(shaderProgram.colorAmbienteUniform, this._colorArrayNormalized(this.phong.ambiente));
-      gl.uniform3fv(shaderProgram.colorDifusoUniform, this._colorArrayNormalized(this.phong.difuso));
-      gl.uniform3fv(shaderProgram.colorEspecularUniform, this._colorArrayNormalized(this.phong.especular));
-      gl.uniform1f(shaderProgram.glossinessUniform, this.phong.glossiness);
+      gl.uniform3fv(shaderProgram.colorDifusoUniform, this.configuracionPhong.colorDifuso);
+
+      gl.uniform1f(shaderProgram.KaUniform, this.configuracionPhong.Ka);
+      gl.uniform1f(shaderProgram.KdUniform, this.configuracionPhong.Kd);
+      gl.uniform1f(shaderProgram.KsUniform, this.configuracionPhong.Ks);
+      gl.uniform1f(shaderProgram.glossinessUniform, this.configuracionPhong.glossiness);
     }
 
     gl.uniform1i(shaderProgram.rendering, renderColor);
-    gl.uniform3fv(shaderProgram.colorUniform, this.color);
+
+
 
     return this.shaderProgram
   }
@@ -44,7 +47,7 @@ export default Material
 /*
 // 1- cargar materiales en global
 // 2- usar en objeto 3d
-3- Asignar material a elementos de la escena
-4- eliminar glprogram
+// 3- Asignar material a elementos de la escena
+// 4- eliminar glprogram
 5. adaptar para shader curva y eliminar glprogramcurva
 */
