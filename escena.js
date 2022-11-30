@@ -48,6 +48,10 @@ export class Escena {
         return this.camara.generarVista(data)
     }
 
+    obtenerPosCamara(){
+        return this.camara.obtenerPosicion()
+    }
+
     dibujar() {
         this.esfera.dibujar(this.matriz)
         // if (app.mostrarEjes) this.ejes.dibujar()

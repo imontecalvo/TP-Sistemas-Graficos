@@ -7,8 +7,8 @@ class ColorLiso extends Material {
             colorDifuso:color,
             Ka:1.0,
             Kd:1.0,
-            Ks:10.0,
-            glossiness:100.0
+            Ks:1.0,
+            glossiness:100
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")

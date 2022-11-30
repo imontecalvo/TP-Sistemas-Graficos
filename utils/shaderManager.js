@@ -1,3 +1,5 @@
+var vec3 = glMatrix.vec3;
+
 //shaders = [{vs1,fs1},{vs2,fs2}]
 class ShaderManager {
     constructor(shaders, glContext) {
@@ -75,6 +77,8 @@ class ShaderManager {
             glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
             gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
 
+            glProgram.posCamaraUniform = gl.getUniformLocation(glProgram, "posCamaraMundo");
+
             glProgram.KaUniform = gl.getUniformLocation(glProgram, "Ka");
             glProgram.KdUniform = gl.getUniformLocation(glProgram, "Kd");
             glProgram.KsUniform = gl.getUniformLocation(glProgram, "Ks");
@@ -102,6 +106,18 @@ class ShaderManager {
 
             gl.uniformMatrix4fv(program.viewMatrixUniform, false, viewMatrix);
             gl.uniformMatrix4fv(program.projMatrixUniform, false, projMatrix);
+        }
+    }
+
+    actualizarPosCamara(posCamaraMundo) {
+        const { gl } = this
+        for (const id in this.programs) {
+            if (id == 'phong') {
+                const program = this.programs[id]
+                
+                gl.useProgram(program);
+                gl.uniform3fv(program.posCamaraUniform, posCamaraMundo);
+            }
         }
     }
 }

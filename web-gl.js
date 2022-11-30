@@ -39,7 +39,7 @@ function initWebGL() {
         shadersManager = new ShadersManager([{vs:vs_source, fs:fs_source},{vs:vs_src_curva, fs:fs_src_curva}],gl);
         glProgramCurva = shadersManager.getProgram("curvas");
         initMateriales()
-        setupVertexShaderMatrix();
+        // setupVertexShaderMatrix();
         setupWebGL();
         tick();
 
@@ -119,6 +119,7 @@ function loadShaders() {
 
 function setupVertexShaderMatrix() {
     shadersManager.actualizarMatrices(viewMatrix, projMatrix);
+    shadersManager.actualizarPosCamara(escena.obtenerPosCamara());
 }
 
 function drawScene() {

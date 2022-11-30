@@ -4,37 +4,43 @@ attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
 attribute vec2 aUv;
 
+varying vec3 vNormal;    
+varying vec3 vPosWorld;  
+varying vec2 vUv;
+
+uniform vec3 posCamaraMundo;
+varying vec3 vPosCamaraMundo;
+
 uniform mat4 modelMatrix;            
 uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
-
 uniform mat4 normalMatrix;
             
 uniform vec3 uColorDifuso;
+varying vec3 vColorDifuso;
 
 uniform bool renderColor;
 
 uniform float Ka;   // Ambient reflection coefficient
+varying float vKa;
+
 uniform float Kd;   // Diffuse reflection coefficient
+varying float vKd;
+
 uniform float Ks;   // Specular reflection coefficient
+varying float vKs;
+
 uniform float glossiness;
-
-varying vec3 vNormal;    
-varying vec3 vPosWorld;  
-varying vec3 vColorDifuso;
-varying vec2 vUv;
-
-varying float vKa;   // Ambient reflection coefficient
-varying float vKd;   // Diffuse reflection coefficient
-varying float vKs;   // Specular reflection coefficient
 varying float vGlossiness;
+
 
 void main(void) {
     vec3 position = aVertexPosition;
     gl_Position = projMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
     
-    vPosWorld=(modelMatrix*vec4(position,1.0)).xyz;
-    vNormal=normalize((normalMatrix*vec4(aVertexNormal,1.0)).xyz);        
+    vec4 vPosWorld4 =(modelMatrix*vec4(position,1.0)).xyzw;
+    vPosWorld = vec3(vPosWorld4)/vPosWorld4.w;
+    vNormal=(normalMatrix*vec4(aVertexNormal,1.0)).xyz;        
     vColorDifuso = uColorDifuso;
     vUv=aUv;
 
@@ -42,4 +48,6 @@ void main(void) {
     vKd = Kd;
     vKs = Ks;
     vGlossiness = glossiness;
+
+    vPosCamaraMundo = posCamaraMundo;
 }
