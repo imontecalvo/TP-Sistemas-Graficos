@@ -1,4 +1,5 @@
 import Agua from "./tipos/agua.js";
+import Fuego from "./tipos/fuego.js";
 import Madera from "./tipos/madera.js";
 import MaderaClara from "./tipos/maderaClara.js";
 import MaderaOscura from "./tipos/maderaOscura.js";
@@ -13,6 +14,7 @@ import ColorLiso from "./tipos/colorLiso.js";
 export default function initMateriales(){
     window.materiales = {
         AGUA: new Agua(),
+        FUEGO: new Fuego(),
         MADERA: new Madera(),
         MADERA_CLARA: new MaderaClara(),
         MADERA_OSCURA: new MaderaOscura(),

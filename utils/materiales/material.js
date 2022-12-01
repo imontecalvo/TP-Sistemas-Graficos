@@ -13,17 +13,8 @@ class Material {
     // console.log("shader: ",shaderProgram)
     gl.useProgram(shaderProgram);
 
-    // gl.uniformMatrix4fv(shaderProgram.modelMatrixUniform, false, modelMatrix);
-    // gl.uniformMatrix4fv(shaderProgram.normalMatrixUniform, false, normalMatrix);
-
-    // gl.bindBuffer(gl.ARRAY_BUFFER, position);
-    // gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, position.itemSize, gl.FLOAT, false, 0, 0);
-
     // Activamos colores de iluminacion para modelo de Phong
     if (this.configuracionPhong) {
-      //   gl.uniform3fv(shaderProgram.colorAmbienteUniform, this._colorArrayNormalized(this.colorAmbiente));
-      //   gl.uniform3fv(shaderProgram.colorDifusoUniform, this._colorArrayNormalized(this.colorDifuso));
-      //   gl.uniform3fv(shaderProgram.colorEspecularUniform, this._colorArrayNormalized(this.colorEspecular));
       gl.uniform3fv(shaderProgram.colorDifusoUniform, this.configuracionPhong.colorDifuso);
 
       gl.uniform1f(shaderProgram.KaUniform, this.configuracionPhong.Ka);
@@ -33,8 +24,6 @@ class Material {
     }
 
     gl.uniform1i(shaderProgram.rendering, renderColor);
-
-
 
     return this.shaderProgram
   }

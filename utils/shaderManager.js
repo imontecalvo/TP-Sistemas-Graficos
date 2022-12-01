@@ -14,6 +14,9 @@ class ShaderManager {
     initShaders(shaders) {
         this.crearShader(shaders[0], 'phong');
         this.crearShader(shaders[1], 'curvas');
+        this.crearShader(shaders[2], 'fuego');
+
+        console.log(this.programs["fuego"])
     }
 
     crearShader(shader, id) {
@@ -29,7 +32,7 @@ class ShaderManager {
             gl.compileShader(shader);
 
             if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                console.log("Error compiling shader: " + gl.getShaderInfoLog(shader));
+                console.log("Error compiling shader: " + id + " " + gl.getShaderInfoLog(shader));
             }
             return shader;
         }
@@ -64,25 +67,28 @@ class ShaderManager {
         glProgram.projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
         glProgram.viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
 
-        glProgram.rendering = gl.getUniformLocation(glProgram, "renderColor");
-        glProgram.colorDifusoUniform = gl.getUniformLocation(glProgram, "uColorDifuso");
-
+        
         glProgram.vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
         gl.enableVertexAttribArray(glProgram.vertexPositionAttribute);
-
-        if (glProgram.id == 'phong') {
+        
+        if (glProgram.id !== 'curvas') {
+            glProgram.rendering = gl.getUniformLocation(glProgram, "renderColor");
             glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
             gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
 
-            glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
-            gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
+            if (glProgram.id == "phong" || glProgram.id == "fuego") {
+                glProgram.colorDifusoUniform = gl.getUniformLocation(glProgram, "uColorDifuso");
 
-            glProgram.posCamaraUniform = gl.getUniformLocation(glProgram, "posCamaraMundo");
+                glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
+                gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
 
-            glProgram.KaUniform = gl.getUniformLocation(glProgram, "Ka");
-            glProgram.KdUniform = gl.getUniformLocation(glProgram, "Kd");
-            glProgram.KsUniform = gl.getUniformLocation(glProgram, "Ks");
-            glProgram.glossinessUniform = gl.getUniformLocation(glProgram, "glossiness");
+                glProgram.posCamaraUniform = gl.getUniformLocation(glProgram, "posCamaraMundo");
+
+                glProgram.KaUniform = gl.getUniformLocation(glProgram, "Ka");
+                glProgram.KdUniform = gl.getUniformLocation(glProgram, "Kd");
+                glProgram.KsUniform = gl.getUniformLocation(glProgram, "Ks");
+                glProgram.glossinessUniform = gl.getUniformLocation(glProgram, "glossiness");
+            }
         }
     }
 
@@ -100,7 +106,6 @@ class ShaderManager {
         const { gl } = this
         for (const id in this.programs) {
             const program = this.programs[id]
-            // console.log(program)
 
             gl.useProgram(program);
 
@@ -114,7 +119,7 @@ class ShaderManager {
         for (const id in this.programs) {
             if (id == 'phong') {
                 const program = this.programs[id]
-                
+
                 gl.useProgram(program);
                 // console.log(posCamaraMundo)
                 gl.uniform3fv(program.posCamaraUniform, posCamaraMundo);

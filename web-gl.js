@@ -13,11 +13,14 @@ var gl = null,
     canvas = null
 
 var glProgramCurva = null
+
+//Shader sources
 var vs_source
 var fs_source
-
 var vs_src_curva
 var fs_src_curva
+var fs_src_fuego
+var vs_src_fuego
 
 var modelMatrix = mat4.create();
 var viewMatrix = mat4.create();
@@ -36,7 +39,7 @@ function initWebGL() {
     }
 
     if (gl) {
-        shadersManager = new ShadersManager([{vs:vs_source, fs:fs_source},{vs:vs_src_curva, fs:fs_src_curva}],gl);
+        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_source, fs:fs_src_fuego}], gl);
         glProgramCurva = shadersManager.getProgram("curvas");
         initMateriales()
         // setupVertexShaderMatrix();
@@ -74,14 +77,14 @@ function setupWebGL() {
 
 function loadShaders() {
 
-    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva()).done(function (res1, res2) {
+    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva(), loadVSFuego(), loadFSFuego()).done(function (res1, res2) {
         //this code is executed when all ajax calls are done     
         initWebGL();
     });
 
     function loadVS() {
         return $.ajax({
-            url: "./shaders/vertex.glsl",
+            url: "./shaders/vs-default.glsl",
             success: function (result) {
                 vs_source = result;
             }
@@ -90,7 +93,7 @@ function loadShaders() {
 
     function loadFS() {
         return $.ajax({
-            url: "./shaders/fragment.glsl",
+            url: "./shaders/fs-phong.glsl",
             success: function (result) {
                 fs_source = result;
             }
@@ -99,7 +102,7 @@ function loadShaders() {
 
     function loadVSCurva() {
         return $.ajax({
-            url: "./shaders/vlinea.glsl",
+            url: "./shaders/vs-curvas.glsl",
             success: function (result) {
                 vs_src_curva = result;
             }
@@ -108,12 +111,31 @@ function loadShaders() {
 
     function loadFSCurva() {
         return $.ajax({
-            url: "./shaders/flinea.glsl",
+            url: "./shaders/fs-curvas.glsl",
             success: function (result) {
                 fs_src_curva = result;
             }
         });
     }
+
+    function loadFSFuego() {
+        return $.ajax({
+            url: "./shaders/fs-fuego.glsl",
+            success: function (result) {
+                fs_src_fuego = result;
+            }
+        });
+    }
+
+    function loadVSFuego() {
+        return $.ajax({
+            url: "./shaders/vs-fuego.glsl",
+            success: function (result) {
+                vs_src_fuego = result;
+            }
+        });
+    }
+
 }
 
 

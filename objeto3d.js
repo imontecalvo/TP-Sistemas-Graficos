@@ -87,7 +87,6 @@ export class Objeto3D {
             const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
             
             const glProgram = this.material.activar(renderColor)
-            // console.log(glProgram)
             gl.useProgram(glProgram);
 
             gl.uniformMatrix4fv(glProgram.modelMatrixUniform, false, mat);
