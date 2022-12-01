@@ -6,6 +6,8 @@ import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 import { Esfera } from "./esfera.js";
 
+var mat4 = glMatrix.mat4;
+
 const angulo = 0
 
 export class Catapulta extends Objeto3D {
@@ -31,6 +33,14 @@ export class Catapulta extends Objeto3D {
         this.agregarHijo(this.municionMov)
 
         this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
+    }
+
+    obtenerPosMunicion(){
+        if (this.brazo.municion.oculto) return this.municionMov.obtenerPosicionAbsoluta(this.matrizModelado)
+        var mat = mat4.create();
+        mat4.multiply(mat, this.matrizModelado, this.brazo.matrizModelado);
+
+        return this.brazo.municion.obtenerPosicionAbsoluta(mat)
     }
 
     actualizar() {

@@ -142,6 +142,8 @@ function loadShaders() {
 function setupVertexShaderMatrix() {
     shadersManager.actualizarMatrices(viewMatrix, projMatrix);
     shadersManager.actualizarPosCamara(escena.obtenerPosCamara());
+    shadersManager.actualizarPosAntorchas(escena.obtenerPosAntorchas());
+    shadersManager.actualizarPosMunicion(escena.obtenerPosMunicion())
 }
 
 function drawScene() {

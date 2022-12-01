@@ -7,7 +7,7 @@ class PinturaAmarilla extends Material {
         const configPhong = {
             colorDifuso: color,
             Ka:0.5,
-            Kd:1.0,
+            Kd:0.5,
             Ks:0.2,
             glossiness:2
         }

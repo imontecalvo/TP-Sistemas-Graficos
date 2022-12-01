@@ -30,6 +30,10 @@ export class Escena {
         this.castillo.trasladar(0, 0.4, 0)
 
         this.catapulta = new Catapulta()
+
+        this.esf = new Esfera(0.2, window.materiales.MADERA_OSCURA)
+        const x = this.obtenerPosAntorchas()
+        this.esf.trasladar(x[0], x[1], x[2])
         // this.esfera = new Esfera(3, window.materiales.PRUEBA)
         // this.esfera.trasladar(-5, -5, 2)
         // this.caja = new Caja(3, 3, 3, window.materiales.PRUEBA)
@@ -53,10 +57,19 @@ export class Escena {
         return this.camara.obtenerPosicion()
     }
 
+    obtenerPosAntorchas(){
+        return this.muralla.obtenerPosAntorchas()
+    }
+
+    obtenerPosMunicion(){
+        return this.catapulta.obtenerPosMunicion()
+    }
+
     dibujar() {
         // this.esfera.dibujar(this.matriz)
         // this.caja.dibujar(this.matriz)
         if (app.mostrarEjes) this.ejes.dibujar()
+        this.esf.dibujar(this.matriz)
         
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)

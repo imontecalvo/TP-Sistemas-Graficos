@@ -76,18 +76,22 @@ class ShaderManager {
             glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
             gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
 
-            glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
-            gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
-
             if (glProgram.id == "phong") {
+                glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
+                gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
+
                 glProgram.colorDifusoUniform = gl.getUniformLocation(glProgram, "uColorDifuso");
 
                 glProgram.posCamaraUniform = gl.getUniformLocation(glProgram, "posCamaraMundo");
-
+                
                 glProgram.KaUniform = gl.getUniformLocation(glProgram, "Ka");
                 glProgram.KdUniform = gl.getUniformLocation(glProgram, "Kd");
                 glProgram.KsUniform = gl.getUniformLocation(glProgram, "Ks");
                 glProgram.glossinessUniform = gl.getUniformLocation(glProgram, "glossiness");
+
+                glProgram.posAntorcha1Uniform = gl.getUniformLocation(glProgram, "uPosicionAntorcha1");
+                glProgram.posAntorcha2Uniform = gl.getUniformLocation(glProgram, "uPosicionAntorcha2");
+                glProgram.posMunicionUniform = gl.getUniformLocation(glProgram, "uPosicionMunicion");
             }
         }
     }
@@ -125,6 +129,23 @@ class ShaderManager {
                 gl.uniform3fv(program.posCamaraUniform, posCamaraMundo);
             }
         }
+    }
+
+    actualizarPosAntorchas(posAntorchas) {
+        const { gl } = this
+        const program = this.programs["phong"]
+
+        gl.useProgram(program);
+        gl.uniform3fv(program.posAntorcha1Uniform, posAntorchas[0]);
+        gl.uniform3fv(program.posAntorcha2Uniform, posAntorchas[1]);
+    }
+
+    actualizarPosMunicion(posMunicion){
+        const { gl } = this
+        const program = this.programs["phong"]
+
+        gl.useProgram(program);
+        gl.uniform3fv(program.posMunicionUniform, posMunicion);
     }
 }
 

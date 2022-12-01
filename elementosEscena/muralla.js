@@ -60,18 +60,18 @@ export class Muralla extends Objeto3D {
             const torre = new TorreMuralla(altura)
             torre.rotarY(Math.PI * 2 / (this.lados) * i - Math.PI / (this.lados))
             torre.trasladar(0, 0, radio + 1)
-            // this.agregarHijo(torre)
+            this.agregarHijo(torre)
         }
 
         // Creacion de antorchas
-        const antorcha1 = new Antorcha()
-        antorcha1.trasladar(this.posPorton[0]-2.,1.2,this.posPorton[2]-1)
-        antorcha1.rotarX(-Math.PI / 4)
-        this.agregarHijo(antorcha1)
-        const antorcha2 = new Antorcha()
-        antorcha2.trasladar(this.posPorton[0]+2.,1.2,this.posPorton[2]-1)
-        antorcha2.rotarX(-Math.PI / 4)
-        this.agregarHijo(antorcha2)
+        this.antorcha1 = new Antorcha()
+        this.antorcha1.trasladar(this.posPorton[0]-2.,1.2,this.posPorton[2]-1)
+        this.antorcha1.rotarX(-Math.PI / 4)
+        this.agregarHijo(this.antorcha1)
+        this.antorcha2 = new Antorcha()
+        this.antorcha2.trasladar(this.posPorton[0]+2.,1.2,this.posPorton[2]-1)
+        this.antorcha2.rotarX(-Math.PI / 4)
+        this.agregarHijo(this.antorcha2)
 
 
         
@@ -90,6 +90,10 @@ export class Muralla extends Objeto3D {
         this.entrada.porton.rotarX((-app.aperturaPorton / 360) * Math.PI * 2)
         this.entrada.porton.trasladar(0, - 2, 0)
 
+    }
+
+    obtenerPosAntorchas(){
+        return [this.antorcha1.obtenerPosicionAbsoluta(this.matrizModelado), this.antorcha2.obtenerPosicionAbsoluta(this.matrizModelado),]
     }
 
     obtenerPuntosCurva(altura, h, a, radio) {

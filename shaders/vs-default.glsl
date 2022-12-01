@@ -33,6 +33,12 @@ varying float vKs;
 uniform float glossiness;
 varying float vGlossiness;
 
+uniform vec3 uPosicionAntorcha1;
+varying vec3 vPosicionAntorcha1;
+uniform vec3 uPosicionAntorcha2;
+varying vec3 vPosicionAntorcha2;
+uniform vec3 uPosicionMunicion;
+varying vec3 vPosicionMunicion;
 
 void main(void) {
     vec3 position = aVertexPosition;
@@ -50,4 +56,7 @@ void main(void) {
     vGlossiness = glossiness;
 
     vPosCamaraMundo = posCamaraMundo;
+    vPosicionAntorcha1 = uPosicionAntorcha1;
+    vPosicionAntorcha2 = uPosicionAntorcha2;
+    vPosicionMunicion = uPosicionMunicion;
 }

@@ -98,8 +98,10 @@ export class Objeto3D {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
             gl.vertexAttribPointer(glProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
-            gl.vertexAttribPointer(glProgram.vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
+            if (this.material.shaderProgram.id == "phong") {
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
+                gl.vertexAttribPointer(glProgram.vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
+            }
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
 
