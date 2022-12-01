@@ -20,12 +20,12 @@ void main(void) {
     vec3 lightPos = vec3(1,10,1.);
     vec3 N = normalize(vNormal);
     //vec3 L = normalize(lightPos - vPosWorld);
-    vec3 L = normalize(vec3(0,30,50));
+    vec3 L = normalize(vec3(0,15,50));
 
     vec3 colorAmbiente = vec3(78./255.,78./255.,86./255.);
     //vec3 colorAmbiente = vec3(41./255.,42./255.,87./255.);
     //vec3 colorAmbiente = vec3(0.04,0.0,0.25);
-    vec3 colorEspecular = vec3(1.,1.,1.);
+    vec3 colorEspecular = vec3(0.95,0.67,0.03);
 
     // Lambert's cosine law
     float lambertian = max(dot(N, L), 0.0);
@@ -39,7 +39,7 @@ void main(void) {
     }
     gl_FragColor = vec4(vKa * colorAmbiente +
                       vKd * lambertian * vColorDifuso +
-                      vKs * specular * vec3(1.0,1.0,1.0), 1.0);
+                      vKs * specular * colorEspecular, 1.0);
 
     // specularColor: vec3(0.95,0.67,0.03), 1.0)
 

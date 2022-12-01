@@ -8,8 +8,8 @@ class Vidrio extends Material {
             colorDifuso: color,
             Ka:0.1,
             Kd:1.0,
-            Ks:1.0,
-            glossiness:20
+            Ks:0.8,
+            glossiness:100
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
