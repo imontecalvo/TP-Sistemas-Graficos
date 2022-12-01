@@ -76,11 +76,11 @@ class ShaderManager {
             glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
             gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
 
-            if (glProgram.id == "phong" || glProgram.id == "fuego") {
-                glProgram.colorDifusoUniform = gl.getUniformLocation(glProgram, "uColorDifuso");
+            glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
+            gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
 
-                glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
-                gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
+            if (glProgram.id == "phong") {
+                glProgram.colorDifusoUniform = gl.getUniformLocation(glProgram, "uColorDifuso");
 
                 glProgram.posCamaraUniform = gl.getUniformLocation(glProgram, "posCamaraMundo");
 

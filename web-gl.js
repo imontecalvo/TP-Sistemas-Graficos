@@ -39,7 +39,7 @@ function initWebGL() {
     }
 
     if (gl) {
-        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_source, fs:fs_src_fuego}], gl);
+        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_src_fuego, fs:fs_src_fuego}], gl);
         glProgramCurva = shadersManager.getProgram("curvas");
         initMateriales()
         // setupVertexShaderMatrix();
