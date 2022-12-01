@@ -19,7 +19,6 @@ export class CamaraOrbital {
         var ojo = vec3.fromValues(foco[0] + scroll * posObserver.x, foco[1] + scroll * posObserver.y, foco[2] + scroll * posObserver.z);
 
         this.posicion = ojo;
-        // console.log(ojo)
 
         var centro = vec3.fromValues(foco[0], foco[1], foco[2]);
 

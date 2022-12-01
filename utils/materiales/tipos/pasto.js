@@ -3,8 +3,15 @@ import Material from "../material.js";
 
 class Pasto extends Material {
     constructor() {
-        super();
-        this.color = [63/255,147/255,68/255];
+        const color = [63/255,147/255,68/255];
+        const configPhong = {
+            colorDifuso: color,
+            Ka:0.5,
+            Kd:1.0,
+            Ks:0.1,
+            glossiness:3
+        }
+        super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
     }
 }
