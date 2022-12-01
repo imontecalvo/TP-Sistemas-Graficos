@@ -213,7 +213,7 @@ export class Objeto3D {
     }
 
     calcularNormalesDibujadas() {
-        for (let i = 0; i < this.bufferPos.length - 3; i += 3) {
+        for (let i = 0; i <= this.bufferPos.length - 3; i += 3) {
             this.bufferNormDibujadas.push(this.bufferPos[i])
             this.bufferNormDibujadas.push(this.bufferPos[i + 1])
             this.bufferNormDibujadas.push(this.bufferPos[i + 2])
