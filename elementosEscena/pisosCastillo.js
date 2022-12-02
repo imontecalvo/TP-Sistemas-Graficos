@@ -1,5 +1,5 @@
 import { Objeto3D } from "../objeto3d.js";
-import { Caja } from "./caja.js";
+import { Caja, CaraTrapecio } from "./caja.js";
 import { superficeBarrido } from "../superficieBarrido.js";
 import { BezierCubica } from "../bezier/bezier3.js"
 import { discretizar } from "../bezier/discretizador.js"
@@ -159,10 +159,20 @@ export class TechoCastillo extends Objeto3D {
         // const cuerpo = new CuerpoTecho(ancho, largo, window.materiales.TEJAS_AZULES, alto)
         // this.agregarHijo(cuerpo)
 
-        const caraFrente = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "frente")
-        const caraAtras = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "atras")
-        const caraDer = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "derecha")
-        const caraIzq = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "izquierda")
+        // const caraFrente = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "frente")
+        // const caraAtras = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "atras")
+        // const caraDer = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "derecha")
+        // const caraIzq = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "izquierda")
+
+        // this.agregarHijo(caraFrente)
+        // this.agregarHijo(caraAtras)
+        // this.agregarHijo(caraDer)
+        // this.agregarHijo(caraIzq)
+
+        const caraFrente = new CaraTrapecio([-largo / 2, 0, ancho / 2], [-largo / 4, alto, 0], [largo / 2, 0, ancho / 2], [largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+        const caraAtras = new CaraTrapecio([largo / 2, 0, -ancho / 2], [largo / 4, alto, 0], [-largo / 2, 0, -ancho / 2], [-largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+        const caraDer = new CaraTrapecio([largo / 2, 0, ancho / 2], [largo / 4, alto, 0],[largo / 2, 0, -ancho / 2], [largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+        const caraIzq = new CaraTrapecio([-largo / 2, 0, -ancho / 2], [-largo / 4, alto, 0], [-largo / 2, 0, ancho / 2], [-largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
 
         this.agregarHijo(caraFrente)
         this.agregarHijo(caraAtras)

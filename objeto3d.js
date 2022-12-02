@@ -174,34 +174,34 @@ export class Objeto3D {
 
 
 
-        for (var j = 0; j <= this.columnas; j++) {
-            if (j == 0) longAcumuladaFila.push(0)
-            else {
-                longAcumuladaFila.push(longAcumuladaFila[j - 1] + distancia(coordPos[j - 1], coordPos[j]))
-            }
-        }
-        let longTotalFila = longAcumuladaFila[this.columnas]
-        longAcumuladaFila = longAcumuladaFila.map(x => x / longTotalFila)
-
-
-        // let puntoAnterior;
-        // for (var i = 0; i <= this.filas; i++) {
-        //     let longFilaActual = []
-        //     for (var j = 0; j <= this.columnas; j++) {
-        //         const idx = i * (this.columnas + 1) + j
-        //         // console.log("idx: ",idx)
-        //         if (j == 0) longFilaActual.push(0)
-        //         else {
-        //             longFilaActual.push(longFilaActual[j - 1] + distancia(coordPos[idx], coordPos[idx - 1]))
-        //         }
-        //         // puntoAnterior = coordPos[idx]
+        // for (var j = 0; j <= this.columnas; j++) {
+        //     if (j == 0) longAcumuladaFila.push(0)
+        //     else {
+        //         longAcumuladaFila.push(longAcumuladaFila[j - 1] + distancia(coordPos[j - 1], coordPos[j]))
         //     }
-        //     const longTotalFila = longFilaActual[longFilaActual.length - 1]
-        //     longFilaActual = longFilaActual.map(x => x / longTotalFila)
-        //     longAcumuladaFila.push(longFilaActual)
         // }
+        // let longTotalFila = longAcumuladaFila[this.columnas]
+        // longAcumuladaFila = longAcumuladaFila.map(x => x / longTotalFila)
 
-        // if (this.id == "torreC") console.log("longAcumuladaFila: ", longAcumuladaFila)
+
+        let puntoAnterior;
+        for (var i = 0; i <= this.filas; i++) {
+            let longFilaActual = []
+            for (var j = 0; j <= this.columnas; j++) {
+                const idx = i * (this.columnas + 1) + j
+                // console.log("idx: ",idx)
+                if (j == 0) longFilaActual.push(0)
+                else {
+                    longFilaActual.push(longFilaActual[j - 1] + distancia(coordPos[idx], coordPos[idx - 1]))
+                }
+                // puntoAnterior = coordPos[idx]
+            }
+            const longTotalFila = longFilaActual[longFilaActual.length - 1]
+            longFilaActual = longFilaActual.map(x => x / longTotalFila)
+            longAcumuladaFila.push(longFilaActual)
+        }
+
+        if (this.id == "torreC") console.log("longAcumuladaFila: ", longAcumuladaFila)
 
 
         let longAcumuladaColumna = []
@@ -237,9 +237,12 @@ export class Objeto3D {
                 // var v = 1 - j / this.columnas;
                 let multiplicadorU = 1
                 let multiplicadorV = 1
-                if (this.id == "muralla") multiplicadorU = this.lados; multiplicadorV = 2
+                let signoU = 1
+                let signoV = 1
+                if (this.id == "muralla") {multiplicadorU = this.lados; multiplicadorV = 2}
+                if (this.id == "terreno") {multiplicadorU = this.lados; multiplicadorV = 2; signoU=-1}
                 // var u = multiplicador * (1 - i / this.filas);
-                var v = longAcumuladaFila[j]
+                var v = longAcumuladaFila[i][j]
                 // var u = longAcumuladaColumna[j][i]
 
                 var u = (this.id === "muralla" || this.id === "techo") ? longAcumuladaColumna[j][i] : (i / this.filas)
@@ -247,8 +250,8 @@ export class Objeto3D {
                 // if(this.id == "techo"){
                 //     const aux = u; u = v; v = aux
                 // }
-                uvBuffer.push(multiplicadorU * (1 - u));
-                uvBuffer.push(multiplicadorV * (1 - v));
+                uvBuffer.push(multiplicadorU * (1 - signoU * u));
+                uvBuffer.push(multiplicadorV * (1 - signoV * v));
             }
         }
 

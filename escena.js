@@ -30,6 +30,8 @@ export class Escena {
         this.castillo.trasladar(0, 0.4, 0)
 
         this.catapulta = new Catapulta()
+
+        this.caja = new Caja(1, 1, 1, window.materiales.PASTO)
     }
 
     actualizar() {
@@ -64,13 +66,14 @@ export class Escena {
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
         this.agua.dibujar(this.matriz)
-// 
+
         this.muralla.actualizar()
         this.muralla.dibujar(this.matriz)
 
         this.catapulta.actualizar()
         this.catapulta.dibujar(this.matriz)
 
+        // this.caja.dibujar(this.matriz)
         this.castillo.dibujar(this.matriz)
     }
 }

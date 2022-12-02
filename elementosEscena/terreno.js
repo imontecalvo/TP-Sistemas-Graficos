@@ -50,6 +50,8 @@ class Periferia extends Objeto3D {
         super(window.materiales.PASTO)
         this.filas = 8
         this.columnas = 5
+        this.lados = this.filas
+        this.id = "terreno"
         var puntosCurva = []
         this.curvaLado = new BezierCubica([[17,-1.5,0],[17,-0.5,0],[17,-0.1,0],[17,0,0]], "z")
         this.curvaCentro = new BezierCubica([[17,0,0],[18,0,0],[20,0,0],[40,0,0]], "z")

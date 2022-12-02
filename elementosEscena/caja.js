@@ -2,90 +2,122 @@ import { Objeto3D } from "../objeto3d.js"
 import { BezierCubica } from "../bezier/bezier3.js"
 import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
+import { Esfera } from "./esfera.js";
 
 export class Caja extends Objeto3D{
     constructor(alto, largo, ancho, material) {
+        super()
+
+        const caraFrontal = new CaraCaja(alto, largo, material)
+        caraFrontal.trasladar(0, 0, ancho / 2)
+        const caraTrasera = new CaraCaja(alto, largo, material)
+        caraTrasera.trasladar(0, 0, -ancho / 2)
+        caraTrasera.rotarY(Math.PI)
+        const caraIzquierda = new CaraCaja(alto, ancho, material)
+        caraIzquierda.trasladar(-largo/2, 0, 0)
+        caraIzquierda.rotarY(-Math.PI/2)
+        const caraDerecha = new CaraCaja(alto, ancho, material)
+        caraDerecha.trasladar(largo/2, 0, 0)
+        caraDerecha.rotarY(Math.PI/2)
+        const caraSuperior = new CaraCaja(ancho, largo, material)
+        caraSuperior.trasladar(0, alto, ancho/2)
+        caraSuperior.rotarX(-Math.PI/2)
+        const caraInferior = new CaraCaja(ancho, largo, material)
+        caraInferior.trasladar(0, 0, -ancho/2)
+        caraInferior.rotarX(Math.PI/2)
+
+        this.agregarHijo(caraFrontal)
+        this.agregarHijo(caraTrasera)
+        this.agregarHijo(caraIzquierda)
+        this.agregarHijo(caraDerecha)
+        this.agregarHijo(caraSuperior)
+        this.agregarHijo(caraInferior)
+    }
+}
+
+export class CaraCaja extends Objeto3D{
+    constructor(alto, largo, material) {
         super(material)
 
-        this.filas = 5
-        this.columnas = 7
-        const puntosCurva = this.obtenerPuntosCurva(alto, largo)
-        const cantPuntosCurva = this.columnas + 1
-        const recorrido = new BezierCubica([[0, 0, ancho/2], [0, 0, ancho / 3], [0, 0, -ancho / 3], [0, 0, -ancho/2]], "y")
-        const data = superficeBarrido(puntosCurva, recorrido, this.columnas, 2)
-
-        const caras = this.obtenerCaras(data, cantPuntosCurva, ancho)
-
-        this.bufferPos = caras.Frontal.posicion.concat(data[0], caras.Trasera.posicion)
-        this.bufferNorm = caras.Frontal.normal.concat(data[1], caras.Trasera.normal)
+        this.filas = 1
+        this.columnas = 1
+        const posiciones = [[largo/2,0,0], [largo/2,alto,0],[-largo/2,0,0], [-largo/2,alto,0]]
+        const normales = [[0,0,1], [0,0,1], [0,0,1], [0,0,1]]
+        this.bufferPos = posiciones.flat()
+        this.bufferNorm = normales.flat()
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }
+}
 
-    obtenerCaras(data, cantPuntosCurva, ancho) {
-        const caraFrontalPos = data[0].slice(0, cantPuntosCurva * 3).map((x, i) => {
-            if (i % 3 == 1) return 0;
-            else return x
-        }).concat(data[0].slice(0, cantPuntosCurva * 3))
+export class CaraTrapecio extends Objeto3D{
+    constructor(abajoIzq, arribaIzq, abajoDer, arribaDer, material) {
+        super(material)
+        this.id = "trapecio"
+        this.filas = 8
+        this.columnas = 1
+        const puntoMedioArriba = puntoMedio(arribaIzq, arribaDer)
+        const puntoMedioAbajo = puntoMedio(abajoIzq, abajoDer)
 
-        let caraFrontalNorm = []
-        for (let i = 0; i < cantPuntosCurva * 2; i++) {
-            caraFrontalNorm.push(0)
-            caraFrontalNorm.push(0)
-            caraFrontalNorm.push(1)
-        }
+        const puntoMedioDerArriba = puntoMedio(arribaDer, puntoMedioArriba)
+        const puntoMedioDerAbajo = puntoMedio(abajoDer, puntoMedioAbajo)
 
-        const caraTraseraPos = data[0].slice(-cantPuntosCurva * 3).concat(caraFrontalPos.map((x, i) => {
-            if (i % 3 == 2) return -ancho/2;
-            else return x
-        }))
+        const puntoMedioIzqArriba = puntoMedio(arribaIzq, puntoMedioArriba)
+        const puntoMedioIzqAbajo = puntoMedio(abajoIzq, puntoMedioAbajo)
 
-        const caraTraseraNorm = caraFrontalNorm.map((x, i) => {
-            if (i % 3 == 2) return -1;
-            else return x
-        })
+        const puntoMedioDerDerArriba = puntoMedio(arribaDer, puntoMedioDerArriba)
+        const puntoMedioDerDerAbajo = puntoMedio(abajoDer, puntoMedioDerAbajo)
 
-        return {
-            Frontal: { posicion: caraFrontalPos, normal: caraFrontalNorm },
-            Trasera: { posicion: caraTraseraPos, normal: caraTraseraNorm }
-        }
+        const puntoMedioDerIzqArriba = puntoMedio(puntoMedioArriba, puntoMedioDerArriba)
+        const puntoMedioDerIzqAbajo = puntoMedio(puntoMedioAbajo, puntoMedioDerAbajo)
+
+        const puntoMedioIzqIzqArriba = puntoMedio(arribaIzq, puntoMedioIzqArriba)
+        const puntoMedioIzqIzqAbajo = puntoMedio(abajoIzq, puntoMedioIzqAbajo)
+
+        const puntoMedioIzqDerArriba = puntoMedio(puntoMedioArriba, puntoMedioIzqArriba)
+        const puntoMedioIzqDerAbajo = puntoMedio(puntoMedioAbajo, puntoMedioIzqAbajo)
+
+        const posiciones = [abajoDer, arribaDer,
+            puntoMedioDerDerAbajo, puntoMedioDerDerArriba,
+            puntoMedioDerAbajo, puntoMedioDerArriba,
+            puntoMedioDerIzqAbajo, puntoMedioDerIzqArriba,
+            puntoMedioAbajo, puntoMedioArriba,
+            puntoMedioIzqDerAbajo, puntoMedioIzqDerArriba,
+            puntoMedioIzqAbajo, puntoMedioIzqArriba,
+            puntoMedioIzqIzqAbajo, puntoMedioIzqIzqArriba,
+            abajoIzq, arribaIzq]
+            
+        const normal = normalizar(productoVectorial(restarVectores(abajoDer, abajoIzq), restarVectores(arribaIzq, abajoIzq)))
+        const normales = new Array(2*(this.filas+1)).fill(normal);
+
+        this.bufferPos = posiciones.flat()
+        this.bufferNorm = normales.flat()
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
     }
+}
 
-    obtenerPuntosCurva(alto, largo) {
-        const ptosCtrlAbajo = [[largo / 2, 0, 0], [largo / 4, 0, 0], [-largo / 4, 0, 0], [-largo / 2, 0, 0]]
-        const ptosCtrlIzq = [[-largo / 2, 0, 0], [-largo / 2, alto / 3, 0], [-largo / 2, alto / 2, 0], [-largo / 2, alto, 0]]
-        const ptosCtrlArriba = [[-largo / 2, alto, 0], [-largo / 4, alto, 0], [largo / 4, alto, 0], [largo / 2, alto, 0]]
-        const ptosCtrlDerecha = [[largo / 2, alto, 0], [largo / 2, alto / 2, 0], [largo / 2, alto / 3, 0], [largo / 2, 0, 0]]
+function productoVectorial(vec1, vec2) {
+    const x = vec1[1] * vec2[2] - vec1[2] * vec2[1]
+    const y = - (vec1[0] * vec2[2] - vec1[2] * vec2[0])
+    const z = vec1[0] * vec2[1] - vec1[1] * vec2[0]
 
-        const curvaAbajo = new BezierCubica(ptosCtrlAbajo, "z")
-        const curvaIzq = new BezierCubica(ptosCtrlIzq, "z")
-        const curvaArriba = new BezierCubica(ptosCtrlArriba, "z")
-        const curvaDerecha = new BezierCubica(ptosCtrlDerecha, "z")
+    return [x, y, z]
+}
 
-        const puntosAbajo = discretizar(curvaAbajo, 1, false)
-        const puntosIzq = discretizar(curvaIzq, 1, false)
-        const puntosArriba = discretizar(curvaArriba, 1, false)
-        const puntosDerecha = discretizar(curvaDerecha, 1, false)
+function normalizar(normal) {
+    const norma = Math.sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2])
+    return [normal[0] / norma, normal[1] / norma, normal[2] / norma]
+}
 
-        const pos =
-            puntosAbajo.posicion.concat(
-                puntosIzq.posicion,
-                puntosArriba.posicion,
-                puntosDerecha.posicion
-            )
+function restarVectores(vec1, vec2) {
+    return [vec1[0] - vec2[0], vec1[1] - vec2[1], vec1[2] - vec2[2]]
+}
 
-        const norm =
-            puntosAbajo.normal.concat(
-                puntosIzq.normal,
-                puntosArriba.normal,
-                puntosDerecha.normal
-            )
-
-        return {
-            posicion: pos,
-            normal: norm,
-        }
-    }
+function puntoMedio(vec1, vec2) {
+    return [(vec1[0] + vec2[0]) / 2, (vec1[1] + vec2[1]) / 2, (vec1[2] + vec2[2]) / 2]
 }
