@@ -22,7 +22,6 @@ export class Escena {
 
         this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
         this.agua.trasladar(0, -0.8, 0)
-        this.agua.setId("agua")
 
         this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
         this.muralla.trasladar(0, 0.4, 0)

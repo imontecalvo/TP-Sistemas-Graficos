@@ -4,7 +4,7 @@ var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(material = window.materiales.ROJO, id=null) {
+    constructor(material = window.materiales.ROJO, id = null) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
@@ -184,15 +184,29 @@ export class Objeto3D {
         longAcumuladaFila = longAcumuladaFila.map(x => x / longTotalFila)
 
 
+        // let puntoAnterior;
+        // for (var i = 0; i <= this.filas; i++) {
+        //     let longFilaActual = []
+        //     for (var j = 0; j <= this.columnas; j++) {
+        //         const idx = i * (this.columnas + 1) + j
+        //         // console.log("idx: ",idx)
+        //         if (j == 0) longFilaActual.push(0)
+        //         else {
+        //             longFilaActual.push(longFilaActual[j - 1] + distancia(coordPos[idx], coordPos[idx - 1]))
+        //         }
+        //         // puntoAnterior = coordPos[idx]
+        //     }
+        //     const longTotalFila = longFilaActual[longFilaActual.length - 1]
+        //     longFilaActual = longFilaActual.map(x => x / longTotalFila)
+        //     longAcumuladaFila.push(longFilaActual)
+        // }
+
+        // if (this.id == "torreC") console.log("longAcumuladaFila: ", longAcumuladaFila)
+
+
         let longAcumuladaColumna = []
-        if (this.id == "muralla" || this.id == "agua") {
-            console.log("long ac: ", longAcumuladaFila)
-
-            // if(this.asd == "torre") console.log("long ac: ",longAcumuladaFila)
+        if (this.id == "muralla" || this.id == "techo") {
             // Calculo longitudes de los puntos pertenecientes a cada columna
-
-
-            
 
             for (var j = 0; j <= this.columnas; j++) {
                 // let puntoAnterior;
@@ -211,9 +225,9 @@ export class Objeto3D {
                 longColumnaActual = longColumnaActual.map(x => x / longTotalCol)
                 longAcumuladaColumna.push(longColumnaActual)
             }
-        } 
+        }
 
-       
+
 
         // longitudes a lo largo de una fila -> un nivel
         // long acumulada por cada columna -> ("una fila")
@@ -228,10 +242,13 @@ export class Objeto3D {
                 var v = longAcumuladaFila[j]
                 // var u = longAcumuladaColumna[j][i]
 
-                var u = (this.id === "muralla" || this.id === "agua") ? longAcumuladaColumna[j][i] : (i / this.filas)
+                var u = (this.id === "muralla" || this.id === "techo") ? longAcumuladaColumna[j][i] : (i / this.filas)
 
-                uvBuffer.push(multiplicadorU*(1-u));
-                uvBuffer.push(multiplicadorV*(1-v));
+                // if(this.id == "techo"){
+                //     const aux = u; u = v; v = aux
+                // }
+                uvBuffer.push(multiplicadorU * (1 - u));
+                uvBuffer.push(multiplicadorV * (1 - v));
             }
         }
 

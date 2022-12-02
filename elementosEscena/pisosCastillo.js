@@ -156,12 +156,16 @@ export class TechoCastillo extends Objeto3D {
     constructor(ancho, largo) {
         super()
         const alto = 2
-        const cuerpo = new CuerpoTecho(ancho, largo, window.materiales.TEJAS_AZULES, alto)
-        this.agregarHijo(cuerpo)
+        // const cuerpo = new CuerpoTecho(ancho, largo, window.materiales.TEJAS_AZULES, alto)
+        // this.agregarHijo(cuerpo)
 
-        const caraDer = new CaraTecho(ancho, largo, window.materiales.TEJAS_AZULES, alto, "derecha")
-        const caraIzq = new CaraTecho(ancho, largo, window.materiales.TEJAS_AZULES, alto, "izquierda")
+        const caraFrente = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "frente")
+        const caraAtras = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "atras")
+        const caraDer = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "derecha")
+        const caraIzq = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "izquierda")
 
+        this.agregarHijo(caraFrente)
+        this.agregarHijo(caraAtras)
         this.agregarHijo(caraDer)
         this.agregarHijo(caraIzq)
     }
@@ -172,6 +176,7 @@ class CuerpoTecho extends Objeto3D {
         super(material)
         this.filas = 3
         this.columnas = 1
+        this.id = "techo"
 
         const posiciones = [[-largo / 2, 0, ancho / 2], [largo / 2, 0, ancho / 2],
         [-largo / 4, alto, 0], [largo / 4, alto, 0],
@@ -193,20 +198,47 @@ class CuerpoTecho extends Objeto3D {
     }
 }
 
-class CaraTecho extends Objeto3D {
+class CaraTechoLateral extends Objeto3D {
     constructor(ancho, largo, material, alto, tipo) {
         super(material)
         this.filas = 1
         this.columnas = 1
+        this.id = "techo"
 
         const coordX = tipo === "derecha" ? largo : -largo
 
         const posiciones = [[coordX / 2, 0, ancho / 2], [coordX / 2, 0, -ancho / 2],
         [coordX / 4, alto, 0], [coordX / 4, alto, 0]]
 
-        let normal = tipo == "derecha" ? productoVectorial([0, 0, -1], [-largo/4, alto, 0])
-            : productoVectorial([0, 0, 1], [largo/4, alto, 0])
-            normal = normalizar(normal)
+        let normal = tipo == "derecha" ? productoVectorial([0, 0, -1], [-largo / 4, alto, 0])
+            : productoVectorial([0, 0, 1], [largo / 4, alto, 0])
+        normal = normalizar(normal)
+
+        const normales = [normal, normal, normal, normal]
+        this.bufferPos = [].concat(...posiciones.map((pos) => pos))
+        this.bufferNorm = [].concat(...normales.map((norm) => norm))
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
+    }
+}
+
+class CaraTechoPrincipal extends Objeto3D {
+    constructor(ancho, largo, material, alto, tipo) {
+        super(material)
+        this.filas = 1
+        this.columnas = 1
+        this.id = "techo"
+
+        const coordZ = tipo === "frente" ? ancho : -ancho
+
+        const posiciones = [[-largo / 2, 0, coordZ / 2], [largo / 2, 0, coordZ / 2],
+        [-largo / 4, alto, 0], [largo / 4, alto, 0]]
+
+        let normal = tipo == "frente" ? productoVectorial([1, 0, 0], [0, alto, -ancho / 2])
+            : productoVectorial([-1, 0, 0], [0, alto, ancho / 2])
+        normal = normalizar(normal)
 
         const normales = [normal, normal, normal, normal]
         this.bufferPos = [].concat(...posiciones.map((pos) => pos))

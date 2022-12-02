@@ -21,6 +21,7 @@ export class TorreCastillo extends Objeto3D {
 class Torre extends Objeto3D {
     constructor(alturaVariable, alturaFija, radioInf, radioSup) {
         super(window.materiales.PINTURA_AMARILLA)
+        this.id = "torreC"
         this.filas = 20
         this.columnas = 2 + 5 + 2 - 1
 

@@ -98,12 +98,12 @@ export class Muralla extends Objeto3D {
                 })
             );
         }
-        const coordPos = agruparPuntos(this.bufferPos, 3)
-        for (let i = 0; i < coordPos.length; i++) {
-            const esf = new Esfera(0.1, window.materiales.ROJO)
-            esf.trasladar(coordPos[i][0], coordPos[i][1], coordPos[i][2])
-            this.agregarHijo(esf)
-        }
+        // const coordPos = agruparPuntos(this.bufferPos, 3)
+        // for (let i = 0; i < coordPos.length; i++) {
+        //     const esf = new Esfera(0.1, window.materiales.ROJO)
+        //     esf.trasladar(coordPos[i][0], coordPos[i][1], coordPos[i][2])
+        //     this.agregarHijo(esf)
+        // }
 
 
 

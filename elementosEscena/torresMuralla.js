@@ -6,6 +6,7 @@ import { superficieRevolucion } from "../superficieRevolucion.js";
 export class TorreMuralla extends Objeto3D {
     constructor(altura) {
         super(window.materiales.PIEDRA_OSCURA)
+        this.id = "torre"
         this.filas = 20
         this.columnas = 18-1
         const puntosCurva = this.obtenerPuntosCurva(altura+0.85)
