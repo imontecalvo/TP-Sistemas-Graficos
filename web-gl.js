@@ -1,8 +1,10 @@
 import { Escena } from "./escena.js";
 import initMateriales from "./utils/materiales/materialManager.js";
 import ShadersManager from "./utils/shaderManager.js";
+import TextureManager from "./utils/textureManager.js";
 
 var shadersManager;
+var textureManager;
 
 var tiempo = 0;
 var mat4 = glMatrix.mat4;
@@ -28,7 +30,7 @@ var projMatrix = mat4.create();
 var rotate_angle = -1.57078;
 
 
-function initWebGL() {
+async function initWebGL() {
     canvas = document.getElementById("my-canvas");
 
     try {
@@ -41,8 +43,8 @@ function initWebGL() {
     if (gl) {
         shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_src_fuego, fs:fs_src_fuego}], gl);
         glProgramCurva = shadersManager.getProgram("curvas");
+        textureManager = await TextureManager.init(gl);
         initMateriales()
-        // setupVertexShaderMatrix();
         setupWebGL();
         tick();
 
