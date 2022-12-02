@@ -4,7 +4,8 @@ import { Objeto3D } from "../objeto3d.js"
 import { superficieRevolucion } from "../superficieRevolucion.js";
 import { Entrada } from "./entrada.js";
 import { TorreMuralla } from "./torresMuralla.js";
-import {Antorcha} from "./antorcha.js"
+import { Antorcha } from "./antorcha.js"
+import { Esfera } from "./esfera.js";
 
 
 // Columnas: cant de puntos que forman un segmento transversal de la torre MENOS 1
@@ -16,8 +17,9 @@ var vec4 = glMatrix.vec4;
 export class Muralla extends Objeto3D {
     constructor(altura, lados) {
         super(window.materiales.PIEDRA)
+        this.id = "muralla"
         this.lados = lados
-        this.filas = this.lados - 1 + 2 + 4
+        this.filas = this.lados - 1 + 2
         this.columnas = 35
         this.largoEntrada = 2
         const h = 0.25
@@ -63,22 +65,47 @@ export class Muralla extends Objeto3D {
             this.agregarHijo(torre)
         }
 
+        // const torre = new TorreMuralla(altura)
+        // console.log(torre.bufferPos)
+        // this.agregarHijo(torre)
+
         // Creacion de antorchas
         this.antorcha1 = new Antorcha()
-        this.antorcha1.trasladar(this.posPorton[0]-2.,1.2,this.posPorton[2]-1)
+        this.antorcha1.trasladar(this.posPorton[0] - 2., 1.2, this.posPorton[2] - 1)
         this.antorcha1.rotarX(-Math.PI / 4)
         this.agregarHijo(this.antorcha1)
         this.antorcha2 = new Antorcha()
-        this.antorcha2.trasladar(this.posPorton[0]+2.,1.2,this.posPorton[2]-1)
+        this.antorcha2.trasladar(this.posPorton[0] + 2., 1.2, this.posPorton[2] - 1)
         this.antorcha2.rotarX(-Math.PI / 4)
         this.agregarHijo(this.antorcha2)
 
 
-        
-        this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion, posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
-        this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal, normalesMuralla, extremos.fin.normal, caras.fin.normal)
+
+        // this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion, posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
+        // this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal, normalesMuralla, extremos.fin.normal, caras.fin.normal)
+        this.bufferPos = extremos.inicio.posicion.concat(posicionMuralla, extremos.fin.posicion)
+        console.log(this.bufferPos)
+        this.bufferNorm = extremos.inicio.normal.concat(normalesMuralla, extremos.fin.normal)
+
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
+
+        function agruparPuntos(arr, chunkSize) {
+            var array = arr;
+            return [].concat.apply([],
+                array.map(function (elem, i) {
+                    return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
+                })
+            );
+        }
+        const coordPos = agruparPuntos(this.bufferPos, 3)
+        for (let i = 0; i < coordPos.length; i++) {
+            const esf = new Esfera(0.1, window.materiales.ROJO)
+            esf.trasladar(coordPos[i][0], coordPos[i][1], coordPos[i][2])
+            this.agregarHijo(esf)
+        }
+
+
 
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -92,7 +119,7 @@ export class Muralla extends Objeto3D {
 
     }
 
-    obtenerPosAntorchas(){
+    obtenerPosAntorchas() {
         return [this.antorcha1.obtenerPosicionAbsoluta(this.matrizModelado), this.antorcha2.obtenerPosicionAbsoluta(this.matrizModelado),]
     }
 

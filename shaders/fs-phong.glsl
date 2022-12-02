@@ -108,7 +108,8 @@ void main(void) {
 
         vec3 colorTotal = color + (colorAntorcha1 * intensidadLuzAntorcha1) + (colorAntorcha2 * intensidadLuzAntorcha2) + (colorMunicion * intensidadLuzMunicion);
 
-        gl_FragColor = vec4(colorTotal , 1.0);
+        //gl_FragColor = vec4(colorTotal , 1.0);
+        gl_FragColor = vec4(colorTexturaFinal , 1.0);
 
         // specularColor: vec3(0.95,0.67,0.03), 1.0)
     }else{

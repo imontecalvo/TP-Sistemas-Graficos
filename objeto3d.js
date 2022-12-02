@@ -4,12 +4,13 @@ var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(material=window.materiales.ROJO) {
+    constructor(material = window.materiales.ROJO, id=null) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
         this.oculto = false
         this.material = material
+        this.id = null
     }
 
     ocultar() {
@@ -80,12 +81,12 @@ export class Objeto3D {
         var matNorm = mat4.create()
         mat4.invert(matNorm, mat);
         mat4.transpose(matNorm, matNorm);
-        
+
         if (this.mallaDeTriangulos) {
             // this.configurarIluminacion()
-            
+
             const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
-            
+
             const glProgram = this.material.activar(renderColor)
             gl.useProgram(glProgram);
 
@@ -152,15 +153,85 @@ export class Objeto3D {
             return i * (columnas + 1) + j;
         }
 
+        function agruparPuntos(arr, chunkSize) {
+            var array = arr;
+            return [].concat.apply([],
+                array.map(function (elem, i) {
+                    return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
+                })
+            );
+        }
+
+        function distancia(p1, p2) {
+            return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2)
+        }
+
         let uvBuffer = []
+
+        // Calculo longitudes de los puntos pertenecientes a una fila (un nivel)
+        let longAcumuladaFila = []
+        const coordPos = agruparPuntos(this.bufferPos, 3)
+
+
+
+        for (var j = 0; j <= this.columnas; j++) {
+            if (j == 0) longAcumuladaFila.push(0)
+            else {
+                longAcumuladaFila.push(longAcumuladaFila[j - 1] + distancia(coordPos[j - 1], coordPos[j]))
+            }
+        }
+        let longTotalFila = longAcumuladaFila[this.columnas]
+        longAcumuladaFila = longAcumuladaFila.map(x => x / longTotalFila)
+
+
+        let longAcumuladaColumna = []
+        if (this.id == "muralla" || this.id == "agua") {
+            console.log("long ac: ", longAcumuladaFila)
+
+            // if(this.asd == "torre") console.log("long ac: ",longAcumuladaFila)
+            // Calculo longitudes de los puntos pertenecientes a cada columna
+
+
+            
+
+            for (var j = 0; j <= this.columnas; j++) {
+                // let puntoAnterior;
+                let longColumnaActual = []
+                for (var i = 0; i <= this.filas; i++) {
+                    const idx = i * (this.columnas + 1) + j
+                    // console.log("idx: ",idx)
+                    if (i == 0) longColumnaActual.push(0)
+                    else {
+                        // console.log("ant: ", coordPos[idx], " - ant: ", puntoAnterior)
+                        longColumnaActual.push(longColumnaActual[i - 1] + distancia(coordPos[idx], coordPos[idx - (this.columnas + 1)]))
+                    }
+                    // puntoAnterior = coordPos[idx]
+                }
+                const longTotalCol = longColumnaActual[longColumnaActual.length - 1]
+                longColumnaActual = longColumnaActual.map(x => x / longTotalCol)
+                longAcumuladaColumna.push(longColumnaActual)
+            }
+        } 
+
+       
+
+        // longitudes a lo largo de una fila -> un nivel
+        // long acumulada por cada columna -> ("una fila")
 
         for (var i = 0; i <= this.filas; i++) {
             for (var j = 0; j <= this.columnas; j++) {
-                var u=j/this.columnas;
-                var v=i/this.filas;
+                // var v = 1 - j / this.columnas;
+                let multiplicadorU = 1
+                let multiplicadorV = 1
+                if (this.id == "muralla") multiplicadorU = this.lados; multiplicadorV = 2
+                // var u = multiplicador * (1 - i / this.filas);
+                var v = longAcumuladaFila[j]
+                // var u = longAcumuladaColumna[j][i]
 
-                uvBuffer.push(u);
-                uvBuffer.push(v);
+                var u = (this.id === "muralla" || this.id === "agua") ? longAcumuladaColumna[j][i] : (i / this.filas)
+
+                uvBuffer.push(multiplicadorU*(1-u));
+                uvBuffer.push(multiplicadorV*(1-v));
             }
         }
 

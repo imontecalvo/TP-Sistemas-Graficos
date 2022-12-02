@@ -18,10 +18,11 @@ export class Escena {
         this.terreno = new Terreno()
 
         this.puente = new Caja(0.2, 2, 8, window.materiales.PASTO)
-        this.puente.trasladar(0, -0.2, 10 + 7 / 2)
+        this.puente.trasladar(0, -0.25, 10 + 7 / 2)
 
         this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
         this.agua.trasladar(0, -0.8, 0)
+        this.agua.setId("agua")
 
         this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
         this.muralla.trasladar(0, 0.4, 0)
@@ -30,14 +31,6 @@ export class Escena {
         this.castillo.trasladar(0, 0.4, 0)
 
         this.catapulta = new Catapulta()
-
-        this.esf = new Esfera(0.2, window.materiales.MADERA_OSCURA)
-        const x = this.obtenerPosAntorchas()
-        this.esf.trasladar(x[0], x[1], x[2])
-        // this.esfera = new Esfera(3, window.materiales.PRUEBA)
-        // this.esfera.trasladar(-5, -5, 2)
-        // this.caja = new Caja(3, 3, 3, window.materiales.PRUEBA)
-        // this.caja.trasladar(5,-5,0)
     }
 
     actualizar() {
@@ -69,8 +62,6 @@ export class Escena {
         // this.esfera.dibujar(this.matriz)
         // this.caja.dibujar(this.matriz)
         if (app.mostrarEjes) this.ejes.dibujar()
-        this.esf.dibujar(this.matriz)
-        
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
         this.agua.dibujar(this.matriz)
