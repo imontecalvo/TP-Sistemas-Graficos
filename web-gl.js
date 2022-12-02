@@ -186,4 +186,4 @@ function tick() {
 
 window.onload = loadShaders;
 
-export { gl, glProgramCurva, shadersManager }
+export { gl, glProgramCurva, shadersManager, textureManager }

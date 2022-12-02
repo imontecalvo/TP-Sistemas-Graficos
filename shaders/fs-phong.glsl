@@ -18,10 +18,32 @@ varying vec3 vPosicionAntorcha1;
 varying vec3 vPosicionAntorcha2;
 varying vec3 vPosicionMunicion;
 
+uniform sampler2D uTextura1;
+uniform sampler2D uTextura2;
+uniform sampler2D uTextura3;
+
 void main(void) {
 
     if (renderColor==true){
         vec3 camVec = normalize(vPosWorld - vPosCamaraMundo);
+
+        vec4 colorTextura_1 = texture2D(uTextura1, vUv);
+        vec3 colorTextura3D_1 = colorTextura_1.xyz;
+
+        // Textura 2
+        vec3 colorTextura3D_2_1 = texture2D(uTextura2, vUv).xyz;
+        vec3 colorTextura3D_2_2 = texture2D(uTextura2, vUv * 2.17123).xyz;
+        vec3 colorTextura3D_2_3 = texture2D(uTextura2, vUv * 3.8813).xyz;
+        vec3 colorTextura3D_2 = mix(mix(colorTextura3D_2_1, colorTextura3D_2_2, 0.5), colorTextura3D_2_3, 0.3);
+
+        // Textura 3
+        vec3 colorTextura3D_3_1 = texture2D(uTextura3, vUv * 0.893).xyz;
+        vec3 colorTextura3D_3_2 = texture2D(uTextura3, vUv * 2.17343).xyz;
+        vec3 colorTextura3D_3_3 = texture2D(uTextura3, vUv * 1.55324).xyz;
+        vec3 colorTextura3D_3 = mix(mix(colorTextura3D_3_1, colorTextura3D_3_2, 0.5), colorTextura3D_3_3, 0.3);
+
+        // Color textura final
+        vec3 colorTexturaFinal = mix(colorTextura3D_1, colorTextura3D_2, colorTextura3D_3);
 
         //Sol
         vec3 lightPos = vec3(1,10,1.);
@@ -44,7 +66,7 @@ void main(void) {
             specular = pow(specAngle, vGlossiness);
         }
 
-        vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso) + (vKs * specular * colorEspecular);
+        vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso + colorTexturaFinal) + (vKs * specular * colorEspecular);
         
         // Antorcha1
         vec3 lightVecAntorcha1 = normalize(vPosicionAntorcha1 - vPosWorld);

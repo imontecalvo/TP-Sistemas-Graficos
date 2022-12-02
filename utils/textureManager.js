@@ -64,8 +64,12 @@ class TextureManager {
         gl.activeTexture(gl.TEXTURE8);
         gl.bindTexture(gl.TEXTURE_2D, Pasto1);
 
-        const Negro = await initTexture('images/black.jpg',gl);
+        const Test = await initTexture('images/uv.jpg',gl);
         gl.activeTexture(gl.TEXTURE9);
+        gl.bindTexture(gl.TEXTURE_2D, Test);
+
+        const Negro = await initTexture('images/black.jpg',gl);
+        gl.activeTexture(gl.TEXTURE10);
         gl.bindTexture(gl.TEXTURE_2D, Negro);
 
         const texturas = [
@@ -78,6 +82,7 @@ class TextureManager {
             Agua,
             Pasto2,
             Pasto3,
+            Test,
             Negro,
         ];
         return new TextureManager(texturas, gl);
@@ -96,6 +101,7 @@ class TextureManager {
         this.Pasto1 = texturas[5];
         this.Pasto2 = texturas[7]
         this.Pasto3 = texturas[8]
+        this.Test = texturas[9]
         this.Negro = texturas[texturas.length - 1];
     }
 

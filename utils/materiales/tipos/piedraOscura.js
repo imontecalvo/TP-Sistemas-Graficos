@@ -1,4 +1,4 @@
-import { shadersManager } from "../../../web-gl.js";
+import { shadersManager, textureManager } from "../../../web-gl.js";
 import Material from "../material.js";
 
 class PiedraOscura extends Material {
@@ -13,6 +13,7 @@ class PiedraOscura extends Material {
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
+        this.textura = textureManager.Test;
     }
 }
 

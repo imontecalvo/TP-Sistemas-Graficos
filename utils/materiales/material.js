@@ -1,4 +1,4 @@
-import { gl } from "../../web-gl.js";
+import { gl, textureManager } from "../../web-gl.js";
 
 class Material {
   constructor(phong) {
@@ -21,6 +21,15 @@ class Material {
       gl.uniform1f(shaderProgram.KdUniform, this.configuracionPhong.Kd);
       gl.uniform1f(shaderProgram.KsUniform, this.configuracionPhong.Ks);
       gl.uniform1f(shaderProgram.glossinessUniform, this.configuracionPhong.glossiness);
+
+      var textura1Uniform = gl.getUniformLocation(shaderProgram, "uTextura1");
+      gl.uniform1i(textura1Uniform, textureManager.getTextureUnit(this.textura));
+
+      var textura2Uniform = gl.getUniformLocation(shaderProgram, "uTextura2");
+      gl.uniform1i(textura2Uniform, textureManager.getTextureUnit(this.textura_2));
+
+      var textura3Uniform = gl.getUniformLocation(shaderProgram, "uTextura3");
+      gl.uniform1i(textura3Uniform, textureManager.getTextureUnit(this.textura_3));
     }
 
     gl.uniform1i(shaderProgram.rendering, renderColor);
