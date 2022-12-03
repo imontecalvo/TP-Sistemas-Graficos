@@ -58,11 +58,14 @@
 				app.gui.destroy()
 				GUI()
 			},
-			gui:null,
-			mostrarEjes:false
+			gui: null,
+			mostrarEjes: false,
+			luzAntorcha:[245,182,66],
+			luzSol:[243,171,7],
+			luzMunicion:[245,182,66],
 		};
 
-		
+
 		function GUI() {
 			var gui = new dat.GUI();
 			app.gui = gui
@@ -85,6 +88,11 @@
 
 			gui.add(app, 'dibujarNormales').name("Dibujar normales");
 			gui.add(app, 'mostrarEjes').name("Mostar ejes");
+
+			var f3 = gui.addFolder('Luces');
+			f3.addColor(app, 'luzAntorcha').name("Antorchas");
+			f3.addColor(app, 'luzSol').name("Sol");
+			f3.addColor(app, 'luzMunicion').name("Proyectil");
 
 			f1.open();
 			f2.open();

@@ -89,6 +89,10 @@ class ShaderManager {
                 glProgram.posAntorcha1Uniform = gl.getUniformLocation(glProgram, "uPosicionAntorcha1");
                 glProgram.posAntorcha2Uniform = gl.getUniformLocation(glProgram, "uPosicionAntorcha2");
                 glProgram.posMunicionUniform = gl.getUniformLocation(glProgram, "uPosicionMunicion");
+
+                glProgram.colorMunicionUniform = gl.getUniformLocation(glProgram, "colorLuzMunicion");
+                glProgram.colorSolUniform = gl.getUniformLocation(glProgram, "colorLuzSol");
+                glProgram.colorAntorchaUniform = gl.getUniformLocation(glProgram, "colorLuzAntorcha");
             }
         }
     }

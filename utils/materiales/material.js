@@ -29,6 +29,12 @@ class Material {
 
       var textura3Uniform = gl.getUniformLocation(shaderProgram, "uTextura3");
       gl.uniform1i(textura3Uniform, textureManager.getTextureUnit(this.textura_3));
+
+      gl.uniform3fv(shaderProgram.colorSolUniform, normalizarColor(app.luzSol));
+      const luzMun = normalizarColor(app.luzMunicion)
+      // console.log(luzMun)
+      gl.uniform3fv(shaderProgram.colorMunicionUniform, luzMun);
+      gl.uniform3fv(shaderProgram.colorAntorchaUniform, normalizarColor(app.luzAntorcha));
     }
 
     gl.uniform1i(shaderProgram.rendering, renderColor);
@@ -38,6 +44,10 @@ class Material {
 }
 
 export default Material
+
+function normalizarColor(color) {
+  return [color[0] / 255, color[1] / 255, color[2] / 255]
+}
 
 
 
