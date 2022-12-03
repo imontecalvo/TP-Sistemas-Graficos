@@ -27,40 +27,40 @@ const initTexture = async (src, gl) => {
 
 class TextureManager {
     static async init(gl) {
-        const ParedCastillo = await initTexture('images/grey_roof_tiles_02_diff_1k.jpg',gl);
+        const ParedCastillo = await initTexture('images/paredLadrillos.jpg',gl);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, ParedCastillo);
 
-        const TejasAzules = await initTexture('images/red_slate_roof_tiles_01_diff_1k.jpg',gl);
+        const TejasAzules = await initTexture('images/tejasAzules.jpg',gl);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, TejasAzules);
 
-        const Piedra = await initTexture('images/rock_05_diff_1k.jpg',gl);
+        const Piedra = await initTexture('images/piedra2.jpg',gl);
         gl.activeTexture(gl.TEXTURE2);
         gl.bindTexture(gl.TEXTURE_2D, Piedra);
 
         // const TEXTURA_MADERA_CLARA = await initTexture('images/madera_clara_1k.jpg');
-        const MaderaClara = await initTexture('images/madera_clara_1k.jpg',gl);
+        const MaderaClara = await initTexture('images/maderaCorteza.jpg',gl);
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_2D, MaderaClara);
 
-        const MaderaOscura = await initTexture('images/madera_oscura_1k.jpg',gl);
+        const TablonMadera = await initTexture('images/tablonesMadera2.jpg',gl);
         gl.activeTexture(gl.TEXTURE4);
-        gl.bindTexture(gl.TEXTURE_2D, MaderaOscura);
+        gl.bindTexture(gl.TEXTURE_2D, TablonMadera);
 
-        const Pasto1 = await initTexture('images/grass_1k.jpg',gl);
+        const Pasto1 = await initTexture('images/suelo1.jpg',gl);
         gl.activeTexture(gl.TEXTURE5);
         gl.bindTexture(gl.TEXTURE_2D, Pasto1);
 
-        const Agua = await initTexture('images/water_1k.jpg',gl);
+        const Agua = await initTexture('images/agua.jpg',gl);
         gl.activeTexture(gl.TEXTURE6);
         gl.bindTexture(gl.TEXTURE_2D, Agua);
 
-        const Pasto2 = await initTexture('images/grass2_1k.jpg',gl);
+        const Pasto2 = await initTexture('images/pasto_aux2.jpg',gl);
         gl.activeTexture(gl.TEXTURE7);
         gl.bindTexture(gl.TEXTURE_2D, Pasto1);
 
-        const Pasto3 = await initTexture('images/grass3_1k.jpg',gl);
+        const Pasto3 = await initTexture('images/pasto_aux.jpg',gl);
         gl.activeTexture(gl.TEXTURE8);
         gl.bindTexture(gl.TEXTURE_2D, Pasto1);
 
@@ -77,7 +77,7 @@ class TextureManager {
             TejasAzules,
             Piedra,
             MaderaClara,
-            MaderaOscura,
+            TablonMadera,
             Pasto1,
             Agua,
             Pasto2,
@@ -96,13 +96,15 @@ class TextureManager {
         this.TejasAzules = texturas[1];
         this.Piedra = texturas[2];
         this.MaderaClara = texturas[3];
-        this.MaderaOscura = texturas[4];
+        this.TablonMadera = texturas[4];
         this.Agua = texturas[6]
         this.Pasto1 = texturas[5];
         this.Pasto2 = texturas[7]
         this.Pasto3 = texturas[8]
         this.Test = texturas[9]
-        this.Negro = texturas[texturas.length - 1];
+        this.Negro = texturas[texturas.length -1];
+
+        console.log(texturas.length)
     }
 
     getTextureUnit(texture) {

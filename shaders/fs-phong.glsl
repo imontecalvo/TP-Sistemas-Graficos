@@ -27,19 +27,22 @@ void main(void) {
     if (renderColor==true){
         vec3 camVec = normalize(vPosWorld - vPosCamaraMundo);
 
-        vec4 colorTextura_1 = texture2D(uTextura1, vUv);
-        vec3 colorTextura3D_1 = colorTextura_1.xyz;
+        // Textura 1
+        vec3 colorTextura3D_1_1 = texture2D(uTextura1, vUv).xyz;
+        vec3 colorTextura3D_1_2 = texture2D(uTextura1, vUv * 0.77).xyz;
+        vec3 colorTextura3D_1_3 = texture2D(uTextura1, vUv * 3.8813).xyz;
+        vec3 colorTextura3D_1 = mix(mix(colorTextura3D_1_1, colorTextura3D_1_2, 0.5), colorTextura3D_1_3, 0.3);
 
         // Textura 2
         vec3 colorTextura3D_2_1 = texture2D(uTextura2, vUv).xyz;
-        vec3 colorTextura3D_2_2 = texture2D(uTextura2, vUv * 2.17123).xyz;
-        vec3 colorTextura3D_2_3 = texture2D(uTextura2, vUv * 3.8813).xyz;
+        vec3 colorTextura3D_2_2 = texture2D(uTextura2, vUv * 2.17).xyz;
+        vec3 colorTextura3D_2_3 = texture2D(uTextura2, vUv * 3.8).xyz;
         vec3 colorTextura3D_2 = mix(mix(colorTextura3D_2_1, colorTextura3D_2_2, 0.5), colorTextura3D_2_3, 0.3);
 
         // Textura 3
-        vec3 colorTextura3D_3_1 = texture2D(uTextura3, vUv * 0.893).xyz;
-        vec3 colorTextura3D_3_2 = texture2D(uTextura3, vUv * 2.17343).xyz;
-        vec3 colorTextura3D_3_3 = texture2D(uTextura3, vUv * 1.55324).xyz;
+        vec3 colorTextura3D_3_1 = texture2D(uTextura3, vUv).xyz;
+        vec3 colorTextura3D_3_2 = texture2D(uTextura3, vUv * 2.9).xyz;
+        vec3 colorTextura3D_3_3 = texture2D(uTextura3, vUv * 1.5).xyz;
         vec3 colorTextura3D_3 = mix(mix(colorTextura3D_3_1, colorTextura3D_3_2, 0.5), colorTextura3D_3_3, 0.3);
 
         // Color textura final

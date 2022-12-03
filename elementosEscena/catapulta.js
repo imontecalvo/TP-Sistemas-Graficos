@@ -17,7 +17,7 @@ export class Catapulta extends Objeto3D {
         this.alturaCatapulta = 2
         this.medidasTablon = [0.15, 1.8, 3.5]
         this.elevacion = 0.3
-        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], window.materiales.MADERA_CLARA)
+        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], window.materiales.MADERA)
         tablon.trasladar(0, 0, -0.5)
 
         this.agregarHijo(tablon)
@@ -78,17 +78,17 @@ export class Catapulta extends Objeto3D {
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {
         const multiplicadores = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
         multiplicadores.forEach((x) => {
-            const rueda = new Cilindro(radio, ancho, 20, window.materiales.MADERA)
+            const rueda = new Cilindro(radio, ancho, 20, window.materiales.MADERA_CLARA)
             rueda.trasladar(x[0] * (largoTablon + ancho) / 2, 0, x[1] * (anchoTablon / 2) - (x[1] * radio) - 0.5)
             rueda.rotarY(Math.PI / 2)
             this.agregarHijo(rueda)
         })
 
-        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA_OSCURA)
+        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA)
         eje1.trasladar(0, 0, (anchoTablon / 2) - radio - 0.5)
         eje1.rotarY(Math.PI / 2)
 
-        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10,window.materiales.MADERA_OSCURA)
+        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10,window.materiales.MADERA)
         eje2.trasladar(0, 0, -(anchoTablon / 2) + radio - 0.5)
         eje2.rotarY(Math.PI / 2)
 
@@ -111,7 +111,7 @@ export class Catapulta extends Objeto3D {
         this.agregarHijo(pilar1)
         this.agregarHijo(pilar2)
 
-        const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20, materiales.MADERA_OSCURA)
+        const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20, materiales.MADERA)
         // ejePilar.trasladar(0, -alturaCatapulta - elevacion -0.15, 0)
 
         ejePilar.trasladar(0, elevacion + altoPilar - 0.2, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2 - 0.5)
@@ -124,7 +124,7 @@ export class Catapulta extends Objeto3D {
 
 class Pilar extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super(window.materiales.MADERA)
+        super(window.materiales.MADERA_CLARA)
         this.filas = 5
         this.columnas = 8 - 1
         const puntosCurva = this.obtenerPuntosCurva(alto, largo)
@@ -337,7 +337,7 @@ class Colgante extends Objeto3D {
         super()
 
         // EJE
-        const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20, window.materiales.MADERA_OSCURA)
+        const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20, window.materiales.MADERA)
         eje.trasladar(0, 0, 0)
         // eje.trasladar(0, 0, anchoTablon / 2 - 0.10)
         eje.rotarY(Math.PI / 2)

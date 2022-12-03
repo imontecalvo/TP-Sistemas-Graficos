@@ -1,41 +1,43 @@
-import {Objeto3D} from "../objeto3d.js"
-import {BezierCubica} from "../bezier/bezier3.js"
+import { Objeto3D } from "../objeto3d.js"
+import { BezierCubica } from "../bezier/bezier3.js"
 import { superficieRevolucion } from "../superficieRevolucion.js";
 import { discretizar } from "../bezier/discretizador.js";
 
 var mat4 = glMatrix.mat4;
 
-export class Terreno extends Objeto3D{
-    constructor(){
+export class Terreno extends Objeto3D {
+    constructor() {
         super()
         const centro = new Centro()
-        centro.trasladar(0,0.4,0)
+        centro.trasladar(0, 0.4, 0)
         this.agregarHijo(centro)
-        
+
         this.agregarHijo(new Periferia())
-        
+
         this.modelMatrix = mat4.create()
     }
 }
 
 class Centro extends Objeto3D {
     constructor() {
-        super(window.materiales.PASTO)
+        const configMapeoUv = { multiplicadorU: 2, signoU: -1 }
+        super(window.materiales.PASTO, configMapeoUv)
+        this.id = "terrenoCentro"
         const radio = 10
         this.filas = 40
         this.columnas = 3
         var puntosCurva = []
-        this.curvaPendiente = new BezierCubica([[11,-1.5,0],[10.5,-0.75,0],[10.3,-0.45,0],[10,0,0]], "z")
-        this.curvaCentro = new BezierCubica([[10,0,0],[5,0,0],[2,0,0],[0,0,0]], "z")
+        this.curvaPendiente = new BezierCubica([[11, -1.5, 0], [10.5, -0.75, 0], [10.3, -0.45, 0], [10, 0, 0]], "z")
+        this.curvaCentro = new BezierCubica([[10, 0, 0], [5, 0, 0], [2, 0, 0], [0, 0, 0]], "z")
         const puntosPendiente = discretizar(this.curvaPendiente, 1, false, true)
         const puntosCentro = discretizar(this.curvaCentro, 1, false, true)
 
         puntosCurva = {
-            posicion:puntosPendiente.posicion.concat(puntosCentro.posicion),
-            normal:puntosPendiente.normal.concat(puntosCentro.normal),
+            posicion: puntosPendiente.posicion.concat(puntosCentro.posicion),
+            normal: puntosPendiente.normal.concat(puntosCentro.normal),
         }
-        
-        const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1)
+
+        const data = superficieRevolucion(puntosCurva, this.columnas, this.filas + 1)
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
@@ -47,25 +49,27 @@ class Centro extends Objeto3D {
 
 class Periferia extends Objeto3D {
     constructor() {
-        super(window.materiales.PASTO)
-        this.filas = 8
+        const filas = 8
+        const configMapeoUv = { multiplicadorU: filas, multiplicadorV: 2, signoU: -1 }
+        super(window.materiales.PASTO, configMapeoUv)
+        this.id = "terrenoPeriferia"
+        this.filas = filas
         this.columnas = 5
         this.lados = this.filas
-        this.id = "terreno"
         var puntosCurva = []
-        this.curvaLado = new BezierCubica([[17,-1.5,0],[17,-0.5,0],[17,-0.1,0],[17,0,0]], "z")
-        this.curvaCentro = new BezierCubica([[17,0,0],[18,0,0],[20,0,0],[40,0,0]], "z")
-        this.curvaLadoFuera = new BezierCubica([[40,0,0],[40,-0.5,0],[40,-0.75,0],[40,-1,0]], "z")
+        this.curvaLado = new BezierCubica([[17, -1.5, 0], [17, -0.5, 0], [17, -0.1, 0], [17, 0, 0]], "z")
+        this.curvaCentro = new BezierCubica([[17, 0, 0], [18, 0, 0], [20, 0, 0], [40, 0, 0]], "z")
+        this.curvaLadoFuera = new BezierCubica([[40, 0, 0], [40, -0.5, 0], [40, -0.75, 0], [40, -1, 0]], "z")
         const puntosPendiente = discretizar(this.curvaLado, 1, false)
         const puntosCentro = discretizar(this.curvaCentro, 1, false)
         const puntosLadoFuera = discretizar(this.curvaLadoFuera, 1, false)
 
         puntosCurva = {
-            posicion:puntosPendiente.posicion.concat(puntosCentro.posicion, puntosLadoFuera.posicion),
-            normal:puntosPendiente.normal.concat(puntosCentro.normal, puntosLadoFuera.normal),
+            posicion: puntosPendiente.posicion.concat(puntosCentro.posicion, puntosLadoFuera.posicion),
+            normal: puntosPendiente.normal.concat(puntosCentro.normal, puntosLadoFuera.normal),
         }
-        
-        const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1)
+
+        const data = superficieRevolucion(puntosCurva, this.columnas, this.filas + 1)
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]

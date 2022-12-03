@@ -38,7 +38,7 @@ export class Cilindro extends Objeto3D {
 
         const caraTraseraPos = data[0].slice(-cantPuntosCurva * 3).concat(caraFrontalPos.map((x, i) => {
             if (i % 3 == 2) return -ancho / 2;
-            else return x
+            return x
         }))
 
         const caraTraseraNorm = caraFrontalNorm.map((x, i) => {

@@ -16,7 +16,8 @@ var vec4 = glMatrix.vec4;
 
 export class Muralla extends Objeto3D {
     constructor(altura, lados) {
-        super(window.materiales.PIEDRA)
+        const configMapeoUv = {multiplicadorU:4*lados, multiplicadorV:4}
+        super(window.materiales.PIEDRA, configMapeoUv)
         this.id = "muralla"
         this.lados = lados
         this.filas = this.lados - 1 + 2
@@ -55,7 +56,20 @@ export class Muralla extends Objeto3D {
 
         // Extremos y tapas de muralla
         const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
-        const caras = this.obtenerCarasExtremos(extremos)
+
+        const caraIzq = new CaraMuralla(puntosCurva.posicion)
+        caraIzq.trasladar(-this.largoEntrada/2 - 0.25, 0, this.posPorton[2])
+        caraIzq.rotarY(Math.PI/2)
+        caraIzq.trasladar(-7,0,0)
+
+        const caraDer = new CaraMuralla(puntosCurva.posicion)
+        caraDer.trasladar(this.largoEntrada/2 + 0.25, 0, this.posPorton[2])
+        caraDer.rotarY(-Math.PI/2)
+        caraDer.trasladar(-7,0,0)
+
+        this.agregarHijo(caraIzq)
+        this.agregarHijo(caraDer)
+
 
         // Creacion torres
         for (let i = 0; i < this.lados; i++) {
@@ -65,9 +79,6 @@ export class Muralla extends Objeto3D {
             this.agregarHijo(torre)
         }
 
-        // const torre = new TorreMuralla(altura)
-        // console.log(torre.bufferPos)
-        // this.agregarHijo(torre)
 
         // Creacion de antorchas
         this.antorcha1 = new Antorcha()
@@ -79,33 +90,11 @@ export class Muralla extends Objeto3D {
         this.antorcha2.rotarX(-Math.PI / 4)
         this.agregarHijo(this.antorcha2)
 
-
-
-        // this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion, posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
-        // this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal, normalesMuralla, extremos.fin.normal, caras.fin.normal)
         this.bufferPos = extremos.inicio.posicion.concat(posicionMuralla, extremos.fin.posicion)
-        console.log(this.bufferPos)
         this.bufferNorm = extremos.inicio.normal.concat(normalesMuralla, extremos.fin.normal)
 
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
-
-        function agruparPuntos(arr, chunkSize) {
-            var array = arr;
-            return [].concat.apply([],
-                array.map(function (elem, i) {
-                    return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
-                })
-            );
-        }
-        // const coordPos = agruparPuntos(this.bufferPos, 3)
-        // for (let i = 0; i < coordPos.length; i++) {
-        //     const esf = new Esfera(0.1, window.materiales.ROJO)
-        //     esf.trasladar(coordPos[i][0], coordPos[i][1], coordPos[i][2])
-        //     this.agregarHijo(esf)
-        // }
-
-
 
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -300,5 +289,27 @@ export class Muralla extends Objeto3D {
         const posPorton = [(inicio[0] + final[0]) / 2, 0, (inicio[2] + final[2]) / 2]
 
         return posPorton
+    }
+}
+
+class CaraMuralla extends Objeto3D{
+    constructor(puntosCurva){
+        super(window.materiales.PIEDRA,{multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:-1})
+        this.filas = puntosCurva.length-1
+        this.columnas = 1
+        
+        let posiciones = []
+        for (let i in puntosCurva){
+            posiciones.push(puntosCurva[i])
+            posiciones.push([puntosCurva[i][0],0,puntosCurva[i][2]])
+        }
+        const normales = new Array(posiciones.length).fill([0,0,1])
+
+        this.bufferPos = posiciones.flat()
+        this.bufferNorm = normales.flat()
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
     }
 }

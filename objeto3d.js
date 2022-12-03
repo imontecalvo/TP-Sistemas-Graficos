@@ -4,13 +4,17 @@ var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(material = window.materiales.ROJO, id = null) {
+    constructor(material = window.materiales.ROJO, configMapeoUv = {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
         this.oculto = false
         this.material = material
-        this.id = null
+        
+        this.multiplicadorU = configMapeoUv.hasOwnProperty("multiplicadorU") ? configMapeoUv.multiplicadorU : 1
+        this.multiplicadorV = configMapeoUv.hasOwnProperty("multiplicadorV") ? configMapeoUv.multiplicadorV : 1
+        this.signoU = configMapeoUv.hasOwnProperty("signoU") ? configMapeoUv.signoU : 1
+        this.signoV = configMapeoUv.hasOwnProperty("signoV") ? configMapeoUv.signoV : 1
     }
 
     ocultar() {
@@ -234,13 +238,10 @@ export class Objeto3D {
 
         for (var i = 0; i <= this.filas; i++) {
             for (var j = 0; j <= this.columnas; j++) {
-                // var v = 1 - j / this.columnas;
-                let multiplicadorU = 1
-                let multiplicadorV = 1
-                let signoU = 1
-                let signoV = 1
-                if (this.id == "muralla") {multiplicadorU = this.lados; multiplicadorV = 2}
-                if (this.id == "terreno") {multiplicadorU = this.lados; multiplicadorV = 2; signoU=-1}
+                // if (this.id == "muralla") {multiplicadorU = this.lados; multiplicadorV = 2}
+                // if (this.id == "terrenoCentro") {multiplicadorU = 2; signoU=-1}
+                // if (this.id == "puente") {multiplicadorV = 2; signoU=-1}
+                // if (this.id == "terrenoPeriferia") {multiplicadorU = this.lados; multiplicadorV = 2; signoU=-1}
                 // var u = multiplicador * (1 - i / this.filas);
                 var v = longAcumuladaFila[i][j]
                 // var u = longAcumuladaColumna[j][i]
@@ -250,8 +251,8 @@ export class Objeto3D {
                 // if(this.id == "techo"){
                 //     const aux = u; u = v; v = aux
                 // }
-                uvBuffer.push(multiplicadorU * (1 - signoU * u));
-                uvBuffer.push(multiplicadorV * (1 - signoV * v));
+                uvBuffer.push(this.multiplicadorU * (1 - this.signoU * u));
+                uvBuffer.push(this.multiplicadorV * (1 - this.signoV * v));
             }
         }
 

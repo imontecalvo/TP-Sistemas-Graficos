@@ -5,7 +5,8 @@ import { superficieRevolucion } from "../superficieRevolucion.js";
 
 export class TorreMuralla extends Objeto3D {
     constructor(altura) {
-        super(window.materiales.PIEDRA_OSCURA)
+        const configMapeoUv = {multiplicadorU:4, multiplicadorV:4}
+        super(window.materiales.PIEDRA, configMapeoUv)
         this.id = "torre"
         this.filas = 20
         this.columnas = 18-1

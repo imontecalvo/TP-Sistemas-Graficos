@@ -17,7 +17,15 @@ export class Escena {
 
         this.terreno = new Terreno()
 
-        this.puente = new Caja(0.2, 2, 8, window.materiales.PASTO)
+        const configMapeoUv = [
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}
+        ]
+        this.puente = new Caja(0.2, 2, 8, window.materiales.PASTO, "puente", configMapeoUv)
         this.puente.trasladar(0, -0.25, 10 + 7 / 2)
 
         this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
@@ -47,15 +55,15 @@ export class Escena {
         return this.camara.generarVista(data)
     }
 
-    obtenerPosCamara(){
+    obtenerPosCamara() {
         return this.camara.obtenerPosicion()
     }
 
-    obtenerPosAntorchas(){
+    obtenerPosAntorchas() {
         return this.muralla.obtenerPosAntorchas()
     }
 
-    obtenerPosMunicion(){
+    obtenerPosMunicion() {
         return this.catapulta.obtenerPosMunicion()
     }
 

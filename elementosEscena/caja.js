@@ -5,24 +5,24 @@ import { superficeBarrido } from "../superficieBarrido.js";
 import { Esfera } from "./esfera.js";
 
 export class Caja extends Objeto3D{
-    constructor(alto, largo, ancho, material) {
+    constructor(alto, largo, ancho, material, id=null, configMapeoUv= new Array(6).fill({multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1})) {
         super()
-
-        const caraFrontal = new CaraCaja(alto, largo, material)
+        // if(id == "marco") console.log("mapeo: ",configMapeoUv)
+        const caraFrontal = new CaraCaja(alto, largo, material, id, configMapeoUv[0])
         caraFrontal.trasladar(0, 0, ancho / 2)
-        const caraTrasera = new CaraCaja(alto, largo, material)
+        const caraTrasera = new CaraCaja(alto, largo, material, id, configMapeoUv[1])
         caraTrasera.trasladar(0, 0, -ancho / 2)
         caraTrasera.rotarY(Math.PI)
-        const caraIzquierda = new CaraCaja(alto, ancho, material)
+        const caraIzquierda = new CaraCaja(alto, ancho, material, id, configMapeoUv[2])
         caraIzquierda.trasladar(-largo/2, 0, 0)
         caraIzquierda.rotarY(-Math.PI/2)
-        const caraDerecha = new CaraCaja(alto, ancho, material)
+        const caraDerecha = new CaraCaja(alto, ancho, material, id, configMapeoUv[3])
         caraDerecha.trasladar(largo/2, 0, 0)
         caraDerecha.rotarY(Math.PI/2)
-        const caraSuperior = new CaraCaja(ancho, largo, material)
+        const caraSuperior = new CaraCaja(ancho, largo, material, id, configMapeoUv[4])
         caraSuperior.trasladar(0, alto, ancho/2)
         caraSuperior.rotarX(-Math.PI/2)
-        const caraInferior = new CaraCaja(ancho, largo, material)
+        const caraInferior = new CaraCaja(ancho, largo, material, id, configMapeoUv[5])
         caraInferior.trasladar(0, 0, -ancho/2)
         caraInferior.rotarX(Math.PI/2)
 
@@ -36,8 +36,11 @@ export class Caja extends Objeto3D{
 }
 
 export class CaraCaja extends Objeto3D{
-    constructor(alto, largo, material) {
-        super(material)
+    constructor(alto, largo, material, id=null, configMapeoUv={multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}) {
+
+        super(material, configMapeoUv)
+        this.id = id
+        if(id == "marco") console.log("mapeo: ",configMapeoUv)
 
         this.filas = 1
         this.columnas = 1

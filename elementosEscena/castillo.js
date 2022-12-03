@@ -28,9 +28,9 @@ export class Castillo extends Objeto3D{
         techo.trasladar(0, this.alturaPiso * cantPisos, 0)
         this.agregarHijo(techo)
 
-        // this.agregarHijo(torre1)
-        // this.agregarHijo(torre2)
-        // this.agregarHijo(torre3)
-        // this.agregarHijo(torre4)
+        this.agregarHijo(torre1)
+        this.agregarHijo(torre2)
+        this.agregarHijo(torre3)
+        this.agregarHijo(torre4)
     }
 }

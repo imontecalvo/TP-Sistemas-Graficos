@@ -13,7 +13,9 @@ class Pasto extends Material {
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
-        this.textura = textureManager.Test;
+        this.textura = textureManager.Pasto1;
+        this.textura_2 = textureManager.Pasto2;
+        // this.textura_3 = textureManager.Pasto3;
     }
 }
 
