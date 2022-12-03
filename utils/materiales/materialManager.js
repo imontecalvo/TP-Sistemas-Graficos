@@ -10,6 +10,7 @@ import PinturaAmarilla from "./tipos/pinturaAmarilla.js";
 import TejasAzules from "./tipos/tejasAzules.js";
 import Vidrio from "./tipos/vidrio.js";
 import ColorLiso from "./tipos/colorLiso.js";
+import Cielo from "./tipos/cielo.js";
 
 export default function initMateriales(){
     window.materiales = {
@@ -28,6 +29,7 @@ export default function initMateriales(){
         VERDE: new ColorLiso([0, 1, 0]),
         AZUL: new ColorLiso([0, 0, 1]),
         PRUEBA: new ColorLiso([1,0.87,0.29]),
+        CIELO: new Cielo()
     }
 
     console.log("Materiales cargados")

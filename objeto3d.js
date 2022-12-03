@@ -181,19 +181,6 @@ export class Objeto3D {
         let longAcumuladaFila = []
         const coordPos = agruparPuntos(this.bufferPos, 3)
 
-
-
-        // for (var j = 0; j <= this.columnas; j++) {
-        //     if (j == 0) longAcumuladaFila.push(0)
-        //     else {
-        //         longAcumuladaFila.push(longAcumuladaFila[j - 1] + distancia(coordPos[j - 1], coordPos[j]))
-        //     }
-        // }
-        // let longTotalFila = longAcumuladaFila[this.columnas]
-        // longAcumuladaFila = longAcumuladaFila.map(x => x / longTotalFila)
-
-
-        let puntoAnterior;
         for (var i = 0; i <= this.filas; i++) {
             let longFilaActual = []
             for (var j = 0; j <= this.columnas; j++) {
@@ -252,6 +239,12 @@ export class Objeto3D {
                 // var u = longAcumuladaColumna[j][i]
 
                 var u = (this.id === "muralla" || this.id === "techo") ? longAcumuladaColumna[j][i] : (i / this.filas)
+
+                // if (this.id == "cielo"){
+                //     const aux = u
+                //     u = v
+                //     v = aux
+                // }
 
                 // if(this.id == "techo"){
                 //     const aux = u; u = v; v = aux

@@ -40,6 +40,10 @@ export class Escena {
         this.catapulta = new Catapulta()
 
         this.caja = new Caja(1, 1, 1, window.materiales.PASTO)
+
+        this.cielo = new Esfera(60, window.materiales.CIELO,"cielo", false)
+        this.cielo.rotarY(Math.PI / 3)
+        this.cielo.rotarX(Math.PI / 2)
     }
 
     actualizar() {
@@ -83,5 +87,6 @@ export class Escena {
 
         // this.caja.dibujar(this.matriz)
         this.castillo.dibujar(this.matriz)
+        this.cielo.dibujar(this.matriz)
     }
 }

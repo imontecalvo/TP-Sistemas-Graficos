@@ -67,7 +67,7 @@ function setupWebGL() {
 
     // Matrix de Proyeccion Perspectiva
 
-    mat4.perspective(projMatrix, 45, canvas.width / canvas.height, 0.1, 100.0);
+    mat4.perspective(projMatrix, 45, canvas.width / canvas.height, 0.1, 150.0);
 
     mat4.identity(modelMatrix);
     // mat4.rotate(modelMatrix, modelMatrix, 0.78, [1.0, 0.0, 0.0]);

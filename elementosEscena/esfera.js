@@ -1,22 +1,23 @@
 import { Objeto3D } from "../objeto3d.js"
 
-export class Esfera extends Objeto3D{
-    constructor(radio, material) {
+export class Esfera extends Objeto3D {
+    constructor(radio, material, id = null, invertirNormal = false) {
         super(material)
         this.radio = radio
-        this.filas = 20
-        this.columnas = 20
+        this.filas = 30
+        this.columnas = 30
+        this.id = id
 
         this.bufferPos = []
         this.bufferNorm = []
         this.bufferNormDibujadas = []
-        this.generarGeometria()
+        this.generarGeometria(invertirNormal)
         this.calcularNormalesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }
 
-    generarGeometria() {
+    generarGeometria(invertirNormal) {
         for (var i = 0; i <= this.filas; i++) {
             for (var j = 0; j <= this.columnas; j++) {
 
@@ -28,7 +29,7 @@ export class Esfera extends Objeto3D{
                 this.bufferPos.push(pos[1]);
                 this.bufferPos.push(pos[2]);
 
-                var nrm = this.obtenerNormal(u, v);
+                var nrm = this.obtenerNormal(u, v, invertirNormal);
 
                 this.bufferNorm.push(nrm[0]);
                 this.bufferNorm.push(nrm[1]);
@@ -45,14 +46,15 @@ export class Esfera extends Objeto3D{
         return [x, y, z];
     }
 
-    obtenerNormal(u, v) {
+    obtenerNormal(u, v, invertirNormal = false) {
         var p0 = this.obtenerPosicionPunto(u, v);
         var p1 = this.obtenerPosicionPunto(u + 0.001, v);
         var p2 = this.obtenerPosicionPunto(u, v + 0.001);
         var v1 = [p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]];
         var v2 = [p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]];
 
-        const modulo = Math.sqrt(p0[0]**2 +p0[1]**2 + p0[2]**2);
-        return [p0[0]/modulo, p0[1]/modulo, p0[2]/modulo];
+        const modulo = Math.sqrt(p0[0] ** 2 + p0[1] ** 2 + p0[2] ** 2);
+        if (!invertirNormal) return [p0[0] / modulo, p0[1] / modulo, p0[2] / modulo];
+        return [-p0[0] / modulo, -p0[1] / modulo, -p0[2] / modulo];
     }
 }

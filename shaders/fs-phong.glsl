@@ -28,10 +28,10 @@ void main(void) {
         vec3 camVec = normalize(vPosWorld - vPosCamaraMundo);
 
         // Textura 1
-        vec3 colorTextura3D_1_1 = texture2D(uTextura1, vUv).xyz;
-        vec3 colorTextura3D_1_2 = texture2D(uTextura1, vUv * 0.77).xyz;
-        vec3 colorTextura3D_1_3 = texture2D(uTextura1, vUv * 3.8813).xyz;
-        vec3 colorTextura3D_1 = mix(mix(colorTextura3D_1_1, colorTextura3D_1_2, 0.5), colorTextura3D_1_3, 0.3);
+        vec3 colorTextura3D_1 = texture2D(uTextura1, vUv).xyz;
+        //vec3 colorTextura3D_1_2 = texture2D(uTextura1, vUv * 0.77).xyz;
+        //vec3 colorTextura3D_1_3 = texture2D(uTextura1, vUv * 3.8813).xyz;
+        //vec3 colorTextura3D_1 = mix(mix(colorTextura3D_1_1, colorTextura3D_1_2, 0.5), colorTextura3D_1_3, 0.3);
 
         // Textura 2
         vec3 colorTextura3D_2_1 = texture2D(uTextura2, vUv).xyz;
