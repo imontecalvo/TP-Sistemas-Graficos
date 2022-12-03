@@ -72,6 +72,10 @@ class TextureManager {
         gl.activeTexture(gl.TEXTURE10);
         gl.bindTexture(gl.TEXTURE_2D, Cielo);
 
+        const Negro = await initTexture('images/negro.jpg',gl);
+        gl.activeTexture(gl.TEXTURE11);
+        gl.bindTexture(gl.TEXTURE_2D, Negro);
+
         const texturas = [
             ParedCastillo,
             TejasAzules,
@@ -84,6 +88,7 @@ class TextureManager {
             Pasto3,
             Test,
             Cielo,
+            Negro,
         ];
         return new TextureManager(texturas, gl);
     }
@@ -103,6 +108,7 @@ class TextureManager {
         this.Pasto3 = texturas[8]
         this.Test = texturas[9]
         this.Cielo = texturas[10];
+        this.Negro = texturas[texturas.length-1];
     }
 
     getTextureUnit(texture) {
