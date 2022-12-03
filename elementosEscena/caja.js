@@ -7,7 +7,6 @@ import { Esfera } from "./esfera.js";
 export class Caja extends Objeto3D{
     constructor(alto, largo, ancho, material, id=null, configMapeoUv= new Array(6).fill({multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1})) {
         super()
-        // if(id == "marco") console.log("mapeo: ",configMapeoUv)
         const caraFrontal = new CaraCaja(alto, largo, material, id, configMapeoUv[0])
         caraFrontal.trasladar(0, 0, ancho / 2)
         const caraTrasera = new CaraCaja(alto, largo, material, id, configMapeoUv[1])
@@ -40,7 +39,6 @@ export class CaraCaja extends Objeto3D{
 
         super(material, configMapeoUv)
         this.id = id
-        if(id == "marco") console.log("mapeo: ",configMapeoUv)
 
         this.filas = 1
         this.columnas = 1

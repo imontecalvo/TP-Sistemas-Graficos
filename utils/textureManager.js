@@ -102,9 +102,7 @@ class TextureManager {
         this.Pasto2 = texturas[7]
         this.Pasto3 = texturas[8]
         this.Test = texturas[9]
-        this.Negro = texturas[10];
-
-        console.log(texturas.length)
+        this.Cielo = texturas[10];
     }
 
     getTextureUnit(texture) {

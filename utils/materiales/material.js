@@ -10,7 +10,6 @@ class Material {
 
   activar(renderColor) {
     const { shaderProgram } = this;
-    // console.log("shader: ",shaderProgram)
     gl.useProgram(shaderProgram);
 
     // Activamos colores de iluminacion para modelo de Phong
