@@ -4,6 +4,10 @@ import { Objeto3D } from "../objeto3d.js"
 import { superficieRevolucion } from "../superficieRevolucion.js";
 import { Entrada } from "./entrada.js";
 import { TorreMuralla } from "./torresMuralla.js";
+import { Antorcha } from "./antorcha.js"
+import { Esfera } from "./esfera.js";
+
+
 // Columnas: cant de puntos que forman un segmento transversal de la torre MENOS 1
 // Filas: cant niveles MAS 1
 
@@ -12,9 +16,11 @@ var vec4 = glMatrix.vec4;
 
 export class Muralla extends Objeto3D {
     constructor(altura, lados) {
-        super([125/255,125/255,125/255])
+        const configMapeoUv = {multiplicadorU:4*lados, multiplicadorV:4}
+        super(window.materiales.PIEDRA, configMapeoUv)
+        this.id = "muralla"
         this.lados = lados
-        this.filas = this.lados - 1 + 2 + 4
+        this.filas = this.lados - 1 + 2
         this.columnas = 35
         this.largoEntrada = 2
         const h = 0.25
@@ -50,7 +56,20 @@ export class Muralla extends Objeto3D {
 
         // Extremos y tapas de muralla
         const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
-        const caras = this.obtenerCarasExtremos(extremos)
+
+        const caraIzq = new CaraMuralla(puntosCurva.posicion)
+        caraIzq.trasladar(-this.largoEntrada/2 - 0.25, 0, this.posPorton[2])
+        caraIzq.rotarY(Math.PI/2)
+        caraIzq.trasladar(-7,0,0)
+
+        const caraDer = new CaraMuralla(puntosCurva.posicion)
+        caraDer.trasladar(this.largoEntrada/2 + 0.25, 0, this.posPorton[2])
+        caraDer.rotarY(-Math.PI/2)
+        caraDer.trasladar(-7,0,0)
+
+        this.agregarHijo(caraIzq)
+        this.agregarHijo(caraDer)
+
 
         // Creacion torres
         for (let i = 0; i < this.lados; i++) {
@@ -60,8 +79,20 @@ export class Muralla extends Objeto3D {
             this.agregarHijo(torre)
         }
 
-        this.bufferPos = caras.inicio.posicion.concat(extremos.inicio.posicion, posicionMuralla, extremos.fin.posicion, caras.fin.posicion)
-        this.bufferNorm = caras.inicio.normal.concat(extremos.inicio.normal, normalesMuralla, extremos.fin.normal, caras.fin.normal)
+
+        // Creacion de antorchas
+        this.antorcha1 = new Antorcha()
+        this.antorcha1.trasladar(this.posPorton[0] - 2., 1.2, this.posPorton[2] - 1)
+        this.antorcha1.rotarX(-Math.PI / 4)
+        this.agregarHijo(this.antorcha1)
+        this.antorcha2 = new Antorcha()
+        this.antorcha2.trasladar(this.posPorton[0] + 2., 1.2, this.posPorton[2] - 1)
+        this.antorcha2.rotarX(-Math.PI / 4)
+        this.agregarHijo(this.antorcha2)
+
+        this.bufferPos = extremos.inicio.posicion.concat(posicionMuralla, extremos.fin.posicion)
+        this.bufferNorm = extremos.inicio.normal.concat(normalesMuralla, extremos.fin.normal)
+
         this.bufferNormDibujadas = []
         this.calcularNormalesDibujadas()
 
@@ -75,6 +106,10 @@ export class Muralla extends Objeto3D {
         this.entrada.porton.rotarX((-app.aperturaPorton / 360) * Math.PI * 2)
         this.entrada.porton.trasladar(0, - 2, 0)
 
+    }
+
+    obtenerPosAntorchas() {
+        return [this.antorcha1.obtenerPosicionAbsoluta(this.matrizModelado), this.antorcha2.obtenerPosicionAbsoluta(this.matrizModelado),]
     }
 
     obtenerPuntosCurva(altura, h, a, radio) {
@@ -254,5 +289,27 @@ export class Muralla extends Objeto3D {
         const posPorton = [(inicio[0] + final[0]) / 2, 0, (inicio[2] + final[2]) / 2]
 
         return posPorton
+    }
+}
+
+class CaraMuralla extends Objeto3D{
+    constructor(puntosCurva){
+        super(window.materiales.PIEDRA,{multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:-1})
+        this.filas = puntosCurva.length-1
+        this.columnas = 1
+        
+        let posiciones = []
+        for (let i in puntosCurva){
+            posiciones.push(puntosCurva[i])
+            posiciones.push([puntosCurva[i][0],0,puntosCurva[i][2]])
+        }
+        const normales = new Array(posiciones.length).fill([0,0,1])
+
+        this.bufferPos = posiciones.flat()
+        this.bufferNorm = normales.flat()
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
     }
 }

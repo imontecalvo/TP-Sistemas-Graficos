@@ -1,15 +1,20 @@
-import { gl, glProgram, glProgramCurva } from "./web-gl.js";
+import { gl, glProgramCurva } from "./web-gl.js";
 var mat4 = glMatrix.mat4;
 var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(color = [0, 0, 0]) {
+    constructor(material = window.materiales.ROJO, configMapeoUv = {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
         this.oculto = false
-        this.color = color
+        this.material = material
+        
+        this.multiplicadorU = configMapeoUv.hasOwnProperty("multiplicadorU") ? configMapeoUv.multiplicadorU : 1
+        this.multiplicadorV = configMapeoUv.hasOwnProperty("multiplicadorV") ? configMapeoUv.multiplicadorV : 1
+        this.signoU = configMapeoUv.hasOwnProperty("signoU") ? configMapeoUv.signoU : 1
+        this.signoV = configMapeoUv.hasOwnProperty("signoV") ? configMapeoUv.signoV : 1
     }
 
     ocultar() {
@@ -51,6 +56,11 @@ export class Objeto3D {
         return [pos[0], pos[1], pos[2]]
     }
 
+    setearPosicionY(y){
+        const pos = this.obtenerPosicion()
+        this.trasladar(0, y-pos[1], 0)
+    }
+
     trasladarRelativo(x, y, z) {
         const pos = this.obtenerPosicion()
         mat4.translate(this.matrizModelado, this.matrizModelado, [pos[0] + x, pos[1] + y, pos[2] + z]);
@@ -75,7 +85,6 @@ export class Objeto3D {
     async dibujar(matrizPadre, forzarColor = false) {
         if (this.oculto) return
 
-        gl.useProgram(glProgram);
         var mat = mat4.create();
         mat4.multiply(mat, matrizPadre, this.matrizModelado);
         var matNorm = mat4.create()
@@ -87,31 +96,22 @@ export class Objeto3D {
 
             const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
 
-            var modelMatrixUniform = gl.getUniformLocation(glProgram, "modelMatrix");
-            gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+            const glProgram = this.material.activar(renderColor)
+            gl.useProgram(glProgram);
 
-            var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
-            gl.uniformMatrix4fv(normalMatrixUniform, false, matNorm);
+            gl.uniformMatrix4fv(glProgram.modelMatrixUniform, false, mat);
+            gl.uniformMatrix4fv(glProgram.normalMatrixUniform, false, matNorm);
 
-            var rendering = gl.getUniformLocation(glProgram, "renderColor");
-            gl.uniform1i(rendering, renderColor);
-            var colorUniform = gl.getUniformLocation(glProgram, "uColor");
-            gl.uniform3fv(colorUniform, this.color);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer);
+            gl.vertexAttribPointer(glProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition"); //referencia a aVertexPosition del shader
-            gl.enableVertexAttribArray(vertexPositionAttribute); //activo el atributo
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_position_buffer); //linkeo mi buffer de posiciones al atributo activado (aVertexPosition)
-            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-
-            var vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
-            gl.enableVertexAttribArray(vertexNormalAttribute);
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
-            gl.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(glProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            var vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
-            gl.enableVertexAttribArray(vertexUVAttribute);
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
-            gl.vertexAttribPointer(vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
+            if (this.material.shaderProgram.id == "phong") {
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
+                gl.vertexAttribPointer(glProgram.vertexUVAttribute, 2, gl.FLOAT, false, 0, 0);
+            }
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mallaDeTriangulos.webgl_index_buffer);
 
@@ -127,23 +127,9 @@ export class Objeto3D {
         }
     }
 
-    configurarIluminacion(){
-        var ambientColorUniform = gl.getUniformLocation(glProgram, "uAmbientColor");
-        gl.uniform3f(ambientColorUniform, 0.6, 0.6, 0.6 );
-
-        var lightColorUniform = gl.getUniformLocation(glProgram, "uDirectionalColor");
-        gl.uniform3f(lightColorUniform, 1.2, 1.1, 0.7);
-
-        var lightDirectionUniform = gl.getUniformLocation(glProgram, "uLightPosition");
-        gl.uniform3fv(lightDirectionUniform, [10.0,30, 3.0]);
-
-        var useLightingUniform = gl.getUniformLocation(glProgram, "uUseLighting");
-        gl.uniform1f(useLightingUniform, true);
-
-    }
 
     dibujarNormales(mat) {
-        const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
+        // const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
         var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
@@ -162,10 +148,10 @@ export class Objeto3D {
         gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
         gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-        var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
-        gl.enableVertexAttribArray(vertexColorAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-        gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
+        // var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
+        // gl.enableVertexAttribArray(vertexColorAttribute);
+        // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
+        // gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.LINES, 0, 2 * this.bufferNormDibujadas.length / 3);
     }
@@ -176,15 +162,102 @@ export class Objeto3D {
             return i * (columnas + 1) + j;
         }
 
+        function agruparPuntos(arr, chunkSize) {
+            var array = arr;
+            return [].concat.apply([],
+                array.map(function (elem, i) {
+                    return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
+                })
+            );
+        }
+
+        function distancia(p1, p2) {
+            return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2)
+        }
+
         let uvBuffer = []
+
+        // Calculo longitudes de los puntos pertenecientes a una fila (un nivel)
+        let longAcumuladaFila = []
+        const coordPos = agruparPuntos(this.bufferPos, 3)
+
+
+
+        // for (var j = 0; j <= this.columnas; j++) {
+        //     if (j == 0) longAcumuladaFila.push(0)
+        //     else {
+        //         longAcumuladaFila.push(longAcumuladaFila[j - 1] + distancia(coordPos[j - 1], coordPos[j]))
+        //     }
+        // }
+        // let longTotalFila = longAcumuladaFila[this.columnas]
+        // longAcumuladaFila = longAcumuladaFila.map(x => x / longTotalFila)
+
+
+        let puntoAnterior;
+        for (var i = 0; i <= this.filas; i++) {
+            let longFilaActual = []
+            for (var j = 0; j <= this.columnas; j++) {
+                const idx = i * (this.columnas + 1) + j
+                // console.log("idx: ",idx)
+                if (j == 0) longFilaActual.push(0)
+                else {
+                    longFilaActual.push(longFilaActual[j - 1] + distancia(coordPos[idx], coordPos[idx - 1]))
+                }
+                // puntoAnterior = coordPos[idx]
+            }
+            const longTotalFila = longFilaActual[longFilaActual.length - 1]
+            longFilaActual = longFilaActual.map(x => x / longTotalFila)
+            longAcumuladaFila.push(longFilaActual)
+        }
+
+        if (this.id == "torreC") console.log("longAcumuladaFila: ", longAcumuladaFila)
+
+
+        let longAcumuladaColumna = []
+        if (this.id == "muralla" || this.id == "techo") {
+            // Calculo longitudes de los puntos pertenecientes a cada columna
+
+            for (var j = 0; j <= this.columnas; j++) {
+                // let puntoAnterior;
+                let longColumnaActual = []
+                for (var i = 0; i <= this.filas; i++) {
+                    const idx = i * (this.columnas + 1) + j
+                    // console.log("idx: ",idx)
+                    if (i == 0) longColumnaActual.push(0)
+                    else {
+                        // console.log("ant: ", coordPos[idx], " - ant: ", puntoAnterior)
+                        longColumnaActual.push(longColumnaActual[i - 1] + distancia(coordPos[idx], coordPos[idx - (this.columnas + 1)]))
+                    }
+                    // puntoAnterior = coordPos[idx]
+                }
+                const longTotalCol = longColumnaActual[longColumnaActual.length - 1]
+                longColumnaActual = longColumnaActual.map(x => x / longTotalCol)
+                longAcumuladaColumna.push(longColumnaActual)
+            }
+        }
+
+
+
+        // longitudes a lo largo de una fila -> un nivel
+        // long acumulada por cada columna -> ("una fila")
 
         for (var i = 0; i <= this.filas; i++) {
             for (var j = 0; j <= this.columnas; j++) {
-                var u=j/this.columnas;
-                var v=i/this.filas;
+                // if (this.id == "muralla") {multiplicadorU = this.lados; multiplicadorV = 2}
+                // if (this.id == "terrenoCentro") {multiplicadorU = 2; signoU=-1}
+                // if (this.id == "puente") {multiplicadorV = 2; signoU=-1}
+                // if (this.id == "terrenoPeriferia") {multiplicadorU = this.lados; multiplicadorV = 2; signoU=-1}
+                // var u = multiplicador * (1 - i / this.filas);
+                var v = longAcumuladaFila[i][j]
+                // var u = longAcumuladaColumna[j][i]
 
-                uvBuffer.push(u);
-                uvBuffer.push(v);
+                var u = (this.id === "muralla" || this.id === "techo") ? longAcumuladaColumna[j][i] : (i / this.filas)
+
+                // if(this.id == "techo"){
+                //     const aux = u; u = v; v = aux
+                // }
+                uvBuffer.push(this.multiplicadorU * (1 - this.signoU * u));
+                uvBuffer.push(this.multiplicadorV * (1 - this.signoV * v));
             }
         }
 
@@ -238,7 +311,7 @@ export class Objeto3D {
     }
 
     calcularNormalesDibujadas() {
-        for (let i = 0; i < this.bufferPos.length - 3; i += 3) {
+        for (let i = 0; i <= this.bufferPos.length - 3; i += 3) {
             this.bufferNormDibujadas.push(this.bufferPos[i])
             this.bufferNormDibujadas.push(this.bufferPos[i + 1])
             this.bufferNormDibujadas.push(this.bufferPos[i + 2])

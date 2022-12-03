@@ -1,5 +1,5 @@
 import { Objeto3D } from "../objeto3d.js";
-import { Caja } from "./caja.js";
+import { Caja, CaraTrapecio } from "./caja.js";
 import { superficeBarrido } from "../superficieBarrido.js";
 import { BezierCubica } from "../bezier/bezier3.js"
 import { discretizar } from "../bezier/discretizador.js"
@@ -7,12 +7,12 @@ import { discretizar } from "../bezier/discretizador.js"
 export class PisosCastillo extends Objeto3D {
     constructor(ancho, largo, cantPisos, alturaPiso) {
         super()
-        const pisos = new Caja(cantPisos * alturaPiso, largo, ancho,[238/255,226/255,121/255])
+        const pisos = new Caja(cantPisos * alturaPiso, largo, ancho, window.materiales.PINTURA_AMARILLA)
         this.agregarHijo(pisos)
 
         const anchoBorde = 0.15
         for (let i = 1; i < cantPisos; i++) {
-            const borde = new Caja(anchoBorde, largo + anchoBorde, ancho + anchoBorde,[208/255,197/255,105/255])
+            const borde = new Caja(anchoBorde, largo + anchoBorde, ancho + anchoBorde, window.materiales.PINTURA_AMARILLA)
             borde.trasladar(0, i * alturaPiso - anchoBorde / 2, 0)
             this.agregarHijo(borde)
         }
@@ -66,7 +66,7 @@ export class PisosCastillo extends Objeto3D {
 
 export class Ventana extends Objeto3D {
     constructor(altura, largo) {
-        super([62/255,62/255,62/255])
+        super(window.materiales.VIDRIO)
         this.filas = 5
         this.columnas = 16 - 1
         const ancho = 0.15
@@ -150,4 +150,125 @@ export class Ventana extends Objeto3D {
             normal: norm,
         }
     }
+}
+
+export class TechoCastillo extends Objeto3D {
+    constructor(ancho, largo) {
+        super()
+        const alto = 2
+        // const cuerpo = new CuerpoTecho(ancho, largo, window.materiales.TEJAS_AZULES, alto)
+        // this.agregarHijo(cuerpo)
+
+        // const caraFrente = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "frente")
+        // const caraAtras = new CaraTechoPrincipal(ancho, largo, window.materiales.TEJAS_AZULES, alto, "atras")
+        // const caraDer = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "derecha")
+        // const caraIzq = new CaraTechoLateral(ancho, largo, window.materiales.TEJAS_AZULES, alto, "izquierda")
+
+        // this.agregarHijo(caraFrente)
+        // this.agregarHijo(caraAtras)
+        // this.agregarHijo(caraDer)
+        // this.agregarHijo(caraIzq)
+
+        const caraFrente = new CaraTrapecio([-largo / 2, 0, ancho / 2], [-largo / 4, alto, 0], [largo / 2, 0, ancho / 2], [largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+        const caraAtras = new CaraTrapecio([largo / 2, 0, -ancho / 2], [largo / 4, alto, 0], [-largo / 2, 0, -ancho / 2], [-largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+        const caraDer = new CaraTrapecio([largo / 2, 0, ancho / 2], [largo / 4, alto, 0],[largo / 2, 0, -ancho / 2], [largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+        const caraIzq = new CaraTrapecio([-largo / 2, 0, -ancho / 2], [-largo / 4, alto, 0], [-largo / 2, 0, ancho / 2], [-largo / 4, alto, 0], window.materiales.TEJAS_AZULES)
+
+        this.agregarHijo(caraFrente)
+        this.agregarHijo(caraAtras)
+        this.agregarHijo(caraDer)
+        this.agregarHijo(caraIzq)
+    }
+}
+
+class CuerpoTecho extends Objeto3D {
+    constructor(ancho, largo, material, alto) {
+        super(material)
+        this.filas = 3
+        this.columnas = 1
+        this.id = "techo"
+
+        const posiciones = [[-largo / 2, 0, ancho / 2], [largo / 2, 0, ancho / 2],
+        [-largo / 4, alto, 0], [largo / 4, alto, 0],
+        [-largo / 4, alto, 0], [largo / 4, alto, 0],
+        [-largo / 2, 0, -ancho / 2], [largo / 2, 0, -ancho / 2]]
+
+        let normFrente = productoVectorial([1, 0, 0], [0, alto, -ancho / 2])
+        normFrente = normalizar(normFrente)
+        let normAtras = productoVectorial([-1, 0, 0], [0, alto, ancho / 2])
+        normAtras = normalizar(normAtras)
+
+        const normales = [normFrente, normFrente, normFrente, normFrente, normAtras, normAtras, normAtras, normAtras]
+        this.bufferPos = [].concat(...posiciones.map((pos) => pos))
+        this.bufferNorm = [].concat(...normales.map((norm) => norm))
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
+    }
+}
+
+class CaraTechoLateral extends Objeto3D {
+    constructor(ancho, largo, material, alto, tipo) {
+        super(material)
+        this.filas = 1
+        this.columnas = 1
+        this.id = "techo"
+
+        const coordX = tipo === "derecha" ? largo : -largo
+
+        const posiciones = [[coordX / 2, 0, ancho / 2], [coordX / 2, 0, -ancho / 2],
+        [coordX / 4, alto, 0], [coordX / 4, alto, 0]]
+
+        let normal = tipo == "derecha" ? productoVectorial([0, 0, -1], [-largo / 4, alto, 0])
+            : productoVectorial([0, 0, 1], [largo / 4, alto, 0])
+        normal = normalizar(normal)
+
+        const normales = [normal, normal, normal, normal]
+        this.bufferPos = [].concat(...posiciones.map((pos) => pos))
+        this.bufferNorm = [].concat(...normales.map((norm) => norm))
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
+    }
+}
+
+class CaraTechoPrincipal extends Objeto3D {
+    constructor(ancho, largo, material, alto, tipo) {
+        super(material)
+        this.filas = 1
+        this.columnas = 1
+        this.id = "techo"
+
+        const coordZ = tipo === "frente" ? ancho : -ancho
+
+        const posiciones = [[-largo / 2, 0, coordZ / 2], [largo / 2, 0, coordZ / 2],
+        [-largo / 4, alto, 0], [largo / 4, alto, 0]]
+
+        let normal = tipo == "frente" ? productoVectorial([1, 0, 0], [0, alto, -ancho / 2])
+            : productoVectorial([-1, 0, 0], [0, alto, ancho / 2])
+        normal = normalizar(normal)
+
+        const normales = [normal, normal, normal, normal]
+        this.bufferPos = [].concat(...posiciones.map((pos) => pos))
+        this.bufferNorm = [].concat(...normales.map((norm) => norm))
+        this.bufferNormDibujadas = []
+        this.calcularNormalesDibujadas()
+
+        this.mallaDeTriangulos = this.crearMalla()
+    }
+}
+
+function productoVectorial(vec1, vec2) {
+    const x = vec1[1] * vec2[2] - vec1[2] * vec2[1]
+    const y = - (vec1[0] * vec2[2] - vec1[2] * vec2[0])
+    const z = vec1[0] * vec2[1] - vec1[1] * vec2[0]
+
+    return [x, y, z]
+}
+
+function normalizar(normal) {
+    const norma = Math.sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2])
+    return [normal[0] / norma, normal[1] / norma, normal[2] / norma]
 }

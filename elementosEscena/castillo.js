@@ -1,6 +1,6 @@
 import { Objeto3D } from "../objeto3d.js";
 import { TorreCastillo } from "./torreCastillo.js";
-import { PisosCastillo } from "./pisosCastillo.js";
+import { PisosCastillo, TechoCastillo } from "./pisosCastillo.js";
 import { BezierCubica } from "../bezier/bezier3.js";
 
 export class Castillo extends Objeto3D{
@@ -23,6 +23,10 @@ export class Castillo extends Objeto3D{
 
         const pisos = new PisosCastillo(ancho,largo,cantPisos, this.alturaPiso)
         this.agregarHijo(pisos)
+
+        const techo = new TechoCastillo(ancho,largo)
+        techo.trasladar(0, this.alturaPiso * cantPisos, 0)
+        this.agregarHijo(techo)
 
         this.agregarHijo(torre1)
         this.agregarHijo(torre2)

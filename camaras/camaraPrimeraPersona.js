@@ -10,6 +10,7 @@ export class CamaraPrimeraPersona {
         this.persona = new Objeto3D()
         this.control = new ControlFPCam()
         this.persona.trasladar(0, 2, 20)
+        this.posicion = vec3.create()
     }
 
     actualizar() {
@@ -33,6 +34,8 @@ export class CamaraPrimeraPersona {
         var ojo = posPersona
         var centro = vec3.fromValues(posPersona[0] + posFoco.x, posPersona[1] + posFoco.y, posPersona[2] + posFoco.z);
 
+        this.posicion = ojo;
+
         mat4.lookAt(matrizVista,
             ojo,
             centro,
@@ -40,6 +43,10 @@ export class CamaraPrimeraPersona {
         );
 
         return matrizVista;
+    }
+
+    obtenerPosicion(){
+        return this.posicion
     }
 }
 

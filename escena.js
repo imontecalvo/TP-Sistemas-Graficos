@@ -5,6 +5,7 @@ import { Muralla } from "./elementosEscena/muralla.js"
 import { Castillo } from "./elementosEscena/castillo.js";
 import { Catapulta } from "./elementosEscena/catapulta.js";
 import { Caja } from "./elementosEscena/caja.js";
+import { Esfera } from "./elementosEscena/esfera.js";
 
 var mat4 = glMatrix.mat4;
 
@@ -16,10 +17,18 @@ export class Escena {
 
         this.terreno = new Terreno()
 
-        this.puente = new Caja(0.2, 2, 8, [63 / 255, 147 / 255, 68 / 255])
-        this.puente.trasladar(0, -0.2, 10 + 7 / 2)
+        const configMapeoUv = [
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}
+        ]
+        this.puente = new Caja(0.2, 2, 8, window.materiales.PASTO, "puente", configMapeoUv)
+        this.puente.trasladar(0, -0.25, 10 + 7 / 2)
 
-        this.agua = new Caja(0.2, 50, 50, [101 / 255, 218 / 255, 223 / 255])
+        this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
         this.agua.trasladar(0, -0.8, 0)
 
         this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
@@ -30,6 +39,7 @@ export class Escena {
 
         this.catapulta = new Catapulta()
 
+        this.caja = new Caja(1, 1, 1, window.materiales.PASTO)
     }
 
     actualizar() {
@@ -45,19 +55,33 @@ export class Escena {
         return this.camara.generarVista(data)
     }
 
+    obtenerPosCamara() {
+        return this.camara.obtenerPosicion()
+    }
+
+    obtenerPosAntorchas() {
+        return this.muralla.obtenerPosAntorchas()
+    }
+
+    obtenerPosMunicion() {
+        return this.catapulta.obtenerPosMunicion()
+    }
+
     dibujar() {
+        // this.esfera.dibujar(this.matriz)
+        // this.caja.dibujar(this.matriz)
         if (app.mostrarEjes) this.ejes.dibujar()
-        
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
         this.agua.dibujar(this.matriz)
-// 
+
         this.muralla.actualizar()
         this.muralla.dibujar(this.matriz)
 
         this.catapulta.actualizar()
         this.catapulta.dibujar(this.matriz)
 
+        // this.caja.dibujar(this.matriz)
         this.castillo.dibujar(this.matriz)
     }
 }

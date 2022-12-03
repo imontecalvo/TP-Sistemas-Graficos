@@ -4,7 +4,7 @@ var mat4 = glMatrix.mat4;
 export class CamaraOrbital {
     constructor() {
         this.control = new ControlMouse()
-        this.position = vec3.create()
+        this.posicion = vec3.create()
     }
 
     actualizar() {
@@ -17,6 +17,9 @@ export class CamaraOrbital {
 
         var matrizVista = mat4.create();
         var ojo = vec3.fromValues(foco[0] + scroll * posObserver.x, foco[1] + scroll * posObserver.y, foco[2] + scroll * posObserver.z);
+
+        this.posicion = ojo;
+
         var centro = vec3.fromValues(foco[0], foco[1], foco[2]);
 
         mat4.lookAt(matrizVista,
@@ -26,6 +29,10 @@ export class CamaraOrbital {
         );
 
         return matrizVista;
+    }
+
+    obtenerPosicion(){
+        return this.posicion
     }
 
 }

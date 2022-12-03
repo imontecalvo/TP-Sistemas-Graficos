@@ -6,6 +6,8 @@ import { discretizar } from "../bezier/discretizador.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 import { Esfera } from "./esfera.js";
 
+var mat4 = glMatrix.mat4;
+
 const angulo = 0
 
 export class Catapulta extends Objeto3D {
@@ -15,7 +17,7 @@ export class Catapulta extends Objeto3D {
         this.alturaCatapulta = 2
         this.medidasTablon = [0.15, 1.8, 3.5]
         this.elevacion = 0.3
-        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], [103 / 255, 78 / 255, 55 / 255])
+        const tablon = new Caja(this.medidasTablon[0], this.medidasTablon[1], this.medidasTablon[2], window.materiales.MADERA)
         tablon.trasladar(0, 0, -0.5)
 
         this.agregarHijo(tablon)
@@ -25,12 +27,20 @@ export class Catapulta extends Objeto3D {
         this.brazo = new Brazo(this.medidasTablon[2], this.medidasTablon[0] / 2 + this.alturaCatapulta - 0.12)
         this.agregarHijo(this.brazo)
 
-        this.municionMov = new Esfera(0.35, [100 / 255, 100 / 255, 100 / 255])
+        this.municionMov = new Esfera(0.35, window.materiales.FUEGO)
         this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
         this.municionMov.ocultar()
         this.agregarHijo(this.municionMov)
 
         this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
+    }
+
+    obtenerPosMunicion(){
+        if (this.brazo.municion.oculto) return this.municionMov.obtenerPosicionAbsoluta(this.matrizModelado)
+        var mat = mat4.create();
+        mat4.multiply(mat, this.matrizModelado, this.brazo.matrizModelado);
+
+        return this.brazo.municion.obtenerPosicionAbsoluta(mat)
     }
 
     actualizar() {
@@ -52,13 +62,14 @@ export class Catapulta extends Objeto3D {
         if (app.moverMunicion) {
             this.municionMov.mostrar()
             this.brazo.municion.ocultar()
-
-            if (this.municionMov.obtenerPosicion()[1] > 0.35) {
+            if (this.municionMov.obtenerPosicion()[1] > 0) {
                 this.municionMov.resetearMatriz()
                 this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
                 const x = 2 * app.velInicial * app.tiempo
                 const y = - (1 / 2) * 9.8 * (app.tiempo) * (app.tiempo)
                 this.municionMov.trasladar(0, y, x)
+            }else{
+                this.municionMov.setearPosicionY(0)
             }
         }
 
@@ -68,17 +79,17 @@ export class Catapulta extends Objeto3D {
     agregarRuedas(radio, ancho, largoTablon, anchoTablon) {
         const multiplicadores = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
         multiplicadores.forEach((x) => {
-            const rueda = new Cilindro(radio, ancho, 20, [89 / 255, 67 / 255, 46 / 255])
+            const rueda = new Cilindro(radio, ancho, 20, window.materiales.MADERA_CLARA)
             rueda.trasladar(x[0] * (largoTablon + ancho) / 2, 0, x[1] * (anchoTablon / 2) - (x[1] * radio) - 0.5)
             rueda.rotarY(Math.PI / 2)
             this.agregarHijo(rueda)
         })
 
-        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, [41 / 255, 24 / 255, 24 / 255])
+        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA)
         eje1.trasladar(0, 0, (anchoTablon / 2) - radio - 0.5)
         eje1.rotarY(Math.PI / 2)
 
-        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, [41 / 255, 24 / 255, 24 / 255])
+        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10,window.materiales.MADERA)
         eje2.trasladar(0, 0, -(anchoTablon / 2) + radio - 0.5)
         eje2.rotarY(Math.PI / 2)
 
@@ -101,7 +112,7 @@ export class Catapulta extends Objeto3D {
         this.agregarHijo(pilar1)
         this.agregarHijo(pilar2)
 
-        const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20, [41 / 255, 24 / 255, 24 / 255])
+        const ejePilar = new Cilindro(anchoPilar * 2 / 3, largoTablon, 20, materiales.MADERA)
         // ejePilar.trasladar(0, -alturaCatapulta - elevacion -0.15, 0)
 
         ejePilar.trasladar(0, elevacion + altoPilar - 0.2, anchoTablon / 2 - 2 * radioRuedas - largoPilar / 2 - 0.5)
@@ -114,7 +125,7 @@ export class Catapulta extends Objeto3D {
 
 class Pilar extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super([89 / 255, 67 / 255, 46 / 255])
+        super(window.materiales.MADERA_CLARA)
         this.filas = 5
         this.columnas = 8 - 1
         const puntosCurva = this.obtenerPuntosCurva(alto, largo)
@@ -211,7 +222,7 @@ class Brazo extends Objeto3D {
         barra.rotarY(-Math.PI / 2)
         this.agregarHijo(barra)
 
-        const pala = new Caja(0.1, 1, 1, [89 / 255, 67 / 255, 46 / 255])
+        const pala = new Caja(0.1, 1, 1, window.materiales.MADERA)
         pala.trasladar(0, 0, anchoTablon / 2 - largoBarra)
         this.agregarHijo(pala)
 
@@ -219,7 +230,7 @@ class Brazo extends Objeto3D {
         this.agregarHijo(this.colgante)
 
         const radioMunicion = 0.35
-        this.municion = new Esfera(radioMunicion, [100 / 255, 100 / 255, 100 / 255])
+        this.municion = new Esfera(radioMunicion, window.materiales.FUEGO)
         this.municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
         this.agregarHijo(this.municion)
 
@@ -236,7 +247,7 @@ class Brazo extends Objeto3D {
 
 class Barra extends Objeto3D {
     constructor(alto, largo, ancho) {
-        super([89 / 255, 67 / 255, 46 / 255])
+        super(window.materiales.MADERA)
         this.filas = 5
         this.columnas = 7
         const puntosCurva = this.obtenerPuntosCurva(alto, largo)
@@ -327,7 +338,7 @@ class Colgante extends Objeto3D {
         super()
 
         // EJE
-        const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20, [41 / 255, 24 / 255, 24 / 255])
+        const eje = new Cilindro(0.05, 2.5 * anchoBarra, 20, window.materiales.MADERA)
         eje.trasladar(0, 0, 0)
         // eje.trasladar(0, 0, anchoTablon / 2 - 0.10)
         eje.rotarY(Math.PI / 2)
@@ -347,7 +358,7 @@ class Colgante extends Objeto3D {
         this.agregarHijo(pilar2)
 
         //BLOQUE
-        const bloque = new Caja(0.75, 2.5 * anchoBarra + 0.1, 0.75, [115 / 255, 115 / 255, 115 / 255])
+        const bloque = new Caja(0.75, 2.5 * anchoBarra + 0.1, 0.75, window.materiales.PIEDRA)
         bloque.trasladar(0, 0 - 0.37 - 0.6, 0)
         // bloque.trasladar(0, 0 - 0.30 - 0.6, anchoTablon / 2 - 0.10)
         this.agregarHijo(bloque)

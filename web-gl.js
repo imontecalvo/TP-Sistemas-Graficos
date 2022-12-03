@@ -1,4 +1,10 @@
 import { Escena } from "./escena.js";
+import initMateriales from "./utils/materiales/materialManager.js";
+import ShadersManager from "./utils/shaderManager.js";
+import TextureManager from "./utils/textureManager.js";
+
+var shadersManager;
+var textureManager;
 
 var tiempo = 0;
 var mat4 = glMatrix.mat4;
@@ -6,38 +12,25 @@ var vec3 = glMatrix.vec3;
 var escena = null;
 
 var gl = null,
-    canvas = null,
-
-    glProgram = null,
-    fragmentShader = null,
-    vertexShader = null,
-    fragmentShaderCurva = null,
-    vertexShaderCurva = null;
-
-var vertexPositionAttribute = null,
-    trianglesVerticeBuffer = null,
-    vertexNormalAttribute = null,
-    trianglesNormalBuffer = null,
-    trianglesIndexBuffer = null;
+    canvas = null
 
 var glProgramCurva = null
+
+//Shader sources
 var vs_source
 var fs_source
-
 var vs_src_curva
 var fs_src_curva
+var fs_src_fuego
+var vs_src_fuego
 
 var modelMatrix = mat4.create();
 var viewMatrix = mat4.create();
 var projMatrix = mat4.create();
-var normalMatrix = mat4.create();
 var rotate_angle = -1.57078;
 
-// var { vertices, normals, indices } = setupBuffers(new Plano(1,1));
-// var plano = new Objeto3D(buffers.webgl_position_buffer,buffers.webgl_normal_buffer, buffers.webgl_index_buffer)
 
-
-function initWebGL() {
+async function initWebGL() {
     canvas = document.getElementById("my-canvas");
 
     try {
@@ -48,10 +41,11 @@ function initWebGL() {
     }
 
     if (gl) {
-
+        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_src_fuego, fs:fs_src_fuego}], gl);
+        glProgramCurva = shadersManager.getProgram("curvas");
+        textureManager = await TextureManager.init(gl);
+        initMateriales()
         setupWebGL();
-        initShaders();
-        setupVertexShaderMatrix();
         tick();
 
     } else {
@@ -85,14 +79,14 @@ function setupWebGL() {
 
 function loadShaders() {
 
-    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva()).done(function (res1, res2) {
+    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva(), loadVSFuego(), loadFSFuego()).done(function (res1, res2) {
         //this code is executed when all ajax calls are done     
         initWebGL();
     });
 
     function loadVS() {
         return $.ajax({
-            url: "./shaders/vertex.glsl",
+            url: "./shaders/vs-default.glsl",
             success: function (result) {
                 vs_source = result;
             }
@@ -101,7 +95,7 @@ function loadShaders() {
 
     function loadFS() {
         return $.ajax({
-            url: "./shaders/fragment.glsl",
+            url: "./shaders/fs-phong.glsl",
             success: function (result) {
                 fs_source = result;
             }
@@ -110,7 +104,7 @@ function loadShaders() {
 
     function loadVSCurva() {
         return $.ajax({
-            url: "./shaders/vlinea.glsl",
+            url: "./shaders/vs-curvas.glsl",
             success: function (result) {
                 vs_src_curva = result;
             }
@@ -119,88 +113,39 @@ function loadShaders() {
 
     function loadFSCurva() {
         return $.ajax({
-            url: "./shaders/flinea.glsl",
+            url: "./shaders/fs-curvas.glsl",
             success: function (result) {
                 fs_src_curva = result;
             }
         });
     }
-}
 
-
-
-
-function initShaders() {
-    //get shader source
-    // var fs_source = document.getElementById('shader-fs').innerHTML,
-    // vs_source = document.getElementById('shader-vs').innerHTML;
-
-
-    //compile shaders    
-    vertexShader = makeShader(vs_source, gl.VERTEX_SHADER);
-    fragmentShader = makeShader(fs_source, gl.FRAGMENT_SHADER);
-
-    vertexShaderCurva = makeShader(vs_src_curva, gl.VERTEX_SHADER);
-    fragmentShaderCurva = makeShader(fs_src_curva, gl.FRAGMENT_SHADER);
-
-    //create program
-    glProgram = gl.createProgram();
-
-    glProgramCurva = gl.createProgram()
-
-    //attach and link shaders to the program
-    gl.attachShader(glProgram, vertexShader);
-    gl.attachShader(glProgram, fragmentShader);
-    gl.linkProgram(glProgram);
-
-    if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
-        alert("Unable to initialize the shader program.");
+    function loadFSFuego() {
+        return $.ajax({
+            url: "./shaders/fs-fuego.glsl",
+            success: function (result) {
+                fs_src_fuego = result;
+            }
+        });
     }
 
-    //...
-
-    gl.attachShader(glProgramCurva, vertexShaderCurva);
-    gl.attachShader(glProgramCurva, fragmentShaderCurva);
-    gl.linkProgram(glProgramCurva);
-
-    if (!gl.getProgramParameter(glProgramCurva, gl.LINK_STATUS)) {
-        alert("Unable to initialize the shader program.");
+    function loadVSFuego() {
+        return $.ajax({
+            url: "./shaders/vs-fuego.glsl",
+            success: function (result) {
+                vs_src_fuego = result;
+            }
+        });
     }
 
-
-    //use program
-    gl.useProgram(glProgram);
-    gl.useProgram(glProgramCurva);
-}
-
-function makeShader(src, type) {
-    //compile the vertex shader
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, src);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.log("Error compiling shader: " + gl.getShaderInfoLog(shader));
-    }
-    return shader;
 }
 
 
 function setupVertexShaderMatrix() {
-    gl.useProgram(glProgram);
-    var viewMatrixUniform = gl.getUniformLocation(glProgram, "viewMatrix");
-    var projMatrixUniform = gl.getUniformLocation(glProgram, "projMatrix");
-    var normalMatrixUniform = gl.getUniformLocation(glProgram, "normalMatrix");
-
-    gl.uniformMatrix4fv(viewMatrixUniform, false, viewMatrix);
-    gl.uniformMatrix4fv(projMatrixUniform, false, projMatrix);
-    gl.uniformMatrix4fv(normalMatrixUniform, false, normalMatrix);
-
-    gl.useProgram(glProgramCurva);
-    var viewMatrixUniformCurva = gl.getUniformLocation(glProgramCurva, "viewMatrix");
-    var projMatrixUniformCurva = gl.getUniformLocation(glProgramCurva, "projMatrix");
-    gl.uniformMatrix4fv(viewMatrixUniformCurva, false, viewMatrix);
-    gl.uniformMatrix4fv(projMatrixUniformCurva, false, projMatrix);
+    shadersManager.actualizarMatrices(viewMatrix, projMatrix);
+    shadersManager.actualizarPosCamara(escena.obtenerPosCamara());
+    shadersManager.actualizarPosAntorchas(escena.obtenerPosAntorchas());
+    shadersManager.actualizarPosMunicion(escena.obtenerPosMunicion())
 }
 
 function drawScene() {
@@ -241,4 +186,4 @@ function tick() {
 
 window.onload = loadShaders;
 
-export { gl, glProgram, glProgramCurva }
+export { gl, glProgramCurva, shadersManager, textureManager }

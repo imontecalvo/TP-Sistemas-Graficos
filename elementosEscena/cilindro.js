@@ -3,8 +3,8 @@ import { BezierCubica } from "../bezier/bezier3.js"
 import { superficeBarrido } from "../superficieBarrido.js";
 
 export class Cilindro extends Objeto3D {
-    constructor(radio, ancho, columnas, color =[0,0,0]) {
-        super(color)
+    constructor(radio, ancho, columnas, material) {
+        super(material)
 
         this.filas = 5
         this.columnas = columnas
@@ -38,7 +38,7 @@ export class Cilindro extends Objeto3D {
 
         const caraTraseraPos = data[0].slice(-cantPuntosCurva * 3).concat(caraFrontalPos.map((x, i) => {
             if (i % 3 == 2) return -ancho / 2;
-            else return x
+            return x
         }))
 
         const caraTraseraNorm = caraFrontalNorm.map((x, i) => {
