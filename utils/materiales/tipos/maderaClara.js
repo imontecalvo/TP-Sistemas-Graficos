@@ -6,8 +6,8 @@ class MaderaClara extends Material {
         const color = [103 / 255, 78 / 255, 55 / 255];
         const configPhong = {
             colorDifuso: color,
-            Ka:1.0,
-            Kd:1.0,
+            Ka:0.5,
+            Kd:0.7,
             Ks:0.2,
             glossiness:1
         }

@@ -8,7 +8,7 @@ class Pasto extends Material {
             colorDifuso: color,
             Ka:0.5,
             Kd:1.0,
-            Ks:0.1,
+            Ks:0.2,
             glossiness:3
         }
         super(configPhong);

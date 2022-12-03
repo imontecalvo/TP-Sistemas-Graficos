@@ -8,7 +8,7 @@ class Piedra extends Material {
             colorDifuso: color,
             Ka:0.5,
             Kd:1.0,
-            Ks:0.3,
+            Ks:0.2,
             glossiness:4
         }
         super(configPhong);

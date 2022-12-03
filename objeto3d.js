@@ -56,6 +56,11 @@ export class Objeto3D {
         return [pos[0], pos[1], pos[2]]
     }
 
+    setearPosicionY(y){
+        const pos = this.obtenerPosicion()
+        this.trasladar(0, y-pos[1], 0)
+    }
+
     trasladarRelativo(x, y, z) {
         const pos = this.obtenerPosicion()
         mat4.translate(this.matrizModelado, this.matrizModelado, [pos[0] + x, pos[1] + y, pos[2] + z]);

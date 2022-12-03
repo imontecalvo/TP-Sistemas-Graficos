@@ -62,13 +62,14 @@ export class Catapulta extends Objeto3D {
         if (app.moverMunicion) {
             this.municionMov.mostrar()
             this.brazo.municion.ocultar()
-
-            if (this.municionMov.obtenerPosicion()[1] > 0.35) {
+            if (this.municionMov.obtenerPosicion()[1] > 0) {
                 this.municionMov.resetearMatriz()
                 this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
                 const x = 2 * app.velInicial * app.tiempo
                 const y = - (1 / 2) * 9.8 * (app.tiempo) * (app.tiempo)
                 this.municionMov.trasladar(0, y, x)
+            }else{
+                this.municionMov.setearPosicionY(0)
             }
         }
 

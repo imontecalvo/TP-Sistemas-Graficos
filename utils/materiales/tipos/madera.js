@@ -3,11 +3,11 @@ import Material from "../material.js";
 
 class Madera extends Material {
     constructor() {
-        const color = [89 / 255, 67 / 255, 46 / 255];
+        const color = [41 / 255, 24 / 255, 24 / 255];
         const configPhong = {
             colorDifuso: color,
-            Ka:1.0,
-            Kd:1.0,
+            Ka:0.5,
+            Kd:0.5,
             Ks:0.2,
             glossiness:1
         }

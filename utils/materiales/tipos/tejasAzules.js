@@ -6,10 +6,10 @@ class TejasAzules extends Material {
         const color = [38/255,87/255,136/255];
         const configPhong = {
             colorDifuso: color,
-            Ka:1.0,
-            Kd:1.0,
-            Ks:1.0,
-            glossiness:20
+            Ka:0.7,
+            Kd:0.5,
+            Ks:0.7,
+            glossiness:10
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")

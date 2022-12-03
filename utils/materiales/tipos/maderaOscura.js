@@ -6,9 +6,9 @@ class MaderaOscura extends Material {
         const color = [41 / 255, 24 / 255, 24 / 255];
         const configPhong = {
             colorDifuso: color,
-            Ka:0.2,
-            Kd:0.0,
-            Ks:0.0,
+            Ka:0.5,
+            Kd:0.7,
+            Ks:0.2,
             glossiness:1
         }
         super(configPhong);

@@ -53,8 +53,8 @@ void main(void) {
         vec3 N = normalize(vNormal);
         vec3 L = normalize(vec3(0,15,50));
 
-        vec3 colorAmbiente = vec3(78./255.,78./255.,86./255.);
-        //vec3 colorAmbiente = vec3(41./255.,42./255.,87./255.);
+        //vec3 colorAmbiente = vec3(78./255.,78./255.,86./255.);
+        vec3 colorAmbiente = vec3(41./255.,42./255.,87./255.);
         //vec3 colorAmbiente = vec3(0.04,0.0,0.25);
         vec3 colorEspecular = vec3(0.95,0.67,0.03);
 
@@ -69,7 +69,8 @@ void main(void) {
             specular = pow(specAngle, vGlossiness);
         }
 
-        vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso + colorTexturaFinal) + (vKs * specular * colorEspecular);
+        vec3 luzAmbienteBase = vec3(0.3,0.3,0.2);
+        vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso * colorTexturaFinal + luzAmbienteBase * colorTexturaFinal) + (vKs * specular * colorEspecular);
         
         // Antorcha1
         vec3 lightVecAntorcha1 = normalize(vPosicionAntorcha1 - vPosWorld);
@@ -105,14 +106,14 @@ void main(void) {
         vec3 colorMunicion = vKd * componenteDifusaMunicion + vKa * colorAmbiente + vKs * componenteEspecularMunicion;
 
         vec3 colorLuzMunicion = vec3(245./255., 182./255., 66./255.);
-        float factorAtenuacionMunicion = 1.0 / pow(distance(vPosicionMunicion, vPosWorld),0.5);
+        float factorAtenuacionMunicion = 2. * 1.0 / pow(distance(vPosicionMunicion, vPosWorld),0.5);
         vec3 intensidadLuzMunicion = colorLuzMunicion * factorAtenuacionMunicion;
 
 
         vec3 colorTotal = color + (colorAntorcha1 * intensidadLuzAntorcha1) + (colorAntorcha2 * intensidadLuzAntorcha2) + (colorMunicion * intensidadLuzMunicion);
 
-        //gl_FragColor = vec4(colorTotal , 1.0);
-        gl_FragColor = vec4(colorTexturaFinal , 1.0);
+        gl_FragColor = vec4(colorTotal , 1.0);
+        //gl_FragColor = vec4(colorTexturaFinal , 1.0);
 
         // specularColor: vec3(0.95,0.67,0.03), 1.0)
     }else{

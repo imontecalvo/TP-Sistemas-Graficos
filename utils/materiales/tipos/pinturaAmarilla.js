@@ -6,10 +6,10 @@ class PinturaAmarilla extends Material {
         const color = [238/255,226/255,121/255];
         const configPhong = {
             colorDifuso: color,
-            Ka:0.5,
-            Kd:0.5,
-            Ks:0.2,
-            glossiness:2
+            Ka:0.7,
+            Kd:0.4,
+            Ks:0.05,
+            glossiness:1
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
