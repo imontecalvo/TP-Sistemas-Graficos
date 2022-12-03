@@ -3,8 +3,6 @@ var vec3 = glMatrix.vec3;
 //shaders = [{vs1,fs1},{vs2,fs2}]
 class ShaderManager {
     constructor(shaders, glContext) {
-        console.log(shaders)
-
         this.gl = glContext
         this.programs = {}
 
@@ -16,7 +14,6 @@ class ShaderManager {
         this.crearShader(shaders[1], 'curvas');
         this.crearShader(shaders[2], 'fuego');
 
-        console.log(this.programs["fuego"])
     }
 
     crearShader(shader, id) {
@@ -125,7 +122,6 @@ class ShaderManager {
                 const program = this.programs[id]
 
                 gl.useProgram(program);
-                // console.log(posCamaraMundo)
                 gl.uniform3fv(program.posCamaraUniform, posCamaraMundo);
             }
         }

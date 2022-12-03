@@ -185,37 +185,28 @@ export class Objeto3D {
             let longFilaActual = []
             for (var j = 0; j <= this.columnas; j++) {
                 const idx = i * (this.columnas + 1) + j
-                // console.log("idx: ",idx)
                 if (j == 0) longFilaActual.push(0)
                 else {
                     longFilaActual.push(longFilaActual[j - 1] + distancia(coordPos[idx], coordPos[idx - 1]))
                 }
-                // puntoAnterior = coordPos[idx]
             }
             const longTotalFila = longFilaActual[longFilaActual.length - 1]
             longFilaActual = longFilaActual.map(x => x / longTotalFila)
             longAcumuladaFila.push(longFilaActual)
         }
 
-        if (this.id == "torreC") console.log("longAcumuladaFila: ", longAcumuladaFila)
-
-
         let longAcumuladaColumna = []
         if (this.id == "muralla" || this.id == "techo") {
             // Calculo longitudes de los puntos pertenecientes a cada columna
 
             for (var j = 0; j <= this.columnas; j++) {
-                // let puntoAnterior;
                 let longColumnaActual = []
                 for (var i = 0; i <= this.filas; i++) {
                     const idx = i * (this.columnas + 1) + j
-                    // console.log("idx: ",idx)
                     if (i == 0) longColumnaActual.push(0)
                     else {
-                        // console.log("ant: ", coordPos[idx], " - ant: ", puntoAnterior)
                         longColumnaActual.push(longColumnaActual[i - 1] + distancia(coordPos[idx], coordPos[idx - (this.columnas + 1)]))
                     }
-                    // puntoAnterior = coordPos[idx]
                 }
                 const longTotalCol = longColumnaActual[longColumnaActual.length - 1]
                 longColumnaActual = longColumnaActual.map(x => x / longTotalCol)

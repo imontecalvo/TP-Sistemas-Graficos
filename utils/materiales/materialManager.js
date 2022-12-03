@@ -31,6 +31,4 @@ export default function initMateriales(){
         PRUEBA: new ColorLiso([1,0.87,0.29]),
         CIELO: new Cielo()
     }
-
-    console.log("Materiales cargados")
 }
