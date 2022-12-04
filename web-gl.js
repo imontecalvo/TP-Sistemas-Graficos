@@ -22,7 +22,6 @@ var fs_source
 var vs_src_curva
 var fs_src_curva
 var fs_src_fuego
-var vs_src_fuego
 
 var modelMatrix = mat4.create();
 var viewMatrix = mat4.create();
@@ -41,7 +40,7 @@ async function initWebGL() {
     }
 
     if (gl) {
-        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_src_fuego, fs:fs_src_fuego}], gl);
+        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_source, fs:fs_src_fuego}], gl);
         glProgramCurva = shadersManager.getProgram("curvas");
         textureManager = await TextureManager.init(gl);
         initMateriales()
@@ -79,7 +78,7 @@ function setupWebGL() {
 
 function loadShaders() {
 
-    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva(), loadVSFuego(), loadFSFuego()).done(function (res1, res2) {
+    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva(), loadFSFuego()).done(function (res1, res2) {
         //this code is executed when all ajax calls are done     
         initWebGL();
     });
@@ -128,16 +127,6 @@ function loadShaders() {
             }
         });
     }
-
-    function loadVSFuego() {
-        return $.ajax({
-            url: "./shaders/vs-fuego.glsl",
-            success: function (result) {
-                vs_src_fuego = result;
-            }
-        });
-    }
-
 }
 
 

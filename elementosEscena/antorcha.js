@@ -5,7 +5,7 @@ import { Esfera } from "./esfera.js";
 export class Antorcha extends Objeto3D{
     constructor(){
         super()
-        const fuego = new Esfera(0.13,window.materiales.FUEGO)
+        const fuego = new Esfera(0.13,window.materiales.FUEGO_ANTORCHA)
         fuego.trasladar(0,0.6/2,0)
         const mango = new Cilindro(0.07,0.6,5,window.materiales.MADERA_OSCURA)
         mango.rotarX(Math.PI/2)

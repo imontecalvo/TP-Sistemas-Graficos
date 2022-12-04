@@ -37,14 +37,21 @@ export class Muralla extends Objeto3D {
 
         let posicionMuralla = []
         let normalesMuralla = []
+        let binormalesMuralla = []
+        let tangentesMuralla = []
         for (let i = 0; i < data[0].length; i += 3) {
             const pos = [data[0][i], data[0][i + 1], data[0][i + 2], 1]
             const norm = [data[1][i], data[1][i + 1], data[1][i + 2], 1]
+            const binorm = [data[2][i], data[2][i + 1], data[2][i + 2], 1]
+            const tang = [data[3][i], data[3][i + 1], data[3][i + 2], 1]
+
             vec4.transformMat4(pos, pos, matRot)
             vec4.transformMat4(norm, norm, matRot)
 
             posicionMuralla.push(pos[0], pos[1], pos[2])
             normalesMuralla.push(norm[0], norm[1], norm[2])
+            binormalesMuralla.push(binorm[0], binorm[1], binorm[2])
+            normalesMuralla.push(tang[0], tang[1], tang[2])
 
         }
 
@@ -52,7 +59,7 @@ export class Muralla extends Objeto3D {
         this.posPorton = this.obtenerPosPorton(posicionMuralla)
         this.entrada = new Entrada(2, this.largoEntrada, 0.25)
         this.entrada.trasladar(this.posPorton[0], this.posPorton[1], this.posPorton[2])
-        this.agregarHijo(this.entrada)
+        // this.agregarHijo(this.entrada)
 
         // Extremos y tapas de muralla
         const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
@@ -224,6 +231,12 @@ export class Muralla extends Objeto3D {
 
             const posActualFin = [puntosCurvaMuralla.posicion[i][0], puntosCurvaMuralla.posicion[i][1], puntosCurvaMuralla.posicion[i][2], 1]
             const normActualFin = [puntosCurvaMuralla.normal[i][0], puntosCurvaMuralla.normal[i][1], puntosCurvaMuralla.normal[i][2], 1]
+
+            // const posActualFin = [puntosCurvaMuralla.posicion[i][0], puntosCurvaMuralla.posicion[i][1], puntosCurvaMuralla.posicion[i][2], 1]
+            // const normActualFin = [puntosCurvaMuralla.normal[i][0], puntosCurvaMuralla.normal[i][1], puntosCurvaMuralla.normal[i][2], 1]
+
+            // const posActualFin = [puntosCurvaMuralla.posicion[i][0], puntosCurvaMuralla.posicion[i][1], puntosCurvaMuralla.posicion[i][2], 1]
+            // const normActualFin = [puntosCurvaMuralla.normal[i][0], puntosCurvaMuralla.normal[i][1], puntosCurvaMuralla.normal[i][2], 1]
 
             vec4.transformMat4(posActualInicio, posActualInicio, matInicioMuralla)
             vec4.transformMat4(normActualInicio, normActualInicio, mat2Normales)

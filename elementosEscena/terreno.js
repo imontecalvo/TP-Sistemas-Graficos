@@ -12,6 +12,10 @@ export class Terreno extends Objeto3D {
         centro.trasladar(0, 0.4, 0)
         this.agregarHijo(centro)
 
+        const ladera = new Ladera()
+        ladera.trasladar(0, 0.4, 0)
+        this.agregarHijo(ladera)
+
         this.agregarHijo(new Periferia())
 
         this.modelMatrix = mat4.create()
@@ -25,24 +29,51 @@ class Centro extends Objeto3D {
         this.id = "terrenoCentro"
         const radio = 10
         this.filas = 40
-        this.columnas = 3
-        var puntosCurva = []
-        this.curvaPendiente = new BezierCubica([[11, -1.5, 0], [10.5, -0.75, 0], [10.3, -0.45, 0], [10, 0, 0]], "z")
+        this.columnas = 1
         this.curvaCentro = new BezierCubica([[10, 0, 0], [5, 0, 0], [2, 0, 0], [0, 0, 0]], "z")
-        const puntosPendiente = discretizar(this.curvaPendiente, 1, false, true)
         const puntosCentro = discretizar(this.curvaCentro, 1, false, true)
+        console.log(puntosCentro)
 
-        puntosCurva = {
-            posicion: puntosPendiente.posicion.concat(puntosCentro.posicion),
-            normal: puntosPendiente.normal.concat(puntosCentro.normal),
-        }
-
-        const data = superficieRevolucion(puntosCurva, this.columnas, this.filas + 1)
+        const data = superficieRevolucion(puntosCentro, this.columnas, this.filas + 1)
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
+        this.bufferTang = data[2]
+        this.bufferBinorm = data[3]
+
         this.bufferNormDibujadas = []
+        this.bufferBinormDibujadas = []
+        this.bufferTangDibujadas = []
+
         this.calcularNormalesDibujadas()
+        this.calcularBinormalesDibujadas()
+        this.calcularTangentesDibujadas()
+        this.mallaDeTriangulos = this.crearMalla()
+    }
+}
+
+class Ladera extends Objeto3D{
+    constructor(){
+        super(window.materiales.PASTO_ROCAS,{ multiplicadorU: 10, multiplicadorV: 0.5, })
+        this.filas = 40
+        this.columnas = 1
+        this.curvaPendiente = new BezierCubica([[11, -1.5, 0], [10.5, -0.75, 0], [10.3, -0.45, 0], [10, 0, 0]], "z")
+        const puntosPendiente = discretizar(this.curvaPendiente, 1, false, true)
+
+        const data = superficieRevolucion(puntosPendiente, this.columnas, this.filas + 1)
+
+        this.bufferPos = data[0]
+        this.bufferNorm = data[1]
+        this.bufferBinorm = data[2]
+        this.bufferTang = data[3]
+
+        this.bufferNormDibujadas = []
+        this.bufferBinormDibujadas = []
+        this.bufferTangDibujadas = []
+
+        this.calcularNormalesDibujadas()
+        this.calcularBinormalesDibujadas()
+        this.calcularTangentesDibujadas()
         this.mallaDeTriangulos = this.crearMalla()
     }
 }
@@ -67,6 +98,8 @@ class Periferia extends Objeto3D {
         puntosCurva = {
             posicion: puntosPendiente.posicion.concat(puntosCentro.posicion, puntosLadoFuera.posicion),
             normal: puntosPendiente.normal.concat(puntosCentro.normal, puntosLadoFuera.normal),
+            tangente: puntosPendiente.tangente.concat(puntosCentro.tangente, puntosLadoFuera.tangente),
+            binormal: puntosPendiente.binormal.concat(puntosCentro.binormal, puntosLadoFuera.binormal)
         }
 
         const data = superficieRevolucion(puntosCurva, this.columnas, this.filas + 1)

@@ -27,7 +27,7 @@ export class Catapulta extends Objeto3D {
         this.brazo = new Brazo(this.medidasTablon[2], this.medidasTablon[0] / 2 + this.alturaCatapulta - 0.12)
         this.agregarHijo(this.brazo)
 
-        this.municionMov = new Esfera(0.35, window.materiales.FUEGO)
+        this.municionMov = new Esfera(0.35, window.materiales.FUEGO_MUNICION)
         this.municionMov.trasladar(0, 5.544064998626709, 0.4945738911628723)
         this.municionMov.ocultar()
         this.agregarHijo(this.municionMov)
@@ -230,7 +230,7 @@ class Brazo extends Objeto3D {
         this.agregarHijo(this.colgante)
 
         const radioMunicion = 0.35
-        this.municion = new Esfera(radioMunicion, window.materiales.FUEGO)
+        this.municion = new Esfera(radioMunicion, window.materiales.FUEGO_MUNICION)
         this.municion.trasladar(0, 0 + radioMunicion + 0.1, anchoTablon / 2 - largoBarra)
         this.agregarHijo(this.municion)
 

@@ -72,8 +72,20 @@ class TextureManager {
         gl.activeTexture(gl.TEXTURE10);
         gl.bindTexture(gl.TEXTURE_2D, Cielo);
 
-        const Negro = await initTexture('images/negro.jpg',gl);
+        const PastoRoca = await initTexture('images/pastoRoca.jpg',gl);
         gl.activeTexture(gl.TEXTURE11);
+        gl.bindTexture(gl.TEXTURE_2D, PastoRoca);
+
+        const PastoNM = await initTexture('images/pastoNMap.jpg',gl);
+        gl.activeTexture(gl.TEXTURE12);
+        gl.bindTexture(gl.TEXTURE_2D, PastoNM);
+
+        const PastoRocaNM = await initTexture('images/pastoRocaNMap.jpg',gl);
+        gl.activeTexture(gl.TEXTURE13);
+        gl.bindTexture(gl.TEXTURE_2D, PastoRocaNM);
+
+        const Negro = await initTexture('images/negro.jpg',gl);
+        gl.activeTexture(gl.TEXTURE14);
         gl.bindTexture(gl.TEXTURE_2D, Negro);
 
         const texturas = [
@@ -88,6 +100,9 @@ class TextureManager {
             Pasto3,
             Test,
             Cielo,
+            PastoRoca,
+            PastoNM,
+            PastoRocaNM,
             Negro,
         ];
         return new TextureManager(texturas, gl);
@@ -108,6 +123,9 @@ class TextureManager {
         this.Pasto3 = texturas[8]
         this.Test = texturas[9]
         this.Cielo = texturas[10];
+        this.PastoRoca = texturas[11];
+        this.PastoNM = texturas[12];
+        this.PastoRocaNM = texturas[13];
         this.Negro = texturas[texturas.length-1];
     }
 

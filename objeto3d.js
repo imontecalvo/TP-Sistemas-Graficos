@@ -4,13 +4,13 @@ var vec4 = glMatrix.vec4;
 
 export class Objeto3D {
     static MODEL_MATRIX_UNIFORM = null;
-    constructor(material = window.materiales.ROJO, configMapeoUv = {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}) {
+    constructor(material = window.materiales.ROJO, configMapeoUv = { multiplicadorU: 1, multiplicadorV: 1, signoU: 1, signoV: 1 }) {
         this.mallaDeTriangulos = null;
         this.matrizModelado = mat4.create();
         this.hijos = []
         this.oculto = false
         this.material = material
-        
+
         this.multiplicadorU = configMapeoUv.hasOwnProperty("multiplicadorU") ? configMapeoUv.multiplicadorU : 1
         this.multiplicadorV = configMapeoUv.hasOwnProperty("multiplicadorV") ? configMapeoUv.multiplicadorV : 1
         this.signoU = configMapeoUv.hasOwnProperty("signoU") ? configMapeoUv.signoU : 1
@@ -56,9 +56,9 @@ export class Objeto3D {
         return [pos[0], pos[1], pos[2]]
     }
 
-    setearPosicionY(y){
+    setearPosicionY(y) {
         const pos = this.obtenerPosicion()
-        this.trasladar(0, y-pos[1], 0)
+        this.trasladar(0, y - pos[1], 0)
     }
 
     trasladarRelativo(x, y, z) {
@@ -96,7 +96,7 @@ export class Objeto3D {
 
             const renderColor = (app.rendering == "Normales" && !forzarColor) ? false : true
 
-            const glProgram = this.material.activar(renderColor)
+            const glProgram = this.material.activar(renderColor, this.id)
             gl.useProgram(glProgram);
 
             gl.uniformMatrix4fv(glProgram.modelMatrixUniform, false, mat);
@@ -107,6 +107,12 @@ export class Objeto3D {
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
             gl.vertexAttribPointer(glProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_binormal_buffer);
+            gl.vertexAttribPointer(glProgram.vertexBinormalAttribute, 3, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_tangente_buffer);
+            gl.vertexAttribPointer(glProgram.vertexTangenteAttribute, 3, gl.FLOAT, false, 0, 0);
 
             if (this.material.shaderProgram.id == "phong") {
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_uvs_buffer);
@@ -132,28 +138,24 @@ export class Objeto3D {
         // const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
-        var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
-        gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+        const componentes = [this.bufferNormDibujadas, this.bufferBinormDibujadas, this.bufferTangDibujadas]
+        console.log(componentes)
+        for (let i in componentes) {
+            var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
+            gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
+            
+            var trianglesVerticeBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(componentes[i]), gl.STATIC_DRAW);
+            
+            var vertexPositionAttribute = gl.getAttribLocation(glProgramCurva, "aVertexPosition");
+            gl.enableVertexAttribArray(vertexPositionAttribute);
+            gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
+            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+            
+            gl.drawArrays(gl.LINES, 0, 2 * componentes[i].length / 3);
 
-
-        var trianglesVerticeBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNormDibujadas), gl.STATIC_DRAW);
-        var trianglesColorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferNorm), gl.STATIC_DRAW);
-
-        var vertexPositionAttribute = gl.getAttribLocation(glProgramCurva, "aVertexPosition");
-        gl.enableVertexAttribArray(vertexPositionAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, trianglesVerticeBuffer);
-        gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-
-        // var vertexColorAttribute = gl.getAttribLocation(glProgramCurva, "aVertexColor");
-        // gl.enableVertexAttribArray(vertexColorAttribute);
-        // gl.bindBuffer(gl.ARRAY_BUFFER, trianglesColorBuffer);
-        // gl.vertexAttribPointer(vertexColorAttribute, 3, gl.FLOAT, false, 0, 0);
-
-        gl.drawArrays(gl.LINES, 0, 2 * this.bufferNormDibujadas.length / 3);
+        }
     }
 
 
@@ -273,6 +275,18 @@ export class Objeto3D {
         webgl_normal_buffer.itemSize = 3;
         webgl_normal_buffer.numItems = this.bufferPos.length / 3;
 
+        let webgl_binormal_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferBinorm), gl.STATIC_DRAW);
+        webgl_normal_buffer.itemSize = 3;
+        webgl_normal_buffer.numItems = this.bufferPos.length / 3;
+
+        let webgl_tangente_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferTang), gl.STATIC_DRAW);
+        webgl_normal_buffer.itemSize = 3;
+        webgl_normal_buffer.numItems = this.bufferPos.length / 3;
+
         let webgl_uvs_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
@@ -289,6 +303,8 @@ export class Objeto3D {
         return {
             webgl_position_buffer,
             webgl_normal_buffer,
+            webgl_binormal_buffer,
+            webgl_tangente_buffer,
             webgl_uvs_buffer,
             webgl_index_buffer
         }
@@ -303,6 +319,30 @@ export class Objeto3D {
             this.bufferNormDibujadas.push(this.bufferPos[i] + this.bufferNorm[i])
             this.bufferNormDibujadas.push(this.bufferPos[i + 1] + this.bufferNorm[i + 1])
             this.bufferNormDibujadas.push(this.bufferPos[i + 2] + this.bufferNorm[i + 2])
+        }
+    }
+
+    calcularBinormalesDibujadas() {
+        for (let i = 0; i <= this.bufferPos.length - 3; i += 3) {
+            this.bufferBinormDibujadas.push(this.bufferPos[i])
+            this.bufferBinormDibujadas.push(this.bufferPos[i + 1])
+            this.bufferBinormDibujadas.push(this.bufferPos[i + 2])
+
+            this.bufferBinormDibujadas.push(this.bufferPos[i] + this.bufferBinorm[i])
+            this.bufferBinormDibujadas.push(this.bufferPos[i + 1] + this.bufferBinorm[i + 1])
+            this.bufferBinormDibujadas.push(this.bufferPos[i + 2] + this.bufferBinorm[i + 2])
+        }
+    }
+
+    calcularTangentesDibujadas() {
+        for (let i = 0; i <= this.bufferPos.length - 3; i += 3) {
+            this.bufferTangDibujadas.push(this.bufferPos[i])
+            this.bufferTangDibujadas.push(this.bufferPos[i + 1])
+            this.bufferTangDibujadas.push(this.bufferPos[i + 2])
+
+            this.bufferTangDibujadas.push(this.bufferPos[i] + this.bufferTang[i])
+            this.bufferTangDibujadas.push(this.bufferPos[i + 1] + this.bufferTang[i + 1])
+            this.bufferTangDibujadas.push(this.bufferPos[i + 2] + this.bufferTang[i + 2])
         }
     }
 }

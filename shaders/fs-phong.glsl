@@ -3,6 +3,8 @@ uniform bool renderColor;
 precision highp float;
 
 varying vec3 vNormal;
+varying vec3 vBinormal;
+varying vec3 vTangente;
 varying vec3 vPosWorld;
 varying vec3 vColorDifuso;
 varying vec2 vUv;
@@ -21,6 +23,7 @@ varying vec3 vPosicionMunicion;
 uniform sampler2D uTextura1;
 uniform sampler2D uTextura2;
 uniform sampler2D uTextura3;
+uniform sampler2D uTexturaNMap;
 
 uniform vec3 colorLuzAntorcha;
 uniform vec3 colorLuzMunicion;
@@ -52,9 +55,22 @@ void main(void) {
         // Color textura final
         vec3 colorTexturaFinal = mix(colorTextura3D_1, colorTextura3D_2, colorTextura3D_3);
 
+        vec3 vNormalMP = vNormal;
+
+        // Normal Mapping
+        vec3 colorTextura3D_NM = texture2D(uTexturaNMap, vUv).rgb;
+        //if((colorTextura3D_NM.r != 0.) || (colorTextura3D_NM.g != 0.) || (colorTextura3D_NM.z != 0.)){
+        //    vec3 T_NMap = (2.*colorTextura3D_NM.r-1.) * vTangente;
+        //    vec3 B_NMap = (2.*colorTextura3D_NM.g-1.) * cross(vNormal, vTangente);
+        //    vec3 N_NMap = (2.*colorTextura3D_NM.b-1.) * vNormal;
+
+            //vNormalMP = T_NMap + B_NMap + N_NMap;
+        //}
+       
+
         //Sol
         vec3 lightPos = vec3(1,10,1.);
-        vec3 N = normalize(vNormal);
+        vec3 N = normalize(vNormalMP);
         vec3 L = normalize(vec3(0,15,50));
 
         //vec3 colorAmbiente = vec3(78./255.,78./255.,86./255.);
@@ -78,8 +94,8 @@ void main(void) {
         
         // Antorcha1
         vec3 lightVecAntorcha1 = normalize(vPosicionAntorcha1 - vPosWorld);
-        vec3 componenteDifusaAntorcha1 = dot(lightVecAntorcha1, vNormal) * vColorDifuso;
-        vec3 reflexVecAntorcha1 = normalize(reflect(-lightVecAntorcha1, vNormal));
+        vec3 componenteDifusaAntorcha1 = dot(lightVecAntorcha1, vNormalMP) * vColorDifuso;
+        vec3 reflexVecAntorcha1 = normalize(reflect(-lightVecAntorcha1, vNormalMP));
         vec3 componenteEspecularAntorcha1 = pow(max(0.0, dot(reflexVecAntorcha1, camVec)), vGlossiness) * colorEspecular;
 
         vec3 colorAntorcha1 = vKd * componenteDifusaAntorcha1 + vKa * colorAmbiente + vKs * componenteEspecularAntorcha1;
@@ -90,8 +106,8 @@ void main(void) {
 
         // Antorcha2
         vec3 lightVecAntorcha2 = normalize(vPosicionAntorcha2 - vPosWorld);
-        vec3 componenteDifusaAntorcha2 = dot(lightVecAntorcha2, vNormal) * vColorDifuso;
-        vec3 reflexVecAntorcha2 = normalize(reflect(-lightVecAntorcha2, vNormal));
+        vec3 componenteDifusaAntorcha2 = dot(lightVecAntorcha2, vNormalMP) * vColorDifuso;
+        vec3 reflexVecAntorcha2 = normalize(reflect(-lightVecAntorcha2, vNormalMP));
         vec3 componenteEspecularAntorcha2 = pow(max(0.0, dot(reflexVecAntorcha2, camVec)), vGlossiness) * colorEspecular;
 
         vec3 colorAntorcha2 = vKd * componenteDifusaAntorcha2 + vKa * colorAmbiente + vKs * componenteEspecularAntorcha2;
@@ -101,8 +117,8 @@ void main(void) {
 
         // Municion
         vec3 lightVecMunicion = normalize(vPosicionMunicion - vPosWorld);
-        vec3 componenteDifusaMunicion = dot(lightVecMunicion, vNormal) * vColorDifuso;
-        vec3 reflexVecMunicion = normalize(reflect(-lightVecMunicion, vNormal));
+        vec3 componenteDifusaMunicion = dot(lightVecMunicion, vNormalMP) * vColorDifuso;
+        vec3 reflexVecMunicion = normalize(reflect(-lightVecMunicion, vNormalMP));
         vec3 componenteEspecularMunicion = pow(max(0.0, dot(reflexVecMunicion, camVec)), vGlossiness) * colorEspecular;
 
         vec3 colorMunicion = vKd * componenteDifusaMunicion + vKa * colorAmbiente + vKs * componenteEspecularMunicion;
@@ -115,6 +131,7 @@ void main(void) {
 
         gl_FragColor = vec4(colorTotal , 1.0);
         //gl_FragColor = vec4(colorTexturaFinal , 1.0);
+        
 
         // specularColor: vec3(0.95,0.67,0.03), 1.0)
     }else{
