@@ -73,9 +73,6 @@ class ShaderManager {
             glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
             gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
 
-            glProgram.vertexBinormalAttribute = gl.getAttribLocation(glProgram, "aVertexBinormal");
-            gl.enableVertexAttribArray(glProgram.vertexBinormalAttribute);
-
             glProgram.vertexTangenteAttribute = gl.getAttribLocation(glProgram, "aVertexTangente");
             gl.enableVertexAttribArray(glProgram.vertexTangenteAttribute);
 

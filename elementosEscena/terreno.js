@@ -39,14 +39,11 @@ class Centro extends Objeto3D {
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
         this.bufferTang = data[2]
-        this.bufferBinorm = data[3]
 
         this.bufferNormDibujadas = []
-        this.bufferBinormDibujadas = []
         this.bufferTangDibujadas = []
 
         this.calcularNormalesDibujadas()
-        this.calcularBinormalesDibujadas()
         this.calcularTangentesDibujadas()
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -64,15 +61,12 @@ class Ladera extends Objeto3D{
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
-        this.bufferBinorm = data[2]
-        this.bufferTang = data[3]
+        this.bufferTang = data[2]
 
         this.bufferNormDibujadas = []
-        this.bufferBinormDibujadas = []
         this.bufferTangDibujadas = []
 
         this.calcularNormalesDibujadas()
-        this.calcularBinormalesDibujadas()
         this.calcularTangentesDibujadas()
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -106,8 +100,13 @@ class Periferia extends Objeto3D {
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
+        this.bufferTang = data[2]
+
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
+
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
         this.mallaDeTriangulos = this.crearMalla()
     }
 }

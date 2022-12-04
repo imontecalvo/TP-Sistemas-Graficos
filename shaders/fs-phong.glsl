@@ -3,7 +3,6 @@ uniform bool renderColor;
 precision highp float;
 
 varying vec3 vNormal;
-varying vec3 vBinormal;
 varying vec3 vTangente;
 varying vec3 vPosWorld;
 varying vec3 vColorDifuso;
@@ -56,6 +55,16 @@ void main(void) {
         vec3 colorTexturaFinal = mix(colorTextura3D_1, colorTextura3D_2, colorTextura3D_3);
 
         vec3 vNormalMP = vNormal;
+        vec3 colorTextura3D_NM = texture2D(uTexturaNMap, vUv).rgb;
+
+        if ((colorTextura3D_NM.r != 0.) || (colorTextura3D_NM.g != 0.) || (colorTextura3D_NM.b != 0.)){
+
+            vec3 T = (2.*colorTextura3D_NM.r - 1.)*vTangente;
+            vec3 B = (2.*colorTextura3D_NM.g - 1.)*cross(vTangente, vNormal);
+            vec3 N = (2.*colorTextura3D_NM.b - 1.)*vNormal;
+
+            vNormalMP = T + N + B;
+        }
 
      
        

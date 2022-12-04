@@ -7,14 +7,14 @@ class PastoRocas extends Material {
         const configPhong = {
             colorDifuso: color,
             Ka:0.5,
-            Kd:0.15,
-            Ks:0.6,
-            glossiness:5
+            Kd:1.0,
+            Ks:0.3,
+            glossiness:3
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.PastoRoca;
-        // this.texturaNMap = textureManager.PastoRocaNM;
+        this.texturaNMap = textureManager.PastoRocaNM;
     }
 };
 

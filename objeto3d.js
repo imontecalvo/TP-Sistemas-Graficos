@@ -108,11 +108,6 @@ export class Objeto3D {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
             gl.vertexAttribPointer(glProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
-            // console.log(this.mallaDeTriangulos.webgl_normal_buffer)
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_binormal_buffer);
-            gl.vertexAttribPointer(glProgram.vertexBinormalAttribute, 3, gl.FLOAT, false, 0, 0);
-
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_tangente_buffer);
             gl.vertexAttribPointer(glProgram.vertexTangenteAttribute, 3, gl.FLOAT, false, 0, 0);
 
@@ -140,8 +135,8 @@ export class Objeto3D {
         // const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
-        const componentes = [this.bufferNormDibujadas, this.bufferBinormDibujadas, this.bufferTangDibujadas]
-        console.log(componentes)
+        const componentes = [ this.bufferTangDibujadas, this.bufferNormDibujadas]
+        // console.log(componentes)
         for (let i in componentes) {
             var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);
@@ -277,14 +272,8 @@ export class Objeto3D {
         webgl_normal_buffer.itemSize = 3;
         webgl_normal_buffer.numItems = this.bufferPos.length / 3;
 
-        let webgl_binormal_buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferBinorm), gl.STATIC_DRAW);
-        webgl_normal_buffer.itemSize = 3;
-        webgl_normal_buffer.numItems = this.bufferPos.length / 3;
-
         let webgl_tangente_buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_normal_buffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_tangente_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.bufferTang), gl.STATIC_DRAW);
         webgl_normal_buffer.itemSize = 3;
         webgl_normal_buffer.numItems = this.bufferPos.length / 3;
@@ -305,7 +294,6 @@ export class Objeto3D {
         return {
             webgl_position_buffer,
             webgl_normal_buffer,
-            webgl_binormal_buffer,
             webgl_tangente_buffer,
             webgl_uvs_buffer,
             webgl_index_buffer

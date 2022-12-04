@@ -2,12 +2,10 @@ precision highp float;
 
 attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
-attribute vec3 aVertexBinormal;
 attribute vec3 aVertexTangente;
 attribute vec2 aUv;
 
 varying vec3 vNormal;    
-varying vec3 vBinormal;    
 varying vec3 vTangente;    
 varying vec3 vPosWorld;  
 varying vec2 vUv;
@@ -51,7 +49,6 @@ void main(void) {
     vec4 vPosWorld4 =(modelMatrix*vec4(position,1.0)).xyzw;
     vPosWorld = vec3(vPosWorld4)/vPosWorld4.w;
     vNormal=(normalMatrix*vec4(aVertexNormal,1.0)).xyz;        
-    vBinormal=(normalMatrix*vec4(aVertexBinormal,1.0)).xyz;        
     vTangente=(normalMatrix*vec4(aVertexTangente,1.0)).xyz;        
     vColorDifuso = uColorDifuso;
     vUv=aUv;

@@ -31,8 +31,8 @@ export class Escena {
         // this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
         // this.agua.trasladar(0, -0.8, 0)
 
-        // this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
-        // this.muralla.trasladar(0, 0.4, 0)
+        this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
+        this.muralla.trasladar(0, 0.4, 0)
 
         // this.castillo = new Castillo(app.ancho, app.largo, app.cantPisos)
         // this.castillo.trasladar(0, 0.4, 0)
@@ -82,8 +82,8 @@ export class Escena {
         // this.puente.dibujar(this.matriz)
         // this.agua.dibujar(this.matriz)
 
-        // this.muralla.actualizar()
-        // this.muralla.dibujar(this.matriz)
+        this.muralla.actualizar()
+        this.muralla.dibujar(this.matriz)
 
         // this.catapulta.actualizar()
         // this.catapulta.dibujar(this.matriz)
