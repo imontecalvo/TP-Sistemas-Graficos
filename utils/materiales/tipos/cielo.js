@@ -3,11 +3,11 @@ import Material from "../material.js";
 
 class Cielo extends Material {
     constructor() {
-        const color = [255 / 255, 180 / 255, 0 / 255];
+        const color = [200 / 200, 180 / 255, 0 / 255];
         const configPhong = {
             colorDifuso:color,
-            Ka:0.5,
-            Kd:0.4,
+            Ka:0.4,
+            Kd:0.7,
             Ks:0.01,
             glossiness:1
         }

@@ -7,7 +7,7 @@ export class Castillo extends Objeto3D{
     constructor(ancho, largo, cantPisos){
         super()
         this.alturaPiso = 2
-        //Torres
+        // Torres
         const torre1 = new TorreCastillo(this.alturaPiso*cantPisos)
         torre1.trasladar(-largo/2, 0, -ancho/2)
 

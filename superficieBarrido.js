@@ -14,14 +14,14 @@ export function superficeBarrido(puntosCurva, recorrido, columnas, niveles) {
     let tangentesTransformadas = []
 
     const puntosRecorrido = discretizar(recorrido, 1 / (niveles-1), true)
-
+    
     // Recorro c/u de los niveles del recorrido
     for (let i = 0; i < niveles; i++) {
         const matrizDeNivel = generarMatrizDeNivel(puntosRecorrido.posicion[i],
             puntosRecorrido.normal[i],
-            puntosRecorrido.binormal,
+            puntosRecorrido.binormal[i],
             puntosRecorrido.tangente[i])
-        
+            
         const matrizDeNivelPos = matrizDeNivel[0]
         const matrizDeNivelNor = matrizDeNivel[1]
         // A cada punto de la curva para este nivel, le aplico la matriz de nivel
@@ -44,14 +44,6 @@ export function superficeBarrido(puntosCurva, recorrido, columnas, niveles) {
             normalesTransformadas.push(normalVec4[1])
             normalesTransformadas.push(normalVec4[2])
 
-            //Binormales
-            const binormalVec3 = puntosCurva.binormales[j]
-            const binormalVec4 = vec4.fromValues(binormalVec3[0], binormalVec3[1], binormalVec3[2], 1)
-            vec4.transformMat4(binormalVec4, binormalVec4, matrizDeNivelNor)
-            binormalesTransformadas.push(binormalVec4[0])
-            binormalesTransformadas.push(binormalVec4[1])
-            binormalesTransformadas.push(binormalVec4[2])
-
             //Tangentes
             const tangenteVec3 = puntosCurva.tangente[j]
             const tangenteVec4 = vec4.fromValues(tangenteVec3[0], tangenteVec3[1], tangenteVec3[2], 1)
@@ -62,7 +54,8 @@ export function superficeBarrido(puntosCurva, recorrido, columnas, niveles) {
 
         }
     }
-    return [puntosTransformados, normalesTransformadas, binormalesTransformadas, tangentesTransformadas]
+
+    return [puntosTransformados, normalesTransformadas, tangentesTransformadas]
 }
 
 function generarMatrizDeNivel(pos, normal, binormal, tangente) {

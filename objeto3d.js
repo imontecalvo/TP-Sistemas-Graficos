@@ -135,7 +135,7 @@ export class Objeto3D {
         // const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
-        const componentes = [ this.bufferTangDibujadas, this.bufferNormDibujadas]
+        const componentes = [this.bufferNormDibujadas]
         // console.log(componentes)
         for (let i in componentes) {
             var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
@@ -220,25 +220,9 @@ export class Objeto3D {
 
         for (var i = 0; i <= this.filas; i++) {
             for (var j = 0; j <= this.columnas; j++) {
-                // if (this.id == "muralla") {multiplicadorU = this.lados; multiplicadorV = 2}
-                // if (this.id == "terrenoCentro") {multiplicadorU = 2; signoU=-1}
-                // if (this.id == "puente") {multiplicadorV = 2; signoU=-1}
-                // if (this.id == "terrenoPeriferia") {multiplicadorU = this.lados; multiplicadorV = 2; signoU=-1}
-                // var u = multiplicador * (1 - i / this.filas);
                 var v = longAcumuladaFila[i][j]
-                // var u = longAcumuladaColumna[j][i]
 
                 var u = (this.id === "muralla" || this.id === "techo") ? longAcumuladaColumna[j][i] : (i / this.filas)
-
-                // if (this.id == "cielo"){
-                //     const aux = u
-                //     u = v
-                //     v = aux
-                // }
-
-                // if(this.id == "techo"){
-                //     const aux = u; u = v; v = aux
-                // }
                 uvBuffer.push(this.multiplicadorU * (1 - this.signoU * u));
                 uvBuffer.push(this.multiplicadorV * (1 - this.signoV * v));
             }

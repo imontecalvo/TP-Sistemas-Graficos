@@ -35,7 +35,7 @@ export class Catapulta extends Objeto3D {
         this.trasladar(0, this.elevacion + this.medidasTablon[0] / 2, 0)
     }
 
-    obtenerPosMunicion(){
+    obtenerPosMunicion() {
         if (this.brazo.municion.oculto) return this.municionMov.obtenerPosicionAbsoluta(this.matrizModelado)
         var mat = mat4.create();
         mat4.multiply(mat, this.matrizModelado, this.brazo.matrizModelado);
@@ -68,7 +68,7 @@ export class Catapulta extends Objeto3D {
                 const x = 2 * app.velInicial * app.tiempo
                 const y = - (1 / 2) * 9.8 * (app.tiempo) * (app.tiempo)
                 this.municionMov.trasladar(0, y, x)
-            }else{
+            } else {
                 this.municionMov.setearPosicionY(0)
             }
         }
@@ -89,7 +89,7 @@ export class Catapulta extends Objeto3D {
         eje1.trasladar(0, 0, (anchoTablon / 2) - radio - 0.5)
         eje1.rotarY(Math.PI / 2)
 
-        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10,window.materiales.MADERA)
+        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA)
         eje2.trasladar(0, 0, -(anchoTablon / 2) + radio - 0.5)
         eje2.rotarY(Math.PI / 2)
 
@@ -204,9 +204,17 @@ class Pilar extends Objeto3D {
                 puntosT4.normal
             )
 
+        const tang =
+            puntosT1.tangente.concat(
+                puntosT2.tangente,
+                puntosT3.tangente,
+                puntosT4.tangente
+            )
+
         return {
             posicion: pos,
             normal: norm,
+            tangente: tang
         }
     }
 }
@@ -326,9 +334,17 @@ class Barra extends Objeto3D {
                 puntosDerecha.normal
             )
 
+        const tang =
+            puntosAbajo.tangente.concat(
+                puntosIzq.tangente,
+                puntosArriba.tangente,
+                puntosDerecha.tangente
+            )
+
         return {
             posicion: pos,
             normal: norm,
+            tangente: tang
         }
     }
 }

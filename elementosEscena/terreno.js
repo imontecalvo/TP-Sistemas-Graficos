@@ -24,7 +24,7 @@ export class Terreno extends Objeto3D {
 
 class Centro extends Objeto3D {
     constructor() {
-        const configMapeoUv = { multiplicadorU: 2, signoU: -1 }
+        const configMapeoUv = { multiplicadorU: 5, signoU: -1 }
         super(window.materiales.PASTO, configMapeoUv)
         this.id = "terrenoCentro"
         const radio = 10

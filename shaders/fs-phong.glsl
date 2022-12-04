@@ -90,7 +90,7 @@ void main(void) {
             specular = pow(specAngle, vGlossiness);
         }
 
-        vec3 luzAmbienteBase = vec3(0.3,0.3,0.2);
+        vec3 luzAmbienteBase = mix(0.3*colorLuzSol,vec3(0.7,0.7,0.7),0.3);
         vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso * colorTexturaFinal + luzAmbienteBase * colorTexturaFinal) + (vKs * specular * colorEspecular);
         
         // Antorcha1

@@ -20,7 +20,7 @@ export class Muralla extends Objeto3D {
         super(window.materiales.PIEDRA, configMapeoUv)
         this.id = "muralla"
         this.lados = lados
-        this.filas = this.lados - 1 
+        this.filas = this.lados - 1 + 2
         this.columnas = 35
         this.largoEntrada = 2
         const h = 0.25
@@ -52,79 +52,67 @@ export class Muralla extends Objeto3D {
             tangentesMuralla.push(tang[0], tang[1], tang[2])
         }
 
-        this.posPorton = [0,0,7]
+        // this.posPorton = [0,0,7]
         // Creacion entrada
-        // this.posPorton = this.obtenerPosPorton(posicionMuralla)
-        // this.entrada = new Entrada(2, this.largoEntrada, 0.25)
-        // this.entrada.trasladar(this.posPorton[0], this.posPorton[1], this.posPorton[2])
-        // this.agregarHijo(this.entrada)
+        this.posPorton = this.obtenerPosPorton(posicionMuralla)
+        this.entrada = new Entrada(2, this.largoEntrada, 0.25)
+        this.entrada.trasladar(this.posPorton[0], this.posPorton[1], this.posPorton[2])
+        this.agregarHijo(this.entrada)
 
         // Extremos y tapas de muralla
-        // const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
+        const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
 
-        // const caraIzq = new CaraMuralla(puntosCurva.posicion, puntosCurva.tangente)
-        // caraIzq.trasladar(-this.largoEntrada/2 - 0.25, 0, this.posPorton[2])
-        // caraIzq.rotarY(Math.PI/2)
-        // caraIzq.trasladar(-7,0,0)
+        const caraIzq = new CaraMuralla(puntosCurva.posicion, puntosCurva.tangente)
+        caraIzq.trasladar(-this.largoEntrada/2 - 0.25, 0, this.posPorton[2])
+        caraIzq.rotarY(Math.PI/2)
+        caraIzq.trasladar(-7,0,0)
 
-        // const caraDer = new CaraMuralla(puntosCurva.posicion, puntosCurva.tangente)
-        // caraDer.trasladar(this.largoEntrada/2 + 0.25, 0, this.posPorton[2])
-        // caraDer.rotarY(-Math.PI/2)
-        // caraDer.trasladar(-7,0,0)
+        const caraDer = new CaraMuralla(puntosCurva.posicion, puntosCurva.tangente)
+        caraDer.trasladar(this.largoEntrada/2 + 0.25, 0, this.posPorton[2])
+        caraDer.rotarY(-Math.PI/2)
+        caraDer.trasladar(-7,0,0)
 
-        // this.agregarHijo(caraIzq)
-        // this.agregarHijo(caraDer)
+        this.agregarHijo(caraIzq)
+        this.agregarHijo(caraDer)
 
 
         // Creacion torres
-        // for (let i = 0; i < this.lados; i++) {
-        //     const torre = new TorreMuralla(altura)
-        //     torre.rotarY(Math.PI * 2 / (this.lados) * i - Math.PI / (this.lados))
-        //     torre.trasladar(0, 0, radio + 1)
-            // this.agregarHijo(torre)
-        // }
+        for (let i = 0; i < this.lados; i++) {
+            const torre = new TorreMuralla(altura)
+            torre.rotarY(Math.PI * 2 / (this.lados) * i - Math.PI / (this.lados))
+            torre.trasladar(0, 0, radio + 1)
+            this.agregarHijo(torre)
+        }
 
 
         // Creacion de antorchas
-        // this.antorcha1 = new Antorcha()
-        // this.antorcha1.trasladar(this.posPorton[0] - 2., 1.2, this.posPorton[2] - 1)
-        // this.antorcha1.rotarX(-Math.PI / 4)
-        // this.agregarHijo(this.antorcha1)
-        // this.antorcha2 = new Antorcha()
-        // this.antorcha2.trasladar(this.posPorton[0] + 2., 1.2, this.posPorton[2] - 1)
-        // this.antorcha2.rotarX(-Math.PI / 4)
-        // this.agregarHijo(this.antorcha2)
+        this.antorcha1 = new Antorcha()
+        this.antorcha1.trasladar(this.posPorton[0] - 2., 1.2, this.posPorton[2] - 1)
+        this.antorcha1.rotarX(-Math.PI / 4)
+        this.agregarHijo(this.antorcha1)
+        this.antorcha2 = new Antorcha()
+        this.antorcha2.trasladar(this.posPorton[0] + 2., 1.2, this.posPorton[2] - 1)
+        this.antorcha2.rotarX(-Math.PI / 4)
+        this.agregarHijo(this.antorcha2)
 
-        // this.bufferPos = extremos.inicio.posicion.concat(posicionMuralla, extremos.fin.posicion)
-        // this.bufferNorm = extremos.inicio.normal.concat(normalesMuralla, extremos.fin.normal)
-        // this.bufferTang = extremos.inicio.tangente.concat(tangentesMuralla, extremos.fin.tangente)
-        // this.bufferNormDibujadas = []
-        // this.bufferTangDibujadas = []
-        // this.calcularNormalesDibujadas()
-        // this.calcularTangentesDibujadas()
-        // console.log("LONG: ", this.bufferPos.length, "\n\n", this.bufferTang, "\n\n", this.bufferTangDibujadas.length)
-
-        // this.mallaDeTriangulos = this.crearMalla()
-
-        this.bufferPos = posicionMuralla
-        this.bufferNorm = normalesMuralla
-        this.bufferTang = tangentesMuralla
+        this.bufferPos = extremos.inicio.posicion.concat(posicionMuralla, extremos.fin.posicion)
+        this.bufferNorm = extremos.inicio.normal.concat(normalesMuralla, extremos.fin.normal)
+        this.bufferTang = extremos.inicio.tangente.concat(tangentesMuralla, extremos.fin.tangente)
         this.bufferNormDibujadas = []
         this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
         this.calcularTangentesDibujadas()
-        // console.log("LONG: ", this.bufferPos.length, "\n\n", this.bufferTang, "\n\n", this.bufferTangDibujadas.length)
 
         this.mallaDeTriangulos = this.crearMalla()
         
     }
 
     actualizar() {
-        // this.entrada.porton.resetearMatriz()
-// 
-        // this.entrada.porton.trasladar(0, 2, 0)
-        // this.entrada.porton.rotarX((-app.aperturaPorton / 360) * Math.PI * 2)
-        // this.entrada.porton.trasladar(0, - 2, 0)
+        this.entrada.porton.resetearMatriz()
+
+        this.entrada.porton.trasladar(0, 2, 0)
+        this.entrada.porton.rotarX((-app.aperturaPorton / 360) * Math.PI * 2)
+        this.entrada.porton.trasladar(0, - 2, 0)
 
     }
 

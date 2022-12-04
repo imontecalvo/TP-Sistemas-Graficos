@@ -7,7 +7,16 @@ import { discretizar } from "../bezier/discretizador.js"
 export class PisosCastillo extends Objeto3D {
     constructor(ancho, largo, cantPisos, alturaPiso) {
         super()
-        const pisos = new Caja(cantPisos * alturaPiso, largo, ancho, window.materiales.PINTURA_AMARILLA)
+
+        const configMapeoUv = [
+            {multiplicadorU:3,multiplicadorV:3,signoU:1,signoV:1},
+            {multiplicadorU:3,multiplicadorV:3,signoU:1,signoV:1},
+            {multiplicadorU:3,multiplicadorV:3,signoU:1,signoV:1},
+            {multiplicadorU:3,multiplicadorV:3,signoU:1,signoV:1},
+            {multiplicadorU:3,multiplicadorV:3,signoU:1,signoV:1},
+            {multiplicadorU:3,multiplicadorV:3,signoU:1,signoV:1}
+        ]
+        const pisos = new Caja(cantPisos * alturaPiso, largo, ancho, window.materiales.PINTURA_AMARILLA, null, configMapeoUv)
         this.agregarHijo(pisos)
 
         const anchoBorde = 0.15
@@ -144,10 +153,17 @@ export class Ventana extends Objeto3D {
             puntosLadoAbajo.normal
         )
 
+        const tang = puntosLadoIzq.tangente.concat(
+            puntosLadoArriba.tangente,
+            puntosLadoDer.tangente,
+            puntosLadoAbajo.tangente
+        )
+
 
         return {
             posicion: pos,
             normal: norm,
+            tangente:tang
         }
     }
 }

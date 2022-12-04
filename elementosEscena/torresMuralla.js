@@ -12,11 +12,13 @@ export class TorreMuralla extends Objeto3D {
         this.columnas = 18-1
         const puntosCurva = this.obtenerPuntosCurva(altura+0.85)
         const data = superficieRevolucion(puntosCurva, this.columnas, this.filas+1, 1)
-
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
+        this.bufferTang = data[2]
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -35,16 +37,6 @@ export class TorreMuralla extends Objeto3D {
             [[(-radio / 2) + 0.5, altura + h, 0], [(-radio / 2) + 0.5 + 0.15 * 0.3, altura + h, 0], [(-radio / 2) + 0.5 + 0.15 * 0.6, altura + h, 0], [(-radio / 2) + 0.5 + 0.15, altura + h, 0]]
         const ptosCtrlBalconInt = [[(-radio / 2) + 0.5 + 0.2, altura + h, 0], [(-radio / 2) + 0.5 + 0.2, altura + h * 0.6, 0], [(-radio / 2) + 0.5 + 0.2, altura + h * 0.3, 0], [(-radio / 2) + 0.5 + 0.2, altura, 0]]
         const ptosCtrlBalconPiso = [[(-radio / 2) + 0.5 + 0.2, altura, 0], [(-radio / 2) + 0.5 * 0.6 + 0.2 * 0.6, altura, 0], [(-radio / 2) + 0.5 * 0.3 + 0.2 * 0.3, altura, 0], [0, altura, 0]]
-
-        // const ptosCtrlLadoInf = [[-radio / 2, 0, 0], [-radio / 2, 1.2, 0], [(-radio / 2) + 0.4, 1.6, 0], [(-radio / 2) + 0.565, 2.45, 0]]
-        // const ptosCtrlLadoSup =
-        //     [[(-radio / 2) + 0.565, 2.45, 0], [(-radio / 2) + 0.73, 3.3, 0], [(-radio / 2) + 1, 3.8, 0], [(-radio / 2) + 0.5, 4, 0]]
-        // const ptosCtrlBalconExt =
-        //     [[(-radio / 2) + 0.5, 4, 0], [(-radio / 2) + 0.5, 4 + h * 0.3, 0], [(-radio / 2) + 0.5, 4 + h * 0.6, 0], [(-radio / 2) + 0.5, 4 + h, 0]]
-        // const ptosCtrlBalconSup =
-        //     [[(-radio / 2) + 0.5, 4 + h, 0], [(-radio / 2) + 0.5 + 0.15 * 0.3, 4 + h, 0], [(-radio / 2) + 0.5 + 0.15 * 0.6, 4 + h, 0], [(-radio / 2) + 0.5 + 0.15, 4 + h, 0]]
-        // const ptosCtrlBalconInt = [[(-radio / 2) + 0.5 + 0.2, 4 + h, 0], [(-radio / 2) + 0.5 + 0.2, 4 + h * 0.6, 0], [(-radio / 2) + 0.5 + 0.2, 4 + h * 0.3, 0], [(-radio / 2) + 0.5 + 0.2, 4, 0]]
-        // const ptosCtrlBalconPiso = [[(-radio / 2) + 0.5 + 0.2, 4, 0], [(-radio / 2) + 0.5 * 0.6 + 0.2 * 0.6, 4, 0], [(-radio / 2) + 0.5 * 0.3 + 0.2 * 0.3, 4, 0], [0, 4, 0]]
 
         //Instanciamos las curvas
         const ladoInf = new BezierCubica(ptosCtrlLadoInf, "z")
@@ -78,9 +70,18 @@ export class TorreMuralla extends Objeto3D {
             puntosBalconPiso.normal
         )
 
+        const tang = puntosLadoInf.tangente.concat(
+            puntosLadoSup.tangente,
+            puntosBalconExt.tangente,
+            puntosBalconSup.tangente,
+            puntosBalconInt.tangente,
+            puntosBalconPiso.tangente
+        )
+
         return {
             posicion: pos,
             normal: norm,
+            tangente: tang
         }
     }
 }
