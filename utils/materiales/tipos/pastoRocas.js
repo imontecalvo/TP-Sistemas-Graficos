@@ -14,7 +14,7 @@ class PastoRocas extends Material {
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.PastoRoca;
-        this.texturaNMap = textureManager.PastoRocaNM;
+        // this.texturaNMap = textureManager.PastoRocaNM;
     }
 };
 

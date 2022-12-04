@@ -16,7 +16,7 @@ class Pasto extends Material {
         this.textura = textureManager.Pasto1;
         this.textura_2 = textureManager.Pasto2;
         this.textura_3 = textureManager.Pasto3;
-        this.texturaNMap = textureManager.Negro;
+        this.texturaNMap = textureManager.PastoNM;
     }
 }
 

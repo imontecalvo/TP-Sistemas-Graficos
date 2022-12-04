@@ -108,6 +108,8 @@ export class Objeto3D {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_normal_buffer);
             gl.vertexAttribPointer(glProgram.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 
+            // console.log(this.mallaDeTriangulos.webgl_normal_buffer)
+
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mallaDeTriangulos.webgl_binormal_buffer);
             gl.vertexAttribPointer(glProgram.vertexBinormalAttribute, 3, gl.FLOAT, false, 0, 0);
 

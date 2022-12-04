@@ -57,15 +57,7 @@ void main(void) {
 
         vec3 vNormalMP = vNormal;
 
-        // Normal Mapping
-        vec3 colorTextura3D_NM = texture2D(uTexturaNMap, vUv).rgb;
-        //if((colorTextura3D_NM.r != 0.) || (colorTextura3D_NM.g != 0.) || (colorTextura3D_NM.z != 0.)){
-        //    vec3 T_NMap = (2.*colorTextura3D_NM.r-1.) * vTangente;
-        //    vec3 B_NMap = (2.*colorTextura3D_NM.g-1.) * cross(vNormal, vTangente);
-        //    vec3 N_NMap = (2.*colorTextura3D_NM.b-1.) * vNormal;
-
-            //vNormalMP = T_NMap + B_NMap + N_NMap;
-        //}
+     
        
 
         //Sol
