@@ -52,7 +52,6 @@ export class Muralla extends Objeto3D {
             tangentesMuralla.push(tang[0], tang[1], tang[2])
         }
 
-        // this.posPorton = [0,0,7]
         // Creacion entrada
         this.posPorton = this.obtenerPosPorton(posicionMuralla)
         this.entrada = new Entrada(2, this.largoEntrada, 0.25)
@@ -104,7 +103,6 @@ export class Muralla extends Objeto3D {
         this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
-        
     }
 
     actualizar() {
@@ -147,9 +145,9 @@ export class Muralla extends Objeto3D {
         const balconPiso = new BezierCubica(pControlBalconPiso, "z")
 
         const ladoD = new BezierCubica(pControlLadoI.map(p => [2 * radio + ancho - p[0], p[1], p[2]]), "z")
-        const balconDLadoD = new BezierCubica(pControlBalconILadoI.map(p => [1 + p[0], p[1], p[2]]), "z")
+        const balconDLadoD = new BezierCubica((pControlBalconILadoI.map(p => [1 + p[0], p[1], p[2]])).reverse(), "z")
         const balconDTecho = new BezierCubica(pControlBalconITecho.map(p => [0.75 + p[0], p[1], p[2]]), "z")
-        const balconDLadoI = new BezierCubica(pControlBalconILadoD.map(p => [0.5 + p[0], p[1], p[2]]), "z")
+        const balconDLadoI = new BezierCubica((pControlBalconILadoD.map(p => [0.5 + p[0], p[1], p[2]])).reverse(), "z")
         const balconPisoD = new BezierCubica(pControlBalconPiso.map(p => [0.25 + p[0], p[1], p[2]]), "z")
 
         //Obtenemos el poligono que forma la curva
