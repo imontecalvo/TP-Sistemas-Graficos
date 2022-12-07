@@ -2,8 +2,9 @@ export function discretizar(curva, deltaU, esRecorrido = false, invertirNormales
     const puntos = []
     const tangentes = []
     const normales = []
-    let binormal = []
+    const binormales = []
 
+    let binormal;
     if (curva.ejeBinormal == "x") binormal = [1, 0, 0]
     else if (curva.ejeBinormal == "y") binormal = [0, 1, 0]
     else if (curva.ejeBinormal == "z") binormal = [0, 0, 1]
@@ -14,6 +15,7 @@ export function discretizar(curva, deltaU, esRecorrido = false, invertirNormales
         const tangente = curva.obtenerTangente(u)
 
         puntos.push(punto)
+        binormales.push(binormal)
         tangentes.push(tangente)
         if(invertirNormales) normales.push(productoVectorial(tangente, binormal))
         else normales.push(productoVectorial(binormal, tangente))
@@ -21,11 +23,12 @@ export function discretizar(curva, deltaU, esRecorrido = false, invertirNormales
         u+=deltaU
     }
 
-    if (esRecorrido) {
-        return {posicion:puntos, tangente:tangentes, normal:normales, binormal:binormal}
-    } else {
-        return {posicion:puntos, normal:normales}
-    }
+    return {posicion:puntos, tangente:tangentes, normal:normales, binormal:binormales}
+    // if (esRecorrido) {
+        // return {posicion:puntos, tangente:tangentes, normal:normales, binormal:binormal}
+    // } else {
+        // return {posicion:puntos, normal:normales}
+    // }
 }
 
 

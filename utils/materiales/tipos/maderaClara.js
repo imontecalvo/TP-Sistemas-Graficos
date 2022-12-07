@@ -14,6 +14,7 @@ class MaderaClara extends Material {
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.MaderaClara;
+        this.texturaNMap = textureManager.MaderaCortezaNM;
     }
 }
 

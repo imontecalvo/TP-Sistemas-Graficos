@@ -22,7 +22,6 @@ var fs_source
 var vs_src_curva
 var fs_src_curva
 var fs_src_fuego
-var vs_src_fuego
 
 var modelMatrix = mat4.create();
 var viewMatrix = mat4.create();
@@ -41,7 +40,7 @@ async function initWebGL() {
     }
 
     if (gl) {
-        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_src_fuego, fs:fs_src_fuego}], gl);
+        shadersManager = new ShadersManager([{ vs: vs_source, fs: fs_source }, { vs: vs_src_curva, fs: fs_src_curva }, {vs: vs_source, fs:fs_src_fuego}], gl);
         glProgramCurva = shadersManager.getProgram("curvas");
         textureManager = await TextureManager.init(gl);
         initMateriales()
@@ -74,12 +73,12 @@ function setupWebGL() {
 
     // mat4.identity(viewMatrix);
     mat4.translate(viewMatrix, viewMatrix, [0., 0, -20.0]);
-    // mat4.rotate(viewMatrix, viewMatrix, Math.PI/4, [0, 0, 1]);
+    mat4.rotate(viewMatrix, viewMatrix, Math.PI/4, [0, 1, 0]);
 }
 
 function loadShaders() {
 
-    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva(), loadVSFuego(), loadFSFuego()).done(function (res1, res2) {
+    $.when(loadVS(), loadFS(), loadVSCurva(), loadFSCurva(), loadFSFuego()).done(function (res1, res2) {
         //this code is executed when all ajax calls are done     
         initWebGL();
     });
@@ -128,16 +127,6 @@ function loadShaders() {
             }
         });
     }
-
-    function loadVSFuego() {
-        return $.ajax({
-            url: "./shaders/vs-fuego.glsl",
-            success: function (result) {
-                vs_src_fuego = result;
-            }
-        });
-    }
-
 }
 
 
@@ -157,7 +146,8 @@ function drawScene() {
         app.anguloCatapulta = 0
         tiempo = 0
 
-        escena = new Escena()
+        const camaras = escena.obtenerCamaras()
+        escena = new Escena(camaras)
     }
 
     escena.actualizar()
@@ -166,7 +156,7 @@ function drawScene() {
     escena.dibujar()
 }
 
-function tick() {
+function tick() {    
     if (app.disparando) {
         tiempo += 0.01
         if (app.anguloCatapulta < Math.PI / 2) {

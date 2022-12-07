@@ -8,12 +8,13 @@ class PinturaAmarilla extends Material {
             colorDifuso: color,
             Ka:0.7,
             Kd:0.4,
-            Ks:0.05,
-            glossiness:1
+            Ks:0.25,
+            glossiness:10
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.ParedCastillo;
+        this.texturaNMap = textureManager.ParedCastilloNM;
     }
 }
 

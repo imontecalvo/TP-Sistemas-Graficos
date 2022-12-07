@@ -84,8 +84,8 @@ function ControlMouse() {
     });
 
     $('canvas').on("wheel", function (event) {
-        WHEEL_SCROLL += event.originalEvent.deltaY / 100;
-        WHEEL_SCROLL = Math.max(0.01, Math.min(6, WHEEL_SCROLL));
+        WHEEL_SCROLL += event.originalEvent.deltaY / 700;
+        WHEEL_SCROLL = Math.max(0.01, Math.min(2.98, WHEEL_SCROLL));
     });
 
     // obtener posicion a partir de los valores Alfa y Beta

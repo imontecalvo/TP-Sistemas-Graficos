@@ -14,6 +14,7 @@ class TejasAzules extends Material {
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.TejasAzules;
+        this.texturaNMap = textureManager.TejasAzulesNM;
     }
 }
 

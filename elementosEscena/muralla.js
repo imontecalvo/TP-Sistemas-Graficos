@@ -37,15 +37,19 @@ export class Muralla extends Objeto3D {
 
         let posicionMuralla = []
         let normalesMuralla = []
+        let tangentesMuralla = []
         for (let i = 0; i < data[0].length; i += 3) {
             const pos = [data[0][i], data[0][i + 1], data[0][i + 2], 1]
             const norm = [data[1][i], data[1][i + 1], data[1][i + 2], 1]
+            const tang = [data[2][i], data[2][i + 1], data[2][i + 2], 1]
+
             vec4.transformMat4(pos, pos, matRot)
             vec4.transformMat4(norm, norm, matRot)
+            vec4.transformMat4(tang, tang, matRot)
 
             posicionMuralla.push(pos[0], pos[1], pos[2])
             normalesMuralla.push(norm[0], norm[1], norm[2])
-
+            tangentesMuralla.push(tang[0], tang[1], tang[2])
         }
 
         // Creacion entrada
@@ -57,12 +61,12 @@ export class Muralla extends Objeto3D {
         // Extremos y tapas de muralla
         const extremos = this.obtenerExtremosMuralla(puntosCurva, radio, this.largoEntrada, this.posPorton)
 
-        const caraIzq = new CaraMuralla(puntosCurva.posicion)
+        const caraIzq = new CaraMuralla(puntosCurva.posicion, puntosCurva.tangente)
         caraIzq.trasladar(-this.largoEntrada/2 - 0.25, 0, this.posPorton[2])
         caraIzq.rotarY(Math.PI/2)
         caraIzq.trasladar(-7,0,0)
 
-        const caraDer = new CaraMuralla(puntosCurva.posicion)
+        const caraDer = new CaraMuralla(puntosCurva.posicion, puntosCurva.tangente)
         caraDer.trasladar(this.largoEntrada/2 + 0.25, 0, this.posPorton[2])
         caraDer.rotarY(-Math.PI/2)
         caraDer.trasladar(-7,0,0)
@@ -92,9 +96,11 @@ export class Muralla extends Objeto3D {
 
         this.bufferPos = extremos.inicio.posicion.concat(posicionMuralla, extremos.fin.posicion)
         this.bufferNorm = extremos.inicio.normal.concat(normalesMuralla, extremos.fin.normal)
-
+        this.bufferTang = extremos.inicio.tangente.concat(tangentesMuralla, extremos.fin.tangente)
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -139,9 +145,9 @@ export class Muralla extends Objeto3D {
         const balconPiso = new BezierCubica(pControlBalconPiso, "z")
 
         const ladoD = new BezierCubica(pControlLadoI.map(p => [2 * radio + ancho - p[0], p[1], p[2]]), "z")
-        const balconDLadoD = new BezierCubica(pControlBalconILadoI.map(p => [1 + p[0], p[1], p[2]]), "z")
+        const balconDLadoD = new BezierCubica((pControlBalconILadoI.map(p => [1 + p[0], p[1], p[2]])).reverse(), "z")
         const balconDTecho = new BezierCubica(pControlBalconITecho.map(p => [0.75 + p[0], p[1], p[2]]), "z")
-        const balconDLadoI = new BezierCubica(pControlBalconILadoD.map(p => [0.5 + p[0], p[1], p[2]]), "z")
+        const balconDLadoI = new BezierCubica((pControlBalconILadoD.map(p => [0.5 + p[0], p[1], p[2]])).reverse(), "z")
         const balconPisoD = new BezierCubica(pControlBalconPiso.map(p => [0.25 + p[0], p[1], p[2]]), "z")
 
         //Obtenemos el poligono que forma la curva
@@ -184,22 +190,40 @@ export class Muralla extends Objeto3D {
                 puntosLadoD.normal.reverse()
             )
 
+        const tang =
+            puntosLadoI.tangente.concat(
+                puntosBalconILadoI.tangente,
+                puntosBalconITecho.tangente,
+                puntosBalconILadoD.tangente,
+                puntosBalconPiso.tangente,
+                puntosBalconPisoD.tangente,
+                puntosBalconDLadoI.tangente,
+                puntosBalconDTecho.tangente,
+                puntosBalconDLadoD.tangente,
+                puntosLadoD.tangente.reverse()
+            )
+
+
         return {
             posicion: pos,
             normal: norm,
+            tangente: tang
         }
     }
 
     obtenerExtremosMuralla(puntosMuralla, radio, anchoPorton, posPorton) {
         const puntosCurvaMuralla = {
             posicion: puntosMuralla.posicion.reverse(),
-            normal: puntosMuralla.normal.reverse()
+            normal: puntosMuralla.normal.reverse(),
+            tangente: puntosMuralla.tangente.reverse()
         }
 
         let posInicio = []
         let normInicio = []
+        let tangInicio = []
         let posFin = []
         let normFin = []
+        let tangFin = []
 
         const mat = mat4.create()
         const matInicioMuralla = mat4.create()
@@ -221,30 +245,39 @@ export class Muralla extends Objeto3D {
             const posActualInicio =
                 [puntosCurvaMuralla.posicion[i][0], puntosCurvaMuralla.posicion[i][1], puntosCurvaMuralla.posicion[i][2], 1]
             const normActualInicio = [puntosCurvaMuralla.normal[i][0], puntosCurvaMuralla.normal[i][1], puntosCurvaMuralla.normal[i][2], 1]
+            const tangActualInicio = [puntosCurvaMuralla.tangente[i][0], puntosCurvaMuralla.tangente[i][1], puntosCurvaMuralla.tangente[i][2], 1]
 
             const posActualFin = [puntosCurvaMuralla.posicion[i][0], puntosCurvaMuralla.posicion[i][1], puntosCurvaMuralla.posicion[i][2], 1]
             const normActualFin = [puntosCurvaMuralla.normal[i][0], puntosCurvaMuralla.normal[i][1], puntosCurvaMuralla.normal[i][2], 1]
+            const tangActualFin = [puntosCurvaMuralla.tangente[i][0], puntosCurvaMuralla.tangente[i][1], puntosCurvaMuralla.tangente[i][2], 1]
+
 
             vec4.transformMat4(posActualInicio, posActualInicio, matInicioMuralla)
             vec4.transformMat4(normActualInicio, normActualInicio, mat2Normales)
+            vec4.transformMat4(tangActualInicio, tangActualInicio, mat2Normales)
 
             vec4.transformMat4(posActualFin, posActualFin, matFinMuralla)
             vec4.transformMat4(normActualFin, normActualFin, mat2Normales)
+            vec4.transformMat4(tangActualFin, tangActualFin, mat2Normales)
 
             posInicio.push(posActualInicio[0], posActualInicio[1], posActualInicio[2])
             normInicio.push(normActualInicio[0], normActualInicio[1], normActualInicio[2])
+            tangInicio.push(tangActualInicio[0], tangActualInicio[1], tangActualInicio[2])
             posFin.push(posActualFin[0], posActualFin[1], posActualFin[2])
             normFin.push(normActualFin[0], normActualFin[1], normActualFin[2])
+            tangFin.push(tangActualFin[0], tangActualFin[1], tangActualFin[2])
         }
 
         return {
             inicio: {
                 posicion: posInicio,
-                normal: normInicio
+                normal: normInicio,
+                tangente: tangInicio
             },
             fin: {
                 posicion: posFin,
-                normal: normInicio
+                normal: normFin,
+                tangente: tangFin
             }
         }
 
@@ -293,22 +326,28 @@ export class Muralla extends Objeto3D {
 }
 
 class CaraMuralla extends Objeto3D{
-    constructor(puntosCurva){
+    constructor(puntosCurva, puntosCurvaTang){
         super(window.materiales.PIEDRA,{multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:-1})
         this.filas = puntosCurva.length-1
         this.columnas = 1
         
         let posiciones = []
+        let tangentes = []
         for (let i in puntosCurva){
             posiciones.push(puntosCurva[i])
             posiciones.push([puntosCurva[i][0],0,puntosCurva[i][2]])
+            tangentes.push(puntosCurvaTang[i])
+            tangentes.push([1,0,0])
         }
         const normales = new Array(posiciones.length).fill([0,0,1])
 
         this.bufferPos = posiciones.flat()
         this.bufferNorm = normales.flat()
+        this.bufferTang = tangentes.flat()
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }

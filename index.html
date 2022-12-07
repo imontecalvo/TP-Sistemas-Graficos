@@ -58,11 +58,15 @@
 				app.gui.destroy()
 				GUI()
 			},
-			gui:null,
-			mostrarEjes:false
+			gui: null,
+			mostrarEjes: false,
+			luzSol:[243,171,7],
+			luzAntorcha:[245,182,66],
+			luzMunicion:[245,182,66],
+			luzAmbiente:[88, 86, 127],
 		};
 
-		
+
 		function GUI() {
 			var gui = new dat.GUI();
 			app.gui = gui
@@ -72,7 +76,7 @@
 			f1.add(app, 'ancho', 2.0, 7.0).name("Ancho");
 			f1.add(app, 'largo', 2.0, 7.0).name("Largo");
 			f1.add(app, 'cantLados', 4.0, 8.0).name("Cantidad de lados").step(1);
-			f1.add(app, 'alturaMuralla', 1.0, 5.0).name("Altura muralla");
+			f1.add(app, 'alturaMuralla', 2.0, 5.0).name("Altura muralla");
 			f1.add(app, 'actualizar').name("Actualizar");
 
 			var f2 = gui.addFolder('Escena');
@@ -85,6 +89,12 @@
 
 			gui.add(app, 'dibujarNormales').name("Dibujar normales");
 			gui.add(app, 'mostrarEjes').name("Mostar ejes");
+
+			var f3 = gui.addFolder('Luces');
+			f3.addColor(app, 'luzAntorcha').name("Antorchas");
+			f3.addColor(app, 'luzSol').name("Sol");
+			f3.addColor(app, 'luzMunicion').name("Municion");
+			f3.addColor(app, 'luzAmbiente').name("Ambiente");
 
 			f1.open();
 			f2.open();

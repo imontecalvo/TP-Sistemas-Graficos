@@ -14,6 +14,7 @@ class MaderaOscura extends Material {
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.TablonMadera;
+        this.texturaNMap = textureManager.TablonMaderaNM;
     }
 }
 

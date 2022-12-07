@@ -29,6 +29,22 @@ class Material {
 
       var textura3Uniform = gl.getUniformLocation(shaderProgram, "uTextura3");
       gl.uniform1i(textura3Uniform, textureManager.getTextureUnit(this.textura_3));
+
+      var texturaNMapUniform = gl.getUniformLocation(shaderProgram, "uTexturaNMap");
+      gl.uniform1i(texturaNMapUniform, textureManager.getTextureUnit(this.texturaNMap));
+
+      var texturaReflexionUniform = gl.getUniformLocation(shaderProgram, "uMapaReflexion");
+      gl.uniform1i(texturaReflexionUniform, textureManager.getTextureUnit(this.texturaRelejo));
+
+      gl.uniform3fv(shaderProgram.colorSolUniform, normalizarColor(app.luzSol));
+      gl.uniform3fv(shaderProgram.colorMunicionUniform, normalizarColor(app.luzMunicion));
+      gl.uniform3fv(shaderProgram.colorAntorchaUniform, normalizarColor(app.luzAntorcha));
+      gl.uniform3fv(shaderProgram.colorAmbienteUniform, normalizarColor(app.luzAmbiente));
+    }
+
+    if (shaderProgram.id === "fuego"){
+      this.actualizarColor();
+      gl.uniform3fv(shaderProgram.colorUniform, normalizarColor(this.color));
     }
 
     gl.uniform1i(shaderProgram.rendering, renderColor);
@@ -38,6 +54,10 @@ class Material {
 }
 
 export default Material
+
+function normalizarColor(color) {
+  return [color[0] / 255, color[1] / 255, color[2] / 255]
+}
 
 
 

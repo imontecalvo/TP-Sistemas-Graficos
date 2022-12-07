@@ -3,10 +3,10 @@ import Material from "../material.js";
 
 class Agua extends Material {
     constructor() {
-        const color = [101 / 255, 218 / 255, 223 / 255];
+        const color = [100 / 255, 190 / 255, 223 / 255];
         const configPhong = {
             colorDifuso:color,
-            Ka:0.3,
+            Ka:0.7,
             Kd:1.0,
             Ks:1.0,
             glossiness:100
@@ -14,6 +14,8 @@ class Agua extends Material {
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.Agua;
+        this.texturaNMap = textureManager.AguaNM;
+        this.texturaRelejo = textureManager.Cielo;
     }
 };
 

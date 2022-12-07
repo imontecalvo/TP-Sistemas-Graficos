@@ -5,10 +5,10 @@ var vec3 = glMatrix.vec3;
 var mat4 = glMatrix.mat4;
 
 export class Camara{
-    constructor(){
-        this.orbital = new CamaraOrbital()
-        this.orbitalCatapulta = new CamaraOrbital()
-        this.primeraPersona = new CamaraPrimeraPersona()
+    constructor(orbital=null, orbitalCatapulta=null, primeraPersona=null){
+        this.orbital = !!orbital ? orbital : new CamaraOrbital()
+        this.orbitalCatapulta = !!orbitalCatapulta ? orbitalCatapulta : new CamaraOrbital()
+        this.primeraPersona = !!primeraPersona ? primeraPersona : new CamaraPrimeraPersona()
 
         this.control = ControlTipoCam()
     }
@@ -29,6 +29,14 @@ export class Camara{
         if (app.camara == "Orbital") return this.orbital.obtenerPosicion()
         else if (app.camara == "Orbital catapulta") return this.orbitalCatapulta.obtenerPosicion()
         else if (app.camara == "Primera persona") return this.primeraPersona.obtenerPosicion()
+    }
+
+    obtenerCamaras(){
+        return {
+            orbital: this.orbital,
+            orbitalCatapulta: this.orbitalCatapulta,
+            primeraPersona: this.primeraPersona
+        }
     }
 }
 

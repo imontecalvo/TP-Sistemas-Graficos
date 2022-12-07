@@ -72,8 +72,44 @@ class TextureManager {
         gl.activeTexture(gl.TEXTURE10);
         gl.bindTexture(gl.TEXTURE_2D, Cielo);
 
-        const Negro = await initTexture('images/negro.jpg',gl);
+        const PastoRoca = await initTexture('images/pastoRoca.jpg',gl);
         gl.activeTexture(gl.TEXTURE11);
+        gl.bindTexture(gl.TEXTURE_2D, PastoRoca);
+
+        const PastoNM = await initTexture('images/pastoNMap.jpg',gl);
+        gl.activeTexture(gl.TEXTURE12);
+        gl.bindTexture(gl.TEXTURE_2D, PastoNM);
+
+        const PastoRocaNM = await initTexture('images/pastoRocaNMap.jpg',gl);
+        gl.activeTexture(gl.TEXTURE13);
+        gl.bindTexture(gl.TEXTURE_2D, PastoRocaNM);
+
+        const PiedraNM = await initTexture('images/piedra2NMap.png',gl);
+        gl.activeTexture(gl.TEXTURE14);
+        gl.bindTexture(gl.TEXTURE_2D, PiedraNM);
+
+        const AguaNM = await initTexture('images/aguaNM.png',gl);
+        gl.activeTexture(gl.TEXTURE15);
+        gl.bindTexture(gl.TEXTURE_2D, AguaNM);
+
+        const ParedCastilloNM = await initTexture('images/paredLadrillosNM.jpg',gl);
+        gl.activeTexture(gl.TEXTURE16);
+        gl.bindTexture(gl.TEXTURE_2D, ParedCastilloNM);
+
+        const TablonMaderaNM = await initTexture('images/tablonesMadera2NM.jpg',gl);
+        gl.activeTexture(gl.TEXTURE17);
+        gl.bindTexture(gl.TEXTURE_2D, TablonMaderaNM);
+
+        const TejasAzulesNM = await initTexture('images/tejasAzulesNM.png',gl);
+        gl.activeTexture(gl.TEXTURE18);
+        gl.bindTexture(gl.TEXTURE_2D, TejasAzulesNM);
+
+        const MaderaCortezaNM = await initTexture('images/maderaCortezaNM.jpg',gl);
+        gl.activeTexture(gl.TEXTURE19);
+        gl.bindTexture(gl.TEXTURE_2D, MaderaCortezaNM);
+
+        const Negro = await initTexture('images/negro.jpg',gl);
+        gl.activeTexture(gl.TEXTURE20);
         gl.bindTexture(gl.TEXTURE_2D, Negro);
 
         const texturas = [
@@ -88,6 +124,15 @@ class TextureManager {
             Pasto3,
             Test,
             Cielo,
+            PastoRoca,
+            PastoNM,
+            PastoRocaNM,
+            PiedraNM,
+            AguaNM,
+            ParedCastilloNM,
+            TablonMaderaNM,
+            TejasAzulesNM,
+            MaderaCortezaNM,
             Negro,
         ];
         return new TextureManager(texturas, gl);
@@ -108,6 +153,15 @@ class TextureManager {
         this.Pasto3 = texturas[8]
         this.Test = texturas[9]
         this.Cielo = texturas[10];
+        this.PastoRoca = texturas[11];
+        this.PastoNM = texturas[12];
+        this.PastoRocaNM = texturas[13];
+        this.PiedraNM = texturas[14];
+        this.AguaNM = texturas[15];
+        this.ParedCastilloNM = texturas[16];
+        this.TablonMaderaNM = texturas[17];
+        this.TejasAzulesNM = texturas[18];
+        this.MaderaCortezaNM = texturas[19];
         this.Negro = texturas[texturas.length-1];
     }
 

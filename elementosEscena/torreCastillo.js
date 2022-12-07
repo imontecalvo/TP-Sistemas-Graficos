@@ -20,8 +20,7 @@ export class TorreCastillo extends Objeto3D {
 
 class Torre extends Objeto3D {
     constructor(alturaVariable, alturaFija, radioInf, radioSup) {
-        super(window.materiales.PINTURA_AMARILLA)
-        this.id = "torreC"
+        super(window.materiales.PINTURA_AMARILLA, {multiplicadorU:2,multiplicadorV:4,signoU:1,signoV:1})
         this.filas = 20
         this.columnas = 2 + 5 + 2 - 1
 
@@ -30,8 +29,11 @@ class Torre extends Objeto3D {
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
+        this.bufferTang = data[2]
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -64,9 +66,15 @@ class Torre extends Objeto3D {
             puntosLadoSup.normal,
         )
 
+        const tang = puntosLadoInf.tangente.concat(
+            puntosLadoMedio.tangente,
+            puntosLadoSup.tangente,
+        )
+
         return {
             posicion: pos,
             normal: norm,
+            tangente: tang,
         }
     }
 }
@@ -81,8 +89,11 @@ class TechoTorre extends Objeto3D {
 
         this.bufferPos = data[0]
         this.bufferNorm = data[1]
+        this.bufferTang = data[2]
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }

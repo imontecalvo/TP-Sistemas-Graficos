@@ -44,10 +44,14 @@ export class CaraCaja extends Objeto3D{
         this.columnas = 1
         const posiciones = [[largo/2,0,0], [largo/2,alto,0],[-largo/2,0,0], [-largo/2,alto,0]]
         const normales = [[0,0,1], [0,0,1], [0,0,1], [0,0,1]]
+        const tangentes = [[0,1,0], [0,1,0], [0,1,0], [0,1,0]]
         this.bufferPos = posiciones.flat()
         this.bufferNorm = normales.flat()
+        this.bufferTang = tangentes.flat()
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }
@@ -93,10 +97,16 @@ export class CaraTrapecio extends Objeto3D{
         const normal = normalizar(productoVectorial(restarVectores(abajoDer, abajoIzq), restarVectores(arribaIzq, abajoIzq)))
         const normales = new Array(2*(this.filas+1)).fill(normal);
 
+        const tangente = normalizar(restarVectores(arribaIzq, abajoIzq))
+        const tangentes = new Array(2*(this.filas+1)).fill(tangente); 
+
         this.bufferPos = posiciones.flat()
         this.bufferNorm = normales.flat()
+        this.bufferTang = tangentes.flat()
         this.bufferNormDibujadas = []
+        this.bufferTangDibujadas = []
         this.calcularNormalesDibujadas()
+        this.calcularTangentesDibujadas()
 
         this.mallaDeTriangulos = this.crearMalla()
     }

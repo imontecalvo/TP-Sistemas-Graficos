@@ -73,6 +73,9 @@ class ShaderManager {
             glProgram.vertexNormalAttribute = gl.getAttribLocation(glProgram, "aVertexNormal");
             gl.enableVertexAttribArray(glProgram.vertexNormalAttribute);
 
+            glProgram.vertexTangenteAttribute = gl.getAttribLocation(glProgram, "aVertexTangente");
+            gl.enableVertexAttribArray(glProgram.vertexTangenteAttribute);
+
             if (glProgram.id == "phong") {
                 glProgram.vertexUVAttribute = gl.getAttribLocation(glProgram, "aUv");
                 gl.enableVertexAttribArray(glProgram.vertexUVAttribute);
@@ -89,6 +92,14 @@ class ShaderManager {
                 glProgram.posAntorcha1Uniform = gl.getUniformLocation(glProgram, "uPosicionAntorcha1");
                 glProgram.posAntorcha2Uniform = gl.getUniformLocation(glProgram, "uPosicionAntorcha2");
                 glProgram.posMunicionUniform = gl.getUniformLocation(glProgram, "uPosicionMunicion");
+
+                glProgram.colorMunicionUniform = gl.getUniformLocation(glProgram, "colorLuzMunicion");
+                glProgram.colorSolUniform = gl.getUniformLocation(glProgram, "colorLuzSol");
+                glProgram.colorAntorchaUniform = gl.getUniformLocation(glProgram, "colorLuzAntorcha");
+                glProgram.colorAmbienteUniform = gl.getUniformLocation(glProgram, "colorLuzAmbiente");
+            
+            }else if (glProgram.id == "fuego") {
+                glProgram.colorUniform = gl.getUniformLocation(glProgram, "vColor");
             }
         }
     }
