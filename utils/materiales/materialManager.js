@@ -28,9 +28,9 @@ export default function initMateriales(){
         PINTURA_AMARILLA: new PinturaAmarilla(),
         TEJAS_AZULES: new TejasAzules(),
         VIDRIO: new Vidrio(),
-        ROJO: new ColorLiso([1, 0, 0]),
-        VERDE: new ColorLiso([0, 1, 0]),
-        AZUL: new ColorLiso([0, 0, 1]),
+        ROJO: new ColorLiso([255, 0, 0]),
+        VERDE: new ColorLiso([0, 255, 0]),
+        AZUL: new ColorLiso([0, 0, 255]),
         PRUEBA: new ColorLiso([1,0.87,0.29]),
         CIELO: new Cielo(),
         PASTO_ROCAS: new PastoRocas()
