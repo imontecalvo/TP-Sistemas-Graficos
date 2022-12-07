@@ -41,8 +41,6 @@ export class Escena {
 
         this.catapulta = new Catapulta()
 
-        // this.caja = new Caja(1, 1, 1, window.materiales.PASTO)
-
         this.cielo = new Esfera(60, window.materiales.CIELO, "cielo", true)
         this.cielo.rotarY(Math.PI / 3)
         this.cielo.rotarX(Math.PI / 2)
@@ -80,8 +78,6 @@ export class Escena {
     }
 
     dibujar() {
-        // this.esfera.dibujar(this.matriz)
-        // this.caja.dibujar(this.matriz)
         if (app.mostrarEjes) this.ejes.dibujar()
         this.terreno.dibujar(this.matriz)
         this.puente.dibujar(this.matriz)
