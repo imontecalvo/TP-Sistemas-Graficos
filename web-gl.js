@@ -73,7 +73,7 @@ function setupWebGL() {
 
     // mat4.identity(viewMatrix);
     mat4.translate(viewMatrix, viewMatrix, [0., 0, -20.0]);
-    // mat4.rotate(viewMatrix, viewMatrix, Math.PI/4, [0, 0, 1]);
+    mat4.rotate(viewMatrix, viewMatrix, Math.PI/4, [0, 1, 0]);
 }
 
 function loadShaders() {

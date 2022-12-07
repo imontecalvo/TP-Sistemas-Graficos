@@ -104,8 +104,12 @@ class TextureManager {
         gl.activeTexture(gl.TEXTURE18);
         gl.bindTexture(gl.TEXTURE_2D, TejasAzulesNM);
 
+        const MaderaCortezaNM = await initTexture('images/maderaCortezaNM.jpg',gl);
+        gl.activeTexture(gl.TEXTURE19);
+        gl.bindTexture(gl.TEXTURE_2D, MaderaCortezaNM);
+
         const Negro = await initTexture('images/negro.jpg',gl);
-        gl.activeTexture(gl.TEXTURE14);
+        gl.activeTexture(gl.TEXTURE20);
         gl.bindTexture(gl.TEXTURE_2D, Negro);
 
         const texturas = [
@@ -128,6 +132,7 @@ class TextureManager {
             ParedCastilloNM,
             TablonMaderaNM,
             TejasAzulesNM,
+            MaderaCortezaNM,
             Negro,
         ];
         return new TextureManager(texturas, gl);
@@ -156,6 +161,7 @@ class TextureManager {
         this.ParedCastilloNM = texturas[16];
         this.TablonMaderaNM = texturas[17];
         this.TejasAzulesNM = texturas[18];
+        this.MaderaCortezaNM = texturas[19];
         this.Negro = texturas[texturas.length-1];
     }
 
