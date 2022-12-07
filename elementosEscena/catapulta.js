@@ -85,11 +85,11 @@ export class Catapulta extends Objeto3D {
             this.agregarHijo(rueda)
         })
 
-        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA)
+        const eje1 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA_OSCURA)
         eje1.trasladar(0, 0, (anchoTablon / 2) - radio - 0.5)
         eje1.rotarY(Math.PI / 2)
 
-        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA)
+        const eje2 = new Cilindro(0.05, largoTablon + 2 * ancho + 2 * 0.1, 10, window.materiales.MADERA_OSCURA)
         eje2.trasladar(0, 0, -(anchoTablon / 2) + radio - 0.5)
         eje2.rotarY(Math.PI / 2)
 

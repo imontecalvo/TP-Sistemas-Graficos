@@ -132,11 +132,9 @@ export class Objeto3D {
 
 
     dibujarNormales(mat) {
-        // const color = [].concat(this.bufferNorm.map(x => [1, 1, 1]))
         gl.useProgram(glProgramCurva);
 
         const componentes = [this.bufferNormDibujadas]
-        // console.log(componentes)
         for (let i in componentes) {
             var modelMatrixUniform = gl.getUniformLocation(glProgramCurva, "modelMatrix");
             gl.uniformMatrix4fv(modelMatrixUniform, false, mat);

@@ -23,10 +23,16 @@ uniform sampler2D uTextura1;
 uniform sampler2D uTextura2;
 uniform sampler2D uTextura3;
 uniform sampler2D uTexturaNMap;
+uniform sampler2D uMapaReflexion;
 
 uniform vec3 colorLuzAntorcha;
 uniform vec3 colorLuzMunicion;
 uniform vec3 colorLuzSol;
+uniform vec3 colorLuzAmbiente;
+
+float map(float value, float inMin, float inMax, float outMin, float outMax) {
+  return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+}
 
 void main(void) {
 
@@ -66,9 +72,6 @@ void main(void) {
             vNormalMP = T + N + B;
         }
 
-     
-       
-
         //Sol
         vec3 lightPos = vec3(1,10,1.);
         vec3 N = normalize(vNormalMP);
@@ -80,7 +83,8 @@ void main(void) {
         vec3 colorEspecular = colorLuzSol;
 
         // Lambert's cosine law
-        float lambertian = max(dot(N, L), 0.0);
+        float lambertian =  (colorLuzSol.x != 0. || colorLuzSol.y != 0. || colorLuzSol.z != 0.) ? max(dot(N, L), 0.0) : 0.0;
+        //float lambertian = max(dot(N, L), 0.0);
         float specular = 0.0;
         if(lambertian > 0.0) {
             vec3 R = normalize(reflect(-L, N));      // Reflected light vector
@@ -90,8 +94,21 @@ void main(void) {
             specular = pow(specAngle, vGlossiness);
         }
 
-        vec3 luzAmbienteBase = mix(0.3*colorLuzSol,vec3(0.7,0.7,0.7),0.3);
-        vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso * colorTexturaFinal + luzAmbienteBase * colorTexturaFinal) + (vKs * specular * colorEspecular);
+        vec3 auxMapaReflexion = texture2D(uMapaReflexion, vUv).rgb;
+        vec3 mapaReflexion = vec3(0.,0.,0.);
+        if ((auxMapaReflexion.r != 0.) || (auxMapaReflexion.g != 0.) || (auxMapaReflexion.b != 0.)){
+            float PI = 3.141592;
+            vec3 reflexion = reflect(camVec, vNormalMP);
+            float m = length(reflexion);
+            float alfa = map(atan(reflexion.y, reflexion.x), -PI, PI, 0., 1.);
+            float beta = map(acos(reflexion.z / m), 0., PI, 0., 1.);
+            mapaReflexion = colorLuzSol * texture2D(uMapaReflexion, vec2(alfa,beta)).xyz*vKs*0.4;
+        }
+
+
+        //vec3 luzAmbienteBase = mix(0.3*colorLuzSol,vec3(0.7,0.7,0.7),0.3);
+        //vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso * colorTexturaFinal + colorLuzAmbiente * colorTexturaFinal) + (vKs * specular * colorEspecular);
+        vec3 color = (vKa * colorAmbiente) + (vKd * lambertian * vColorDifuso * colorLuzSol * colorTexturaFinal + colorLuzAmbiente * colorTexturaFinal) + (vKs * specular * colorEspecular) + mapaReflexion;
         
         // Antorcha1
         vec3 lightVecAntorcha1 = normalize(vPosicionAntorcha1 - vPosWorld);
@@ -124,7 +141,7 @@ void main(void) {
 
         vec3 colorMunicion = vKd * componenteDifusaMunicion + vKa * colorAmbiente + vKs * componenteEspecularMunicion;
 
-        float factorAtenuacionMunicion = 2. * 1.0 / pow(distance(vPosicionMunicion, vPosWorld),0.5);
+        float factorAtenuacionMunicion = 2.0 / pow(distance(vPosicionMunicion, vPosWorld),0.5);
         vec3 intensidadLuzMunicion = colorLuzMunicion * factorAtenuacionMunicion;
 
 
@@ -139,3 +156,4 @@ void main(void) {
         gl_FragColor = vec4(vNormal,1.0);
     }
 }
+

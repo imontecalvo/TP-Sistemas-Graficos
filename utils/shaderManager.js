@@ -96,6 +96,7 @@ class ShaderManager {
                 glProgram.colorMunicionUniform = gl.getUniformLocation(glProgram, "colorLuzMunicion");
                 glProgram.colorSolUniform = gl.getUniformLocation(glProgram, "colorLuzSol");
                 glProgram.colorAntorchaUniform = gl.getUniformLocation(glProgram, "colorLuzAntorcha");
+                glProgram.colorAmbienteUniform = gl.getUniformLocation(glProgram, "colorLuzAmbiente");
             
             }else if (glProgram.id == "fuego") {
                 glProgram.colorUniform = gl.getUniformLocation(glProgram, "vColor");

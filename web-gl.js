@@ -146,7 +146,8 @@ function drawScene() {
         app.anguloCatapulta = 0
         tiempo = 0
 
-        escena = new Escena()
+        const camaras = escena.obtenerCamaras()
+        escena = new Escena(camaras)
     }
 
     escena.actualizar()
@@ -155,7 +156,7 @@ function drawScene() {
     escena.dibujar()
 }
 
-function tick() {
+function tick() {    
     if (app.disparando) {
         tiempo += 0.01
         if (app.anguloCatapulta < Math.PI / 2) {

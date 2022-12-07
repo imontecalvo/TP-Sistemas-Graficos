@@ -6,29 +6,31 @@ import { Castillo } from "./elementosEscena/castillo.js";
 import { Catapulta } from "./elementosEscena/catapulta.js";
 import { Caja } from "./elementosEscena/caja.js";
 import { Esfera } from "./elementosEscena/esfera.js";
+import { Agua } from "./elementosEscena/agua.js";
+import { Cilindro } from "./elementosEscena/cilindro.js";
 
 var mat4 = glMatrix.mat4;
 
 export class Escena {
-    constructor() {
+    constructor(camaras = null) {
         this.ejes = new EjesEscena()
         this.matriz = mat4.create()
-        this.camara = new Camara()
+        this.camara = camaras ? new Camara(camaras.orbital, camaras.orbitalCatapulta, camaras.primeraPersona) : new Camara()
 
         this.terreno = new Terreno()
 
         const configMapeoUv = [
-            {multiplicadorU:1,multiplicadorV:3,signoU:1,signoV:1},
-            {multiplicadorU:1,multiplicadorV:3,signoU:1,signoV:1},
-            {multiplicadorU:1,multiplicadorV:3,signoU:1,signoV:1},
-            {multiplicadorU:1,multiplicadorV:3,signoU:1,signoV:1},
-            {multiplicadorU:1,multiplicadorV:3,signoU:1,signoV:1},
-            {multiplicadorU:1,multiplicadorV:3,signoU:1,signoV:1}
+            { multiplicadorU: 1, multiplicadorV: 3, signoU: 1, signoV: 1 },
+            { multiplicadorU: 1, multiplicadorV: 3, signoU: 1, signoV: 1 },
+            { multiplicadorU: 1, multiplicadorV: 3, signoU: 1, signoV: 1 },
+            { multiplicadorU: 1, multiplicadorV: 3, signoU: 1, signoV: 1 },
+            { multiplicadorU: 1, multiplicadorV: 3, signoU: 1, signoV: 1 },
+            { multiplicadorU: 1, multiplicadorV: 3, signoU: 1, signoV: 1 }
         ]
         this.puente = new Caja(0.2, 2, 8, window.materiales.PASTO, "puente", configMapeoUv)
         this.puente.trasladar(0, -0.25, 10 + 7 / 2)
 
-        this.agua = new Caja(0.2, 50, 50, window.materiales.AGUA)
+        this.agua = new Agua()
         this.agua.trasladar(0, -0.8, 0)
 
         this.muralla = new Muralla(app.alturaMuralla, app.cantLados)
@@ -41,13 +43,14 @@ export class Escena {
 
         // this.caja = new Caja(1, 1, 1, window.materiales.PASTO)
 
-        this.cielo = new Esfera(60, window.materiales.CIELO,"cielo", false)
+        this.cielo = new Esfera(60, window.materiales.CIELO, "cielo", true)
         this.cielo.rotarY(Math.PI / 3)
         this.cielo.rotarX(Math.PI / 2)
     }
 
     actualizar() {
         this.camara.actualizar()
+        this.agua.rotarY(0.002)
     }
 
     obtenerVista() {
@@ -69,7 +72,11 @@ export class Escena {
 
     obtenerPosMunicion() {
         return this.catapulta.obtenerPosMunicion()
-        return [0,0,0]
+        return [0, 0, 0]
+    }
+
+    obtenerCamaras() {
+        return this.camara.obtenerCamaras()
     }
 
     dibujar() {

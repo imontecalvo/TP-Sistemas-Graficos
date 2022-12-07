@@ -32,7 +32,6 @@ class Centro extends Objeto3D {
         this.columnas = 1
         this.curvaCentro = new BezierCubica([[10, 0, 0], [5, 0, 0], [2, 0, 0], [0, 0, 0]], "z")
         const puntosCentro = discretizar(this.curvaCentro, 1, false, true)
-        console.log(puntosCentro)
 
         const data = superficieRevolucion(puntosCentro, this.columnas, this.filas + 1)
 

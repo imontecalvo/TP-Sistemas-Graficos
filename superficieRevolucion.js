@@ -7,10 +7,8 @@ export function superficieRevolucion(puntosCurva, columnas, niveles, tope = 1, d
     let puntosTransformados = []
     let normalesTransformadas = []
     let tangentesTransformadas = []
-    let binormalesTransformadas = []
 
     const puntosRecorrido = getRecorrido(niveles, tope, delta)
-    // console.log(puntosCurva)
 
     // Recorro c/u de los niveles del recorrido
     for (let i = 0; i < niveles; i++) {
@@ -42,21 +40,12 @@ export function superficieRevolucion(puntosCurva, columnas, niveles, tope = 1, d
             normalesTransformadas.push(normalVec4[2])
 
             //Tangentes
-            // console.log(puntosCurva.tangente)
             const tangenteVec3 = puntosCurva.tangente[j]
             const tangenteVec4 = vec4.fromValues(tangenteVec3[0], tangenteVec3[1], tangenteVec3[2], 1)
             vec4.transformMat4(tangenteVec4, tangenteVec4, matrizDeNivelNor)
             tangentesTransformadas.push(tangenteVec4[0])
             tangentesTransformadas.push(tangenteVec4[1])
             tangentesTransformadas.push(tangenteVec4[2])
-
-            //Binormales
-            // const binormalVec3 = puntosCurva.binormal[j]
-            // const binormalVec4 = vec4.fromValues(binormalVec3[0], binormalVec3[1], binormalVec3[2], 1)
-            // vec4.transformMat4(binormalVec4, binormalVec4, matrizDeNivelNor)
-            // binormalesTransformadas.push(binormalVec4[0])
-            // binormalesTransformadas.push(binormalVec4[1])
-            // binormalesTransformadas.push(binormalVec4[2])
 
         }
     }

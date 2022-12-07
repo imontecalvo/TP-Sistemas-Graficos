@@ -15,6 +15,7 @@ class Agua extends Material {
         this.shaderProgram = shadersManager.getProgram("phong")
         this.textura = textureManager.Agua;
         this.texturaNMap = textureManager.AguaNM;
+        this.texturaRelejo = textureManager.Cielo;
     }
 };
 
