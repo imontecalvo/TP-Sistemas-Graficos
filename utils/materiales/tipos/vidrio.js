@@ -1,4 +1,4 @@
-import { shadersManager } from "../../../web-gl.js";
+import { shadersManager, textureManager } from "../../../web-gl.js";
 import Material from "../material.js";
 
 class Vidrio extends Material {
@@ -13,6 +13,7 @@ class Vidrio extends Material {
         }
         super(configPhong);
         this.shaderProgram = shadersManager.getProgram("phong")
+        this.texturaRelejo = textureManager.Cielo;
     }
 }
 

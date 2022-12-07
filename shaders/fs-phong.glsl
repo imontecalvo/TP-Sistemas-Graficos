@@ -102,7 +102,7 @@ void main(void) {
             float m = length(reflexion);
             float beta = -map(atan(reflexion.y, reflexion.x), -PI, PI, 0., 1.);
             float alfa = map(acos(reflexion.z / m), 0., PI, 0., 1.);
-            mapaReflexion = colorLuzSol * texture2D(uMapaReflexion, vec2(alfa,beta)).xyz*vKs*0.4;
+            mapaReflexion = colorLuzSol * texture2D(uMapaReflexion, vec2(alfa,beta)+vec2(0.5,0.)).xyz*vKs*0.4;
         }
 
 
