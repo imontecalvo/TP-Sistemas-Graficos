@@ -20,8 +20,16 @@ export class PisosCastillo extends Objeto3D {
         this.agregarHijo(pisos)
 
         const anchoBorde = 0.15
+        const configMapeoUvBorde = [
+            {multiplicadorU:1,multiplicadorV:1/20,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1/20,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1/20,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1/20,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1},
+            {multiplicadorU:1,multiplicadorV:1,signoU:1,signoV:1}
+        ]
         for (let i = 1; i < cantPisos; i++) {
-            const borde = new Caja(anchoBorde, largo + anchoBorde, ancho + anchoBorde, window.materiales.PINTURA_AMARILLA)
+            const borde = new Caja(anchoBorde, largo + anchoBorde, ancho + anchoBorde, window.materiales.PINTURA_AMARILLA,null, configMapeoUvBorde)
             borde.trasladar(0, i * alturaPiso - anchoBorde / 2, 0)
             this.agregarHijo(borde)
         }
